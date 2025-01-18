@@ -2,17 +2,21 @@ import bcrypt from 'bcryptjs';
 import prisma from '../db/prisma';
 import { CreateUserSchema } from '@odinbook/zod';
 import type { Request, Response, NextFunction } from 'express';
+import type { CreateUserErrors } from '@odinbook/types';
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
 	const { body } = req;
 	const validation = CreateUserSchema.safeParse(body);
 
 	if (!validation.success) {
-		const errors = validation.error.issues.map((issue) => {
+		let errors: CreateUserErrors = {};
+		validation.error.issues.forEach((issue) => {
 			// issue.path will always be an array with a single element in this case
-			return { message: issue.message, path: issue.path[0] };
+			const name = issue.path[0] as keyof CreateUserErrors;
+			if (!errors[name]) errors[name] = [];
+			errors[name] = [...errors[name], issue.message];
 		});
-		res.status(400).json({ success: false, errors });
+		res.status(400).json({ errors });
 		return;
 	}
 
@@ -25,7 +29,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 	if (duplicateUsername) {
 		res.status(409).json({
 			success: false,
-			errors: [{ message: 'This username already exists.', path: 'username' }],
+			errors: { username: ['This username already exists.'] },
 		});
 		return;
 	}

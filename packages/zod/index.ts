@@ -14,8 +14,12 @@ export const CreateUserSchema = z
 			.string()
 			.min(5, 'Username must be at least 5 characters long.')
 			.max(20, 'Username must be at most 20 characters long.'),
-		password: z.string().min(8, 'Password must contain at least 8 characters.'),
-		confirmPassword: z.string(),
+		password: z
+			.string()
+			.min(8, 'Password must contain at least 8 characters long.'),
+		confirmPassword: z
+			.string()
+			.min(8, 'Confirm password must be at least 8 characters long.'),
 	})
 	.refine((data) => data.password === data.confirmPassword, {
 		message: "Passwords don't match",
