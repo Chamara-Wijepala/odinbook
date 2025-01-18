@@ -7,13 +7,15 @@
 		"dev:client": "pnpm -F @odinbook/client dev",
 		"dev:server": "pnpm -F @odinbook/server dev",
 		"build:types": "pnpm -F @odinbook/types build",
-		"start": "pnpm build:types && pnpm -r run dev"
+		"build:zod": "pnpm -F @odinbook/zod build",
+		"start": "pnpm build:types && pnpm build:zod && pnpm -r run dev"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
 		"@odinbook/types": "workspace:*",
+		"@odinbook/zod": "workspace:*",
 		"dotenv": "^16.4.7"
 	},
 	"devDependencies": {

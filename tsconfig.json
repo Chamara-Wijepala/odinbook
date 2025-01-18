@@ -4,7 +4,7 @@
 		"target": "ES2022",
 		"lib": ["ES2023"],
 		"module": "ESNext",
-		"skipLibCheck": true,
+		"skipLibCheck": false,
 		"moduleResolution": "bundler",
 		"isolatedModules": true,
 		"moduleDetection": "force",
@@ -17,6 +17,7 @@
 	"references": [
 		{ "path": "./app/client/tsconfig.json" },
 		{ "path": "./app/server/tsconfig.json" },
-		{ "path": "./packages/types/tsconfig.json" }
+		{ "path": "./packages/types/tsconfig.json" },
+		{ "path": "./packages/zod/tsconfig.json" }
 	]
 }

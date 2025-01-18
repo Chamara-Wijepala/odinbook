@@ -1,0 +1,15 @@
+{
+	"name": "@odinbook/zod",
+	"version": "1.0.0",
+	"description": "",
+	"types": "./dist/index.d.ts",
+	"scripts": {
+		"build": "tsc"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"zod": "^3.24.1"
+	}
+}
