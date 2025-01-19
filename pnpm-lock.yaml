@@ -11,6 +11,9 @@ importers:
       '@odinbook/types':
         specifier: workspace:*
         version: link:packages/types
+      '@odinbook/utils':
+        specifier: workspace:*
+        version: link:packages/utils
       '@odinbook/zod':
         specifier: workspace:*
         version: link:packages/zod
@@ -115,6 +118,8 @@ importers:
         version: 5.7.3
 
   packages/types: {}
+
+  packages/utils: {}
 
   packages/zod:
     dependencies:

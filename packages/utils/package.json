@@ -1,5 +1,5 @@
 {
-	"name": "@odinbook/zod",
+	"name": "@odinbook/utils",
 	"version": "1.0.0",
 	"description": "",
 	"main": "./dist/index.js",
@@ -9,8 +9,5 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"zod": "^3.24.1"
-	}
+	"license": "ISC"
 }

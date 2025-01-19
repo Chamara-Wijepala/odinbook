@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import api from '../../api';
 import { AxiosError } from 'axios';
+import { validateCreateUser } from '@odinbook/utils';
 import type { CreateUserErrors } from '@odinbook/types';
 
 export default function Register() {
@@ -23,6 +24,13 @@ export default function Register() {
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
+
+		const validation = validateCreateUser(formData);
+
+		if (!validation.success) {
+			setErrors(validation.errors);
+			return;
+		}
 
 		setErrors(null);
 

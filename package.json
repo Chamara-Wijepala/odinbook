@@ -8,7 +8,9 @@
 		"dev:server": "pnpm -F @odinbook/server dev",
 		"build:types": "pnpm -F @odinbook/types build",
 		"build:zod": "pnpm -F @odinbook/zod build",
-		"start": "pnpm build:types && pnpm build:zod && pnpm -r run dev"
+		"build:utils": "pnpm -F @odinbook/utils build",
+		"build:packages": "pnpm build:types && pnpm build:zod && pnpm build:utils",
+		"start": "pnpm build:packages && pnpm -r run dev"
 	},
 	"keywords": [],
 	"author": "",
@@ -16,6 +18,7 @@
 	"dependencies": {
 		"@odinbook/types": "workspace:*",
 		"@odinbook/zod": "workspace:*",
+		"@odinbook/utils": "workspace:*",
 		"dotenv": "^16.4.7"
 	},
 	"devDependencies": {
