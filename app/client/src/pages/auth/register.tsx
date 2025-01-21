@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import api from '../../api';
-import { AxiosError } from 'axios';
+import { Link } from 'react-router';
 import { validateCreateUser } from '@odinbook/utils';
+import api from '../../api';
+import { AxiosError } from 'axios'; // importing as type doesn't allow using it as a value
 import type { CreateUserErrors } from '@odinbook/types';
 
 export default function Register() {
@@ -51,8 +52,11 @@ export default function Register() {
 	return (
 		<div className="min-h-[100svh] px-4 flex justify-center items-center bg-gradient-to-br from-sky-400 to-pink-400">
 			<div className="bg-white shadow-md rounded-lg max-w-xl p-8 md:p-12 flex-grow">
-				<h2 className="text-xl md:text-3xl font-bold mb-4 md:mb-6">Register</h2>
-				<form onSubmit={handleSubmit} className="flex flex-col gap-4 md:gap-6">
+				<h2 className="text-xl md:text-3xl font-bold">Register</h2>
+				<form
+					onSubmit={handleSubmit}
+					className="flex flex-col gap-4 md:gap-6  my-4 md:my-6"
+				>
 					<div className="flex flex-col md:flex-row gap-4">
 						<div className="flex flex-col">
 							<label htmlFor="first-name" className="text-slate-500">
@@ -172,6 +176,16 @@ export default function Register() {
 						Submit
 					</button>
 				</form>
+
+				<p className="text-center">
+					Already have an account?{' '}
+					<Link
+						to="/auth/login"
+						className="text-sky-600 hover:text-sky-400 transition-colors duration-250"
+					>
+						Login
+					</Link>
+				</p>
 			</div>
 		</div>
 	);
