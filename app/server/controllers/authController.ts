@@ -79,7 +79,9 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 
 		res.cookie('jwt', refreshToken, {
 			httpOnly: true,
-			maxAge: expiresIn,
+			// expiresIn is supposed to be used as a seconds value but maxAge expects
+			// the value to be in milliseconds
+			maxAge: expiresIn * 1000,
 			sameSite: 'none',
 			secure: process.env.NODE_ENV === 'production',
 		});
