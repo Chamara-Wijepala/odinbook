@@ -115,7 +115,9 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 			where: {
 				token: refreshToken,
 			},
-			include: {
+			select: {
+				token: true,
+				revoked: true,
 				User: {
 					select: {
 						username: true,
