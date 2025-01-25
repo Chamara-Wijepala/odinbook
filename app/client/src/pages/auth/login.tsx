@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import useAuthStore from '../../stores/auth';
 import api from '../../api';
 import { AxiosError } from 'axios'; // importing as type doesn't allow using it as a value
@@ -14,6 +14,7 @@ export default function Login() {
 		password: '',
 	});
 	const setToken = useAuthStore((state) => state.setToken);
+	const navigate = useNavigate();
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
@@ -36,6 +37,7 @@ export default function Login() {
 			});
 
 			setToken(response.data.accessToken);
+			navigate('/');
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setErrors(error.response?.data);

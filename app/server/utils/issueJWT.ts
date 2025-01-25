@@ -13,7 +13,7 @@ const PRIV_KEY = {
 export function issueAccessToken(username: string) {
 	const expiresIn = process.env.NODE_ENV === 'production' ? '10m' : '30s';
 	const payload = {
-		sub: username,
+		username,
 		iat: Date.now(),
 	};
 	const options: SignOptions = {
@@ -29,7 +29,7 @@ export function issueRefreshToken(username: string) {
 	// seconds, not milliseconds
 	const expiresIn = process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60;
 	const payload = {
-		sub: username,
+		username,
 		iat: Date.now(),
 	};
 	const options: SignOptions = {
