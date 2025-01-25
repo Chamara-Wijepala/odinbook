@@ -1,9 +1,20 @@
+import fs from 'fs';
+import path from 'path';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { validateCreateUser } from '@odinbook/utils';
 import prisma from '../db/prisma';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { Request, Response, NextFunction } from 'express';
 import type { CreateUserErrors } from '@odinbook/types';
+
+const PUB_KEY = {
+	key: fs.readFileSync(
+		path.join(__dirname, '..', 'keys/id_rsa_pub.pem'),
+		'utf-8'
+	),
+	passphrase: process.env.KEY_PASSPHRASE,
+};
 
 async function createUser(req: Request, res: Response, next: NextFunction) {
 	const { body } = req;
@@ -89,7 +100,58 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 	});
 }
 
+async function refresh(req: Request, res: Response, next: NextFunction) {
+	if (!req.cookies.jwt) {
+		res.sendStatus(401);
+		return;
+	}
+
+	const refreshToken: string = req.cookies.jwt;
+
+	jwt.verify(refreshToken, PUB_KEY, async (err: unknown) => {
+		if (err) return next(err);
+
+		const foundToken = await prisma.refreshToken.findUnique({
+			where: {
+				token: refreshToken,
+			},
+			include: {
+				User: {
+					select: {
+						username: true,
+					},
+				},
+			},
+		});
+
+		if (!foundToken) {
+			res.clearCookie('jwt');
+			res.sendStatus(401);
+			return;
+		}
+
+		if (foundToken.revoked) {
+			res.clearCookie('jwt');
+			res.sendStatus(401);
+			return;
+		}
+
+		// Type guard if user doesn't exist. All tokens associated with a user will
+		// be deleted alongside with the user so this isn't really necessary.
+		// But, I'll leave this here in case I need to handle some edge case if it
+		// happens
+		if (!foundToken.User) {
+			return next();
+		}
+
+		const accessToken = issueAccessToken(foundToken.User.username);
+
+		res.status(200).json({ accessToken });
+	});
+}
+
 export default {
 	createUser,
 	loginUser,
+	refresh,
 };
