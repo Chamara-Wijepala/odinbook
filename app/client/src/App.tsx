@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router';
+import { ToastContainer } from 'react-toastify';
 import Home from './pages/home';
 import Register from './pages/auth/register';
 import Login from './pages/auth/login';
@@ -13,6 +14,7 @@ function App() {
 					<Route path="login" element={<Login />} />
 				</Route>
 			</Routes>
+			<ToastContainer />
 		</div>
 	);
 }

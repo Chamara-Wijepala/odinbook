@@ -7,6 +7,7 @@ import prisma from '../db/prisma';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { Request, Response, NextFunction } from 'express';
 import type { CreateUserErrors } from '@odinbook/types';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 const PUB_KEY = {
 	key: fs.readFileSync(
@@ -102,8 +103,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 
 async function refresh(req: Request, res: Response, next: NextFunction) {
 	if (!req.cookies.jwt) {
-		res.sendStatus(401);
-		return;
+		return next(new TokenExpiredError('jwt', new Date())); // message won't be used
 	}
 
 	const refreshToken: string = req.cookies.jwt;
@@ -128,14 +128,12 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 
 		if (!foundToken) {
 			res.clearCookie('jwt');
-			res.sendStatus(401);
-			return;
+			return next(new TokenExpiredError('jwt', new Date()));
 		}
 
 		if (foundToken.revoked) {
 			res.clearCookie('jwt');
-			res.sendStatus(401);
-			return;
+			return next(new TokenExpiredError('jwt', new Date()));
 		}
 
 		// Type guard if user doesn't exist. All tokens associated with a user will

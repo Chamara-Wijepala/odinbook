@@ -18,13 +18,16 @@ export default function verifyJWT(
 	next: NextFunction
 ) {
 	const authHeader = req.headers['authorization'];
+	const token = authHeader?.split(' ')[1];
 
-	if (!authHeader) {
-		res.status(401).json({ success: false, message: 'No token provided' });
+	if (!authHeader || !token) {
+		res.status(401).json({
+			type: 'error',
+			message:
+				'There was an unexpected error when verifying your session. Please log in again',
+		});
 		return;
 	}
-
-	const token = authHeader?.split(' ')[1];
 
 	try {
 		const decoded = jwt.verify(token, PUB_KEY) as UserToken;

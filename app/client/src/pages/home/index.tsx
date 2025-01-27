@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 import useAuthStore from '../../stores/auth';
 import api from '../../api';
+import { AxiosError } from 'axios';
 
 type User = {
 	username: string;
@@ -9,6 +12,7 @@ type User = {
 export default function Home() {
 	const token = useAuthStore((state) => state.token);
 	const [user, setUser] = useState<null | User>(null);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		(async () => {
@@ -19,7 +23,20 @@ export default function Home() {
 				});
 				setUser(response.data.user);
 			} catch (error) {
-				console.log(error);
+				if (error instanceof AxiosError) {
+					const { type, message } = error.response?.data;
+					if (type === 'warn') {
+						toast.warn(message, {
+							theme: 'colored',
+						});
+					}
+					if (type === 'error') {
+						toast.error(message, {
+							theme: 'colored',
+						});
+					}
+					navigate('/auth/login');
+				}
 			}
 		})();
 	}, []);

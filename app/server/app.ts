@@ -4,6 +4,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import routes from './routes';
 import verifyJWT from './middleware/verifyJWT';
+import errorHandler from './middleware/errorHandler';
 
 dotenv.config();
 
@@ -20,5 +21,7 @@ app.use('/auth', routes.auth);
 app.use(verifyJWT);
 
 app.use('/', routes.home);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log('Server running'));
