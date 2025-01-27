@@ -14,7 +14,6 @@ export function issueAccessToken(username: string) {
 	const expiresIn = process.env.NODE_ENV === 'production' ? '10m' : '30s';
 	const payload = {
 		username,
-		iat: Date.now(),
 	};
 	const options: SignOptions = {
 		expiresIn,
@@ -30,7 +29,6 @@ export function issueRefreshToken(username: string) {
 	const expiresIn = process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60;
 	const payload = {
 		username,
-		iat: Date.now(),
 	};
 	const options: SignOptions = {
 		expiresIn,
