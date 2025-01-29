@@ -95,7 +95,8 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 			// the value to be in milliseconds
 			maxAge: expiresIn * 1000,
 			sameSite: 'none',
-			secure: process.env.NODE_ENV === 'production',
+			secure: true,
+			path: '/auth/refresh',
 		});
 		return res.status(200).json({ accessToken });
 	});

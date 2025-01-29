@@ -5,4 +5,5 @@ export default axios.create({
 		import.meta.env.MODE === 'production'
 			? import.meta.env.SERVER_BASEURL
 			: 'http://localhost:3000',
+	withCredentials: true,
 });
