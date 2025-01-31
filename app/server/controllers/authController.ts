@@ -7,6 +7,7 @@ import prisma from '../db/prisma';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { Request, Response, NextFunction } from 'express';
 import type { CreateUserErrors } from '@odinbook/types';
+import { TokenExpiredError } from 'jsonwebtoken';
 
 const PUB_KEY = {
 	key: fs.readFileSync(
@@ -109,13 +110,6 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 	const refreshToken: string = req.cookies.jwt;
 
 	jwt.verify(refreshToken, PUB_KEY, async (err: unknown) => {
-		// err is a TokenExpiredError from jsonwebtoken, which is already used to
-		// handle expired access tokens. If it's returned as is to the error handler
-		// it will call a refresh.
-		if (err) {
-			return next(new Error('RefreshTokenExpiredError'));
-		}
-
 		const foundToken = await prisma.refreshToken.findUnique({
 			where: {
 				token: refreshToken,
@@ -135,7 +129,16 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 			return next(new Error('RefreshTokenExpiredError'));
 		}
 
-		if (foundToken.revoked) {
+		// refresh token is either expired or flagged as revoked in the db
+		if (
+			foundToken.revoked ||
+			(foundToken && err instanceof TokenExpiredError)
+		) {
+			await prisma.refreshToken.delete({
+				where: {
+					token: foundToken.token,
+				},
+			});
 			return next(new Error('RefreshTokenExpiredError'));
 		}
 
@@ -146,6 +149,12 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 		if (!foundToken.User) {
 			return next();
 		}
+
+		// since the possibility of err being a TokenExpiredError is handled earlier
+		// passing it to next is safe. Since TokenExpiredError is used to handle
+		// expired access tokens, if it's returned as is to the error handler
+		// it will call a refresh.
+		if (err) return next(err);
 
 		const accessToken = issueAccessToken(foundToken.User.username);
 
