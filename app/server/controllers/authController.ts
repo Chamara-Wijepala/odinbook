@@ -96,7 +96,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 			maxAge: expiresIn * 1000,
 			sameSite: 'none',
 			secure: true,
-			path: '/auth/refresh',
+			path: '/auth',
 		});
 		return res.status(200).json({ accessToken });
 	});
@@ -162,8 +162,30 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 	});
 }
 
+async function logout(req: Request, res: Response) {
+	if (!req.cookies.jwt) {
+		res.sendStatus(200);
+	}
+
+	await prisma.refreshToken.delete({
+		where: {
+			token: req.cookies.jwt,
+		},
+	});
+
+	res
+		.clearCookie('jwt', {
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+			path: '/auth',
+		})
+		.sendStatus(200);
+}
+
 export default {
 	createUser,
 	loginUser,
 	refresh,
+	logout,
 };

@@ -32,7 +32,7 @@ function errorHandler(
 					httpOnly: true,
 					sameSite: 'none',
 					secure: true,
-					path: '/auth/refresh',
+					path: '/auth',
 				})
 				.status(401)
 				.json({
