@@ -17,7 +17,7 @@ function App() {
 	}, [navigate]);
 
 	return (
-		<div className="min-h-[100svh]">
+		<div className="min-h-[100svh] dark:bg-slate-950 dark:text-white transition-colors">
 			<Routes>
 				<Route path="register" element={<Register />} />
 				<Route path="login" element={<Login />} />

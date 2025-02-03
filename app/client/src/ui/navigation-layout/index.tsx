@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Outlet, NavLink } from 'react-router';
 import { IoMenu, IoCloseOutline, IoLogOutOutline } from 'react-icons/io5';
+import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
 import useLogout from '../../hooks/useLogout';
+import useTheme from '../../hooks/useTheme';
 
 export default function NavigationLayout() {
 	const [isOpen, setIsOpen] = useState(false);
 	const logout = useLogout();
+	const { theme, toggleTheme } = useTheme();
 
 	function toggleSidebar() {
 		setIsOpen(!isOpen);
@@ -31,7 +34,7 @@ export default function NavigationLayout() {
 			</button>
 
 			<header
-				className={`fixed top-0 bottom-0 z-40 flex flex-col w-[300px] lg:relative bg-white p-4 pt-16 lg:p-8 transition-transform ${
+				className={`fixed top-0 bottom-0 z-40 flex flex-col w-[300px] lg:relative bg-white dark:bg-slate-950 p-4 pt-16 lg:p-8 transition-all ${
 					isOpen ? '' : '-translate-x-full lg:-translate-x-0'
 				}`}
 			>
@@ -40,8 +43,10 @@ export default function NavigationLayout() {
 						to="/"
 						onClick={toggleSidebar}
 						className={({ isActive }) =>
-							`p-3 lg:p-4 hover:bg-slate-200 rounded-full text-center text-lg font-medium transition-colors ${
-								isActive ? 'bg-slate-300 hover:bg-slate-300' : ''
+							`p-3 lg:p-4 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full text-center text-lg font-medium transition-colors ${
+								isActive
+									? 'bg-slate-300 hover:bg-slate-300 dark:bg-slate-900 hover:dark:bg-slate-900'
+									: ''
 							}`
 						}
 					>
@@ -51,8 +56,10 @@ export default function NavigationLayout() {
 						to="/explore"
 						onClick={toggleSidebar}
 						className={({ isActive }) =>
-							`p-3 lg:p-4 hover:bg-slate-200 rounded-full text-center text-lg font-medium transition-colors ${
-								isActive ? 'bg-slate-300 hover:bg-slate-300' : ''
+							`p-3 lg:p-4 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full text-center text-lg font-medium transition-colors ${
+								isActive
+									? 'bg-slate-300 hover:bg-slate-300 dark:bg-slate-900 hover:dark:bg-slate-900'
+									: ''
 							}`
 						}
 					>
@@ -62,8 +69,10 @@ export default function NavigationLayout() {
 						to="/profile"
 						onClick={toggleSidebar}
 						className={({ isActive }) =>
-							`p-3 lg:p-4 hover:bg-slate-200 rounded-full text-center text-lg font-medium transition-colors ${
-								isActive ? 'bg-slate-300 hover:bg-slate-300' : ''
+							`p-3 lg:p-4 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full text-center text-lg font-medium transition-colors ${
+								isActive
+									? 'bg-slate-300 hover:bg-slate-300 dark:bg-slate-900 hover:dark:bg-slate-900'
+									: ''
 							}`
 						}
 					>
@@ -71,10 +80,18 @@ export default function NavigationLayout() {
 					</NavLink>
 				</nav>
 
-				<div className="mt-auto">
+				<div className="mt-auto flex gap-4">
 					<button onClick={logout}>
 						<IoLogOutOutline className="w-8 h-8" />
 						<span className="sr-only">Log out</span>
+					</button>
+
+					<button onClick={toggleTheme}>
+						{theme === 'light' ? (
+							<MdOutlineDarkMode className="w-8 h-8" />
+						) : (
+							<MdOutlineLightMode className="w-8 h-8" />
+						)}
 					</button>
 				</div>
 			</header>

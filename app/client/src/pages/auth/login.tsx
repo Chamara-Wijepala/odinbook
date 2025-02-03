@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router';
+import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import useTheme from '../../hooks/useTheme';
 import useAuthStore from '../../stores/auth';
 import api from '../../api';
 import { AxiosError } from 'axios'; // importing as type doesn't allow using it as a value
@@ -15,6 +17,7 @@ export default function Login() {
 	});
 	const setToken = useAuthStore((state) => state.setToken);
 	const navigate = useNavigate();
+	const { theme, toggleTheme } = useTheme();
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
@@ -46,15 +49,18 @@ export default function Login() {
 	}
 
 	return (
-		<div className="min-h-[100svh] px-4 flex justify-center items-center bg-gradient-to-br from-sky-400 to-pink-400">
-			<div className="bg-white shadow-md rounded-lg max-w-md p-8 md:p-12 flex-grow">
+		<div className="min-h-[100svh] p-4 flex flex-col gap-4 justify-center items-center relative bg-gradient-to-br from-sky-400 to-pink-400 dark:from-sky-800 dark:to-pink-800">
+			<div className="bg-white dark:bg-slate-800 shadow-md rounded-lg max-w-md p-8 md:p-12 flex-grow-0">
 				<h2 className="text-xl md:text-3xl font-bold">Log In</h2>
 				<form
 					onSubmit={handleSubmit}
 					className="flex flex-col gap-4 md:gap-6 my-4 md:my-6"
 				>
 					<div className="flex flex-col">
-						<label htmlFor="username" className="text-slate-500">
+						<label
+							htmlFor="username"
+							className="text-slate-500 dark:text-slate-300"
+						>
 							Username:
 						</label>
 						<input
@@ -64,7 +70,7 @@ export default function Login() {
 							value={formData.username}
 							required
 							onChange={handleChange}
-							className="py-4 px-6 border-[1px] border-slate-200 rounded-lg"
+							className="py-4 px-6 border-[1px] border-slate-200 rounded-lg bg-transparent"
 						/>
 						{errors.username !== '' && (
 							<ul className="list-disc pl-4 mt-1 text-sm text-rose-500">
@@ -74,7 +80,10 @@ export default function Login() {
 					</div>
 
 					<div className="flex flex-col">
-						<label htmlFor="password" className="text-slate-500">
+						<label
+							htmlFor="password"
+							className="text-slate-500 dark:text-slate-300"
+						>
 							Password:
 						</label>
 						<input
@@ -84,7 +93,7 @@ export default function Login() {
 							value={formData.password}
 							required
 							onChange={handleChange}
-							className="py-4 px-6 border-[1px] border-slate-200 rounded-lg"
+							className="py-4 px-6 border-[1px] border-slate-200 rounded-lg bg-transparent"
 						/>
 						{errors.password !== '' && (
 							<ul className="list-disc pl-4 mt-1 text-sm text-rose-500">
@@ -111,6 +120,17 @@ export default function Login() {
 					</Link>
 				</p>
 			</div>
+
+			<button
+				onClick={toggleTheme}
+				className="bg-white dark:bg-slate-800 p-4 rounded-full md:absolute md:left-4 bottom-4 left-1/2"
+			>
+				{theme === 'light' ? (
+					<MdOutlineDarkMode className="w-8 h-8" />
+				) : (
+					<MdOutlineLightMode className="w-8 h-8" />
+				)}
+			</button>
 		</div>
 	);
 }
