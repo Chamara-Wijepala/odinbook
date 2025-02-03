@@ -45,7 +45,7 @@ api.interceptors.response.use(
 
 		if (data.toast) {
 			coloredNotification(data.toast);
-			navigation.navigate && navigation.navigate('/auth/login');
+			navigation.navigate && navigation.navigate('/login');
 			return;
 		}
 
@@ -68,7 +68,7 @@ api.interceptors.response.use(
 					const { toast } = error.response?.data;
 
 					coloredNotification(toast);
-					navigation.navigate && navigation.navigate('/auth/login');
+					navigation.navigate && navigation.navigate('/login');
 					return;
 				}
 

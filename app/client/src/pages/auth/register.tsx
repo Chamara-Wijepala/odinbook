@@ -180,7 +180,7 @@ export default function Register() {
 				<p className="text-center">
 					Already have an account?{' '}
 					<Link
-						to="/auth/login"
+						to="/login"
 						className="text-sky-600 hover:text-sky-400 transition-colors duration-250"
 					>
 						Login

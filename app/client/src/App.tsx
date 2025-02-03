@@ -16,12 +16,9 @@ function App() {
 	return (
 		<div className="min-h-[100svh]">
 			<Routes>
+				<Route path="register" element={<Register />} />
+				<Route path="login" element={<Login />} />
 				<Route index element={<Home />} />
-
-				<Route path="auth">
-					<Route path="register" element={<Register />} />
-					<Route path="login" element={<Login />} />
-				</Route>
 			</Routes>
 			<ToastContainer />
 		</div>
