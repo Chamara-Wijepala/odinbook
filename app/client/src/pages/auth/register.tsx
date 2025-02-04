@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import useAuthStore from '../../stores/auth';
 import useTheme from '../../hooks/useTheme';
 import { validateCreateUser } from '@odinbook/utils';
 import api from '../../api';
@@ -17,6 +18,8 @@ export default function Register() {
 	});
 	const [errors, setErrors] = useState<CreateUserErrors | null>(null);
 	const { theme, toggleTheme } = useTheme();
+	const navigate = useNavigate();
+	const setToken = useAuthStore((state) => state.setToken);
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
@@ -39,12 +42,22 @@ export default function Register() {
 		setErrors(null);
 
 		try {
-			const response = await api.post('/auth/register', formData, {
+			await api.post('/auth/register', formData, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
 			});
-			console.log(response);
+			const response = await api.post(
+				'/auth/login',
+				{
+					username: formData.username,
+					password: formData.password,
+				},
+				{ headers: { 'Content-Type': 'application/json' } }
+			);
+
+			setToken(response.data.accessToken);
+			navigate('/');
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setErrors(error.response?.data.errors);
