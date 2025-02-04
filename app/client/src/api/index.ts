@@ -24,7 +24,23 @@ api.interceptors.request.use(async (config) => {
 
 	const token = useAuthStore.getState().token;
 
-	if (!token) return config;
+	// since access tokens are stored in memory and removed when the tab is
+	// refreshed, there might still be a valid refresh token stored in cookies
+	if (!token) {
+		try {
+			const response = await axios.get(`${baseURL}/auth/refresh`, {
+				withCredentials: true,
+			});
+			const { newToken } = response.data;
+			const setToken = useAuthStore.getState().setToken;
+
+			setToken(newToken);
+			config.headers['authorization'] = `Bearer ${newToken}`;
+			return config;
+		} catch (error) {
+			return config;
+		}
+	}
 
 	// attach access token to each request
 	config.headers['authorization'] = `Bearer ${token}`;
