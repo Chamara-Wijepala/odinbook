@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import useAuthStore from '../../stores/auth';
+import CreatePost from '../../components/create-post';
 import api from '../../api';
 
 type User = {
@@ -24,6 +25,11 @@ export default function Home() {
 	}, []);
 
 	return (
-		<>{user ? <h2>Welcome! {user.username}</h2> : <div>Loading...</div>}</>
+		<>
+			<div className="p-4 border-b-[1px] border-slate-300 dark:border-slate-800">
+				<CreatePost />
+			</div>
+			{user ? <h2>Welcome! {user.username}</h2> : <div>Loading...</div>}
+		</>
 	);
 }

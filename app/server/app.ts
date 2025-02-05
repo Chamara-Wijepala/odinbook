@@ -26,6 +26,7 @@ app.use('/auth', routes.auth);
 app.use(verifyJWT);
 
 app.use('/', routes.home);
+app.use('/posts', routes.posts);
 
 app.use(errorHandler);
 
