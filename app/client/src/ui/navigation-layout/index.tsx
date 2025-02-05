@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router';
 import { IoMenu, IoCloseOutline, IoLogOutOutline } from 'react-icons/io5';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import useNewPostStore from '../../stores/new-post';
 import CreatePost from '../../components/create-post';
 import Modal from '../../components/modal';
 import useLogout from '../../hooks/useLogout';
@@ -15,6 +16,7 @@ export default function NavigationLayout() {
 		null
 	);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const newPostCreated = useNewPostStore((state) => state.newPostCreated);
 
 	function toggleSidebar() {
 		setIsOpen(!isOpen);
@@ -27,6 +29,11 @@ export default function NavigationLayout() {
 			? modalRef.current.close()
 			: modalRef.current.showModal();
 	}
+
+	// close modal when new post is created
+	useEffect(() => {
+		if (newPostCreated) toggleModal();
+	}, [newPostCreated]);
 
 	return (
 		<div className="grid lg:grid-cols-[300px_1fr_300px] min-h-[100svh] max-w-7xl mx-auto relative pt-12 lg:pt-0">

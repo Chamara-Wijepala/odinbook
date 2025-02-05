@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import useNewPostStore from '../stores/new-post';
 import api from '../api';
 import { AxiosError } from 'axios';
 
@@ -6,6 +7,7 @@ export default function CreatePost() {
 	const [content, setContent] = useState('');
 	const [error, setError] = useState('');
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+	const setNewPost = useNewPostStore((state) => state.setNewPost);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -24,6 +26,7 @@ export default function CreatePost() {
 		try {
 			await api.post('/posts', { content });
 			setContent('');
+			setNewPost();
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setError(error.response?.data.error);
