@@ -15,7 +15,7 @@ export default function NavigationLayout() {
 	}
 
 	return (
-		<div className="flex min-h-[100svh] max-w-5xl mx-auto relative pt-12 lg:pt-0">
+		<div className="grid lg:grid-cols-[300px_1fr_300px] min-h-[100svh] max-w-7xl mx-auto relative pt-12 lg:pt-0">
 			<button
 				onClick={toggleSidebar}
 				className="absolute top-2 left-2 z-50 lg:hidden"
@@ -103,7 +103,12 @@ export default function NavigationLayout() {
 				}`}
 			></div>
 
-			<Outlet />
+			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 w-full">
+				<Outlet />
+			</div>
+
+			{/* used as the third column, which centers the main part of the page */}
+			<div></div>
 		</div>
 	);
 }
