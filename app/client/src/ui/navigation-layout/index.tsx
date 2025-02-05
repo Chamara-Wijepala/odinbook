@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Outlet, NavLink } from 'react-router';
 import { IoMenu, IoCloseOutline, IoLogOutOutline } from 'react-icons/io5';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import CreatePost from '../../components/create-post';
+import Modal from '../../components/modal';
 import useLogout from '../../hooks/useLogout';
 import useTheme from '../../hooks/useTheme';
 
@@ -9,13 +11,29 @@ export default function NavigationLayout() {
 	const [isOpen, setIsOpen] = useState(false);
 	const logout = useLogout();
 	const { theme, toggleTheme } = useTheme();
+	const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+		null
+	);
+	const modalRef = useRef<HTMLDialogElement | null>(null);
 
 	function toggleSidebar() {
 		setIsOpen(!isOpen);
 	}
 
+	function toggleModal() {
+		if (!modalRef.current) return;
+
+		modalRef.current.hasAttribute('open')
+			? modalRef.current.close()
+			: modalRef.current.showModal();
+	}
+
 	return (
 		<div className="grid lg:grid-cols-[300px_1fr_300px] min-h-[100svh] max-w-7xl mx-auto relative pt-12 lg:pt-0">
+			<Modal toggleModal={toggleModal} ref={modalRef}>
+				{modalContent}
+			</Modal>
+
 			<button
 				onClick={toggleSidebar}
 				className="absolute top-2 left-2 z-50 lg:hidden"
@@ -79,6 +97,20 @@ export default function NavigationLayout() {
 						Profile
 					</NavLink>
 				</nav>
+
+				<button
+					onClick={() => {
+						toggleModal();
+						setModalContent(
+							<div className="w-[600px] max-w-full h-fit">
+								<CreatePost />
+							</div>
+						);
+					}}
+					className="p-3 lg:p-4 mt-4 lg:mt-6 rounded-full bg-sky-400 hover:bg-sky-300 w-full"
+				>
+					Post
+				</button>
 
 				<div className="mt-auto flex gap-4">
 					<button onClick={logout}>

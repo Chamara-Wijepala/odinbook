@@ -52,7 +52,7 @@ export default function CreatePost() {
 					onChange={(e) => {
 						setContent(e.target.value);
 					}}
-					className="w-full resize-none bg-transparent p-4 text-lg"
+					className="w-full overflow-scroll max-h-[50svh] lg:max-h-full resize-none bg-transparent p-4 text-lg"
 				></textarea>
 
 				<div className="flex items-center justify-between">
