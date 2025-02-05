@@ -98,7 +98,7 @@ export default function NavigationLayout() {
 
 			{/* darkens background when sidebar is open */}
 			<div
-				className={`fixed inset-0 lg:hidden bg-black transition-opacity duration-300 ${
+				className={`fixed inset-0 lg:hidden pointer-events-none bg-black transition-opacity duration-300 ${
 					isOpen ? 'opacity-25' : 'opacity-0'
 				}`}
 			></div>
