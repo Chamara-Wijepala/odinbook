@@ -142,12 +142,12 @@ export default function NavigationLayout() {
 				}`}
 			></div>
 
-			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 w-full">
+			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 w-full">
 				<Outlet />
 			</div>
 
 			{/* used as the third column, which centers the main part of the page */}
-			<div></div>
+			<div className="hidden lg:block"></div>
 		</div>
 	);
 }

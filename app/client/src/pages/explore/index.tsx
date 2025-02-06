@@ -1,3 +1,57 @@
+import { useState, useEffect } from 'react';
+import Post, { PostSkeleton } from '../../components/post';
+import api from '../../api';
+import type { PostType } from '../../types';
+
 export default function Explore() {
-	return <div>Explore</div>;
+	const [posts, setPosts] = useState<PostType[] | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	useEffect(() => {
+		(async () => {
+			try {
+				const response = await api.get('/posts/explore');
+				setPosts(response.data);
+				setIsLoading(false);
+			} catch (error) {
+				console.log(error);
+			}
+		})();
+	}, []);
+
+	if (isLoading) {
+		return (
+			<div className="p-4 flex flex-col gap-4">
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
+			</div>
+		);
+	}
+
+	if (posts && posts.length < 1) {
+		return (
+			<div className="text-center p-4 pt-8">
+				<p className="text-lg text-slate-500">
+					Looks like there's nothing here. Be the first to create a post!
+				</p>
+			</div>
+		);
+	}
+
+	return (
+		<div className="p-4 flex flex-col gap-4">
+			{posts?.map((post) => (
+				<Post
+					key={post.id}
+					firstName={post.author.firstName}
+					lastName={post.author.lastName}
+					username={post.author.username}
+					content={post.content}
+				/>
+			))}
+		</div>
+	);
 }

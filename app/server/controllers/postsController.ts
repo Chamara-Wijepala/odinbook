@@ -37,6 +37,25 @@ async function createPost(req: Request, res: Response) {
 	res.sendStatus(200);
 }
 
+async function getExplorePage(req: Request, res: Response) {
+	const posts = await prisma.post.findMany({
+		select: {
+			id: true,
+			content: true,
+			author: {
+				select: {
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
+	});
+
+	res.status(200).json(posts);
+}
+
 export default {
 	createPost,
+	getExplorePage,
 };
