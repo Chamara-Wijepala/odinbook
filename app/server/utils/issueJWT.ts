@@ -11,7 +11,7 @@ const PRIV_KEY = {
 };
 
 export function issueAccessToken(username: string) {
-	const expiresIn = process.env.NODE_ENV === 'production' ? '10m' : '30s';
+	const expiresIn = '15m';
 	const payload = {
 		username,
 	};
@@ -26,7 +26,8 @@ export function issueAccessToken(username: string) {
 export function issueRefreshToken(username: string) {
 	// when passing in a numeric value, the jsonwebtoken library interprets it as
 	// seconds, not milliseconds
-	const expiresIn = process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60;
+	const expiresIn =
+		process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60 * 60;
 	const payload = {
 		username,
 	};
