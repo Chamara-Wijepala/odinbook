@@ -13,6 +13,7 @@ model User {
   lastName      String
   username      String         @unique
   password      String
+  createdAt     DateTime       @default(now())
   refreshTokens RefreshToken[]
   posts         Post[]
 }
@@ -26,8 +27,10 @@ model RefreshToken {
 }
 
 model Post {
-  id       String @id @default(uuid())
-  content  String
-  author   User   @relation(fields: [authorId], references: [id])
-  authorId String
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
 }

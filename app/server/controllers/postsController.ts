@@ -65,6 +65,9 @@ async function getExplorePage(req: Request, res: Response) {
 				},
 			},
 		},
+		orderBy: {
+			createdAt: 'desc',
+		},
 	});
 
 	res.status(200).json(posts);

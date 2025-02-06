@@ -42,16 +42,21 @@ export default function Explore() {
 	}
 
 	return (
-		<div className="p-4 flex flex-col gap-4">
-			{posts?.map((post) => (
-				<Post
-					key={post.id}
-					firstName={post.author.firstName}
-					lastName={post.author.lastName}
-					username={post.author.username}
-					content={post.content}
-				/>
-			))}
+		<div className="p-4">
+			<h2 className="text-slate-700 dark:text-slate-300 text-lg font-semibold my-4">
+				See what people are saying
+			</h2>
+			<div className="flex flex-col gap-4">
+				{posts?.map((post) => (
+					<Post
+						key={post.id}
+						firstName={post.author.firstName}
+						lastName={post.author.lastName}
+						username={post.author.username}
+						content={post.content}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }
