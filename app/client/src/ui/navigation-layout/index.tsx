@@ -116,7 +116,7 @@ export default function NavigationLayout() {
 							</div>
 						);
 					}}
-					className="p-3 lg:p-4 mt-4 lg:mt-6 rounded-full bg-sky-400 hover:bg-sky-300 w-full"
+					className="p-3 lg:p-4 mt-4 lg:mt-6 rounded-full text-lg font-medium bg-sky-400 hover:bg-sky-300 w-full"
 				>
 					Post
 				</button>
