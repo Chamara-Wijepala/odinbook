@@ -142,7 +142,7 @@ export default function NavigationLayout() {
 				}`}
 			></div>
 
-			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 w-full">
+			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 max-h-[100svh] overflow-y-auto w-full">
 				<Outlet />
 			</div>
 
