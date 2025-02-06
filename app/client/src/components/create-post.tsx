@@ -24,9 +24,9 @@ export default function CreatePost() {
 		setError('');
 
 		try {
-			await api.post('/posts', { content });
+			const response = await api.post('/posts', { content });
 			setContent('');
-			setNewPost();
+			setNewPost(response.data.newPost);
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setError(error.response?.data.error);

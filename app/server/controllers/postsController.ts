@@ -19,6 +19,8 @@ async function createPost(req: Request, res: Response) {
 		},
 		select: {
 			id: true,
+			firstName: true,
+			lastName: true,
 		},
 	});
 
@@ -27,14 +29,27 @@ async function createPost(req: Request, res: Response) {
 	// is better handled in the verifyJWT middleware than here if needed.
 	if (!user) return;
 
-	await prisma.post.create({
+	const post = await prisma.post.create({
 		data: {
 			content: req.body.content,
 			authorId: user.id,
 		},
+		select: {
+			id: true,
+		},
 	});
 
-	res.sendStatus(200);
+	res.status(200).json({
+		newPost: {
+			id: post.id,
+			content: req.body.content,
+			author: {
+				firstName: user.firstName,
+				lastName: user.lastName,
+				username: req.user.username,
+			},
+		},
+	});
 }
 
 async function getExplorePage(req: Request, res: Response) {
