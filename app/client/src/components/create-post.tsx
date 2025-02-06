@@ -6,6 +6,7 @@ import { AxiosError } from 'axios';
 export default function CreatePost() {
 	const [content, setContent] = useState('');
 	const [error, setError] = useState('');
+	const [isPosting, setIsPosting] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const setNewPost = useNewPostStore((state) => state.setNewPost);
 
@@ -24,8 +25,10 @@ export default function CreatePost() {
 		setError('');
 
 		try {
+			setIsPosting(true);
 			const response = await api.post('/posts', { content });
 			setContent('');
+			setIsPosting(false);
 			setNewPost(response.data.newPost);
 		} catch (error) {
 			if (error instanceof AxiosError) {
@@ -68,7 +71,7 @@ export default function CreatePost() {
 				<div className="flex mt-4">
 					<button
 						type="submit"
-						disabled={content === ''}
+						disabled={content === '' || isPosting}
 						className="ml-auto bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-not-allowed py-2 px-4 rounded-full transition-colors"
 					>
 						Post
