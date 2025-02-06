@@ -38,14 +38,14 @@ export default function NavigationLayout() {
 	}, [newPostCreated]);
 
 	return (
-		<div className="grid lg:grid-cols-[300px_1fr_300px] min-h-[100svh] max-w-7xl mx-auto relative pt-12 lg:pt-0">
+		<div className="grid lg:grid-cols-[300px_1fr_300px] min-h-[100svh] max-w-7xl mx-auto relative">
 			<Modal toggleModal={toggleModal} ref={modalRef}>
 				{modalContent}
 			</Modal>
 
 			<button
 				onClick={toggleSidebar}
-				className="absolute top-2 left-2 z-50 lg:hidden"
+				className="sticky top-2 pl-2 z-50 lg:hidden"
 			>
 				{isOpen ? (
 					<>
@@ -61,7 +61,7 @@ export default function NavigationLayout() {
 			</button>
 
 			<header
-				className={`fixed top-0 bottom-0 z-40 flex flex-col w-[300px] lg:relative bg-white dark:bg-slate-950 p-4 pt-16 lg:p-8 transition-all ${
+				className={`fixed lg:sticky top-0 bottom-0 z-40 flex flex-col max-h-[100vh] w-[300px] bg-white dark:bg-slate-950 p-4 pt-16 lg:p-8 transition-all ${
 					isOpen ? '' : '-translate-x-full lg:-translate-x-0'
 				}`}
 			>
@@ -144,7 +144,7 @@ export default function NavigationLayout() {
 				}`}
 			></div>
 
-			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 max-h-[100svh] overflow-y-auto w-full">
+			<div className="lg:border-x-[1px] border-slate-300 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 w-full">
 				<Outlet />
 			</div>
 
