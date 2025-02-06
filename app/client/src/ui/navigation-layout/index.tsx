@@ -32,7 +32,9 @@ export default function NavigationLayout() {
 
 	// close modal when new post is created
 	useEffect(() => {
-		if (newPostCreated) toggleModal();
+		if (newPostCreated && modalRef.current?.hasAttribute('open')) {
+			modalRef.current.close();
+		}
 	}, [newPostCreated]);
 
 	return (
