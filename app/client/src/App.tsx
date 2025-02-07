@@ -6,6 +6,7 @@ import Explore from './pages/explore';
 import Profile from './pages/profile';
 import Register from './pages/auth/register';
 import Login from './pages/auth/login';
+import PostPage from './pages/post';
 import NavigationLayout from './ui/navigation-layout';
 import navigationService from './services/navigation';
 
@@ -26,6 +27,12 @@ function App() {
 					<Route index element={<Home />} />
 					<Route path="explore" element={<Explore />} />
 					<Route path="profile" element={<Profile />} />
+
+					{/*
+					These pages will be rendered with the navigation layout but won't have
+					a navlink associated with them
+					*/}
+					<Route path="post/:id" element={<PostPage />} />
 				</Route>
 			</Routes>
 			<ToastContainer />

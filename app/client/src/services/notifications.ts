@@ -1,16 +1,21 @@
 import { toast } from 'react-toastify';
 
-export default function coloredNotification(error: {
+export default function coloredNotification(notification: {
 	type: string;
 	message: string;
 }) {
-	if (error.type === 'warn') {
-		toast.warn(error.message, {
+	if (notification.type === 'warn') {
+		toast.warn(notification.message, {
 			theme: 'colored',
 		});
 	}
-	if (error.type === 'error') {
-		toast.error(error.message, {
+	if (notification.type === 'error') {
+		toast.error(notification.message, {
+			theme: 'colored',
+		});
+	}
+	if (notification.type === 'success') {
+		toast.success(notification.message, {
 			theme: 'colored',
 		});
 	}

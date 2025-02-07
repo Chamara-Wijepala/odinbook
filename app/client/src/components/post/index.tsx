@@ -2,6 +2,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from './dialog';
 
 type Props = {
+	id: string;
 	firstName: string;
 	lastName: string;
 	username: string;
@@ -9,6 +10,7 @@ type Props = {
 };
 
 export default function Post({
+	id,
 	firstName,
 	lastName,
 	username,
@@ -29,7 +31,7 @@ export default function Post({
 					<p className="text-slate-500">@{username}</p>
 				</div>
 
-				<Dialog />
+				<Dialog postId={id} postContent={content} />
 			</div>
 
 			<div className="mt-4">

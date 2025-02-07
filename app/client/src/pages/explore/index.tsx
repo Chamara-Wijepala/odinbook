@@ -47,6 +47,7 @@ export default function Explore() {
 				{posts?.map((post) => (
 					<Post
 						key={post.id}
+						id={post.id}
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}

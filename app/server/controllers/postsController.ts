@@ -73,7 +73,66 @@ async function getExplorePage(req: Request, res: Response) {
 	res.status(200).json(posts);
 }
 
+async function updatePost(req: Request, res: Response) {
+	const { postId, content } = req.body;
+
+	if (!postId || !content) {
+		res.send(400).json({
+			toast: { type: 'error', message: 'The post id or content is missing.' },
+		});
+		return;
+	}
+	if (content.length > 500) {
+		res.status(400).json({ error: 'Post exceeds maximum character limit.' });
+		return;
+	}
+
+	// get post along with author's username
+	const post = await prisma.post.findUnique({
+		where: {
+			id: postId,
+		},
+		select: {
+			author: {
+				select: {
+					username: true,
+				},
+			},
+		},
+	});
+
+	if (!post) {
+		res.status(404).json({
+			toast: { type: 'error', message: "Couldn't find the post to update." },
+		});
+		return;
+	}
+	if (post.author.username !== req.user.username) {
+		res.status(403).json({
+			toast: {
+				type: 'error',
+				message: 'You do not have permission to edit this post.',
+			},
+		});
+		return;
+	}
+
+	await prisma.post.update({
+		where: {
+			id: postId,
+		},
+		data: {
+			content,
+		},
+	});
+
+	res
+		.status(200)
+		.json({ toast: { type: 'success', message: 'Post updated!' } });
+}
+
 export default {
 	createPost,
 	getExplorePage,
+	updatePost,
 };

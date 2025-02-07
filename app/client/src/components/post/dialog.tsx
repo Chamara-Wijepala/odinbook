@@ -1,11 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FaRegEdit } from 'react-icons/fa';
+import UpdatePost from '../update-post';
+import Modal from '../modal';
 
-export default function Dialog() {
+export default function Dialog({
+	postId,
+	postContent,
+}: {
+	postId: string;
+	postContent: string;
+}) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [modalContent, setModalContent] = useState<React.ReactNode | null>(
+		null
+	);
 	const dialogRef = useRef<HTMLDialogElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
+	const modalRef = useRef<HTMLDialogElement | null>(null);
 
 	function toggleDialog() {
 		if (!dialogRef.current) return;
@@ -40,6 +52,14 @@ export default function Dialog() {
 		}
 	}
 
+	function toggleModal() {
+		if (!modalRef.current) return;
+
+		modalRef.current.hasAttribute('open')
+			? modalRef.current.close()
+			: modalRef.current.showModal();
+	}
+
 	useEffect(() => {
 		if (isOpen) {
 			window.addEventListener('mousedown', closeDialog);
@@ -72,13 +92,31 @@ export default function Dialog() {
 			>
 				<ul className="font-semibold">
 					<li>
-						<button className="py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+						<button
+							onClick={() => {
+								toggleModal();
+								setModalContent(
+									<div className="w-[600px] max-w-full h-fit">
+										<UpdatePost
+											postId={postId}
+											postContent={postContent}
+											toggleModal={toggleModal}
+										/>
+									</div>
+								);
+							}}
+							className="py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+						>
 							<FaRegEdit />
 							<span>Update</span>
 						</button>
 					</li>
 				</ul>
 			</dialog>
+
+			<Modal toggleModal={toggleModal} ref={modalRef}>
+				{modalContent}
+			</Modal>
 		</div>
 	);
 }
