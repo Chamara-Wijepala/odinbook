@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from './dialog';
 
@@ -17,27 +18,36 @@ export default function Post({
 	content,
 }: Props) {
 	return (
-		<div className="bg-white dark:bg-slate-900 shadow-md p-4 rounded-lg">
-			<div className="grid grid-cols-[40px_1fr_auto] sm:grid-cols-[50px_1fr_auto] gap-2">
-				<div className="bg-sky-500 rounded-full flex items-center justify-center aspect-square">
-					<span>{firstName[0]}</span>
-				</div>
+		<Link to={`/post/${id}`} draggable="false">
+			<div className="bg-white hover:bg-slate-50 dark:bg-slate-900 hover:dark:bg-slate-800 transition-colors shadow-md p-4 rounded-lg">
+				<div className="flex gap-2">
+					<div
+						onClick={(e) => e.preventDefault()} // stop event bubbling
+						className="flex gap-2"
+					>
+						<div>
+							<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
+								<span>{firstName[0]}</span>
+							</div>
+						</div>
 
-				<div className="text-sm sm:text-base flex flex-col justify-between">
-					<div className="flex gap-1 flex-wrap font-semibold">
-						<p>{firstName}</p>
-						<p>{lastName}</p>
+						<div className="text-sm sm:text-base flex flex-col justify-between">
+							<div className="flex gap-1 flex-wrap font-semibold">
+								<p>{firstName}</p>
+								<p>{lastName}</p>
+							</div>
+							<p className="text-slate-500">@{username}</p>
+						</div>
 					</div>
-					<p className="text-slate-500">@{username}</p>
+
+					<Dialog postId={id} postContent={content} />
 				</div>
 
-				<Dialog postId={id} postContent={content} />
+				<div className="mt-4">
+					<p>{content}</p>
+				</div>
 			</div>
-
-			<div className="mt-4">
-				<p>{content}</p>
-			</div>
-		</div>
+		</Link>
 	);
 }
 

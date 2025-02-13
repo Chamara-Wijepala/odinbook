@@ -75,11 +75,14 @@ export default function Dialog({
 	}, [isOpen]);
 
 	return (
-		<div className="relative">
+		<div className="ml-auto relative">
 			<button
 				ref={buttonRef}
-				onClick={toggleDialog}
-				className="w-6 h-6 flex items-center justify-center"
+				onClick={(e) => {
+					e.preventDefault(); // stop event bubbling
+					toggleDialog();
+				}}
+				className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
 			>
 				<BsThreeDotsVertical />
 			</button>
