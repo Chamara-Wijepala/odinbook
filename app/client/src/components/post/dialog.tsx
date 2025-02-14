@@ -1,8 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FaRegEdit } from 'react-icons/fa';
+import { TiDeleteOutline } from 'react-icons/ti';
 import UpdatePost from '../update-post';
 import Modal from '../modal';
+import coloredNotification from '../../services/notifications';
+import api from '../../api';
+import { AxiosError } from 'axios';
 
 export default function Dialog({
 	postId,
@@ -18,6 +23,7 @@ export default function Dialog({
 	const dialogRef = useRef<HTMLDialogElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
+	const navigate = useNavigate();
 
 	function toggleDialog() {
 		if (!dialogRef.current) return;
@@ -60,6 +66,21 @@ export default function Dialog({
 			: modalRef.current.showModal();
 	}
 
+	async function handleDelete() {
+		try {
+			await api.delete(`/posts/${postId}`);
+			toggleModal();
+			coloredNotification({ type: 'success', message: 'Post deleted.' });
+			navigate('/');
+		} catch (error) {
+			if (error instanceof AxiosError) {
+				const { toast } = error.response?.data;
+				coloredNotification(toast);
+				toggleModal();
+			}
+		}
+	}
+
 	useEffect(() => {
 		if (isOpen) {
 			window.addEventListener('mousedown', closeDialog);
@@ -75,13 +96,13 @@ export default function Dialog({
 	}, [isOpen]);
 
 	return (
-		<div className="ml-auto relative">
+		<div
+			onClick={(e) => e.preventDefault()} // prevent event bubbling
+			className="ml-auto relative"
+		>
 			<button
 				ref={buttonRef}
-				onClick={(e) => {
-					e.preventDefault(); // stop event bubbling
-					toggleDialog();
-				}}
+				onClick={toggleDialog}
 				className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
 			>
 				<BsThreeDotsVertical />
@@ -97,7 +118,6 @@ export default function Dialog({
 					<li>
 						<button
 							onClick={() => {
-								toggleModal();
 								setModalContent(
 									<div className="w-[600px] max-w-full h-fit">
 										<UpdatePost
@@ -107,11 +127,46 @@ export default function Dialog({
 										/>
 									</div>
 								);
+								toggleModal();
 							}}
-							className="py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+							className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
 						>
 							<FaRegEdit />
 							<span>Update</span>
+						</button>
+					</li>
+
+					<li>
+						<button
+							onClick={() => {
+								setModalContent(
+									<div>
+										<h2 className="text-xl my-4">
+											Are you sure you want to delete this post?
+										</h2>
+										<div className="flex gap-2 justify-end">
+											<button
+												onClick={toggleModal}
+												className="bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-not-allowed py-2 px-4 rounded-full transition-colors"
+											>
+												Cancel
+											</button>
+
+											<button
+												onClick={handleDelete}
+												className="bg-rose-500 hover:bg-rose-400 py-2 px-4 rounded-full transition-colors"
+											>
+												Delete
+											</button>
+										</div>
+									</div>
+								);
+								toggleModal();
+							}}
+							className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
+						>
+							<TiDeleteOutline />
+							<span>Delete</span>
 						</button>
 					</li>
 				</ul>

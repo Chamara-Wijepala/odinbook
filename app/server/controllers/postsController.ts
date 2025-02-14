@@ -131,8 +131,55 @@ async function updatePost(req: Request, res: Response) {
 		.json({ toast: { type: 'success', message: 'Post updated!' } });
 }
 
+async function deletePost(req: Request, res: Response) {
+	const postId = req.params.id;
+
+	const post = await prisma.post.findUnique({
+		where: {
+			id: postId,
+		},
+		select: {
+			author: {
+				select: {
+					username: true,
+				},
+			},
+		},
+	});
+
+	if (!post) {
+		res.status(404).json({
+			toast: {
+				type: 'error',
+				message:
+					"Couldn't find post to delete. It might have already been deleted.",
+			},
+		});
+		return;
+	}
+
+	if (post.author.username !== req.user.username) {
+		res.status(403).json({
+			toast: {
+				type: 'error',
+				message: 'You do not have permission to delete this post.',
+			},
+		});
+		return;
+	}
+
+	await prisma.post.delete({
+		where: {
+			id: postId,
+		},
+	});
+
+	res.sendStatus(204);
+}
+
 export default {
 	createPost,
 	getExplorePage,
 	updatePost,
+	deletePost,
 };
