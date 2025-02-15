@@ -61,6 +61,16 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 		where: {
 			username: req.body.username,
 		},
+		select: {
+			id: true,
+			username: true,
+			password: true,
+			following: {
+				select: {
+					id: true,
+				},
+			},
+		},
 	});
 
 	if (!user) {
@@ -98,7 +108,14 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 			secure: true,
 			path: '/auth',
 		});
-		return res.status(200).json({ accessToken });
+		return res.status(200).json({
+			accessToken,
+			user: {
+				id: user.id,
+				username: user.username,
+				following: user.following.map((user) => user.id),
+			},
+		});
 	});
 }
 
@@ -119,7 +136,9 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 				revoked: true,
 				User: {
 					select: {
+						id: true,
 						username: true,
+						following: true,
 					},
 				},
 			},
@@ -158,7 +177,14 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 
 		const accessToken = issueAccessToken(foundToken.User.username);
 
-		res.status(200).json({ newToken: accessToken });
+		res.status(200).json({
+			newToken: accessToken,
+			user: {
+				id: foundToken.User.id,
+				username: foundToken.User.username,
+				following: foundToken.User.following.map((user) => user.id),
+			},
+		});
 	});
 }
 

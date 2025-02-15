@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FaRegEdit } from 'react-icons/fa';
 import { TiDeleteOutline } from 'react-icons/ti';
+import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
+import useAuthStore from '../../stores/auth';
 import UpdatePost from '../update-post';
 import Modal from '../modal';
 import coloredNotification from '../../services/notifications';
@@ -10,9 +12,11 @@ import api from '../../api';
 import { AxiosError } from 'axios';
 
 export default function Dialog({
+	authorId,
 	postId,
 	postContent,
 }: {
+	authorId: string;
 	postId: string;
 	postContent: string;
 }) {
@@ -24,6 +28,13 @@ export default function Dialog({
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const navigate = useNavigate();
+	const user = useAuthStore((state) => state.user);
+	const updateUserFollowing = useAuthStore(
+		(state) => state.updateUserFollowing
+	);
+	const deleteUserFollowing = useAuthStore(
+		(state) => state.deleteUserFollowing
+	);
 
 	function toggleDialog() {
 		if (!dialogRef.current) return;
@@ -78,6 +89,26 @@ export default function Dialog({
 				coloredNotification(toast);
 				toggleModal();
 			}
+		}
+	}
+
+	async function followUser() {
+		try {
+			await api.patch(`/users/${authorId}/follow`);
+
+			updateUserFollowing(authorId);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	async function unfollowUser() {
+		try {
+			await api.patch(`/users/${authorId}/unfollow`);
+
+			deleteUserFollowing(authorId);
+		} catch (error) {
+			console.log(error);
 		}
 	}
 
@@ -168,6 +199,26 @@ export default function Dialog({
 							<TiDeleteOutline />
 							<span>Delete</span>
 						</button>
+					</li>
+
+					<li>
+						{user?.following.includes(authorId) ? (
+							<button
+								onClick={unfollowUser}
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+							>
+								<AiOutlineUserDelete />
+								<span>Unfollow</span>
+							</button>
+						) : (
+							<button
+								onClick={followUser}
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+							>
+								<AiOutlineUserAdd />
+								<span>Follow</span>
+							</button>
+						)}
 					</li>
 				</ul>
 			</dialog>

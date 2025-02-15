@@ -31,10 +31,12 @@ api.interceptors.request.use(async (config) => {
 			const response = await axios.get(`${baseURL}/auth/refresh`, {
 				withCredentials: true,
 			});
-			const { newToken } = response.data;
+			const { newToken, user } = response.data;
 			const setToken = useAuthStore.getState().setToken;
+			const setUser = useAuthStore.getState().setUser;
 
 			setToken(newToken);
+			setUser(user);
 			config.headers['authorization'] = `Bearer ${newToken}`;
 			return config;
 		} catch (error) {
@@ -73,10 +75,12 @@ api.interceptors.response.use(
 				const response = await axios.get(`${baseURL}/auth/refresh`, {
 					withCredentials: true,
 				});
-				const { newToken } = response.data;
+				const { newToken, user } = response.data;
 				const setToken = useAuthStore.getState().setToken;
+				const setUser = useAuthStore.getState().setUser;
 
 				setToken(newToken);
+				setUser(user);
 				api.defaults.headers.common['authorization'] = `Bearer ${newToken}`;
 				return api(originalRequest);
 			} catch (error) {

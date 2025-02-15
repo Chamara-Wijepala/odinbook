@@ -16,6 +16,8 @@ model User {
   createdAt     DateTime       @default(now())
   refreshTokens RefreshToken[]
   posts         Post[]
+  followedBy    User[]         @relation("UserFollows")
+  following     User[]         @relation("UserFollows")
 }
 
 model RefreshToken {

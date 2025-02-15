@@ -59,6 +59,7 @@ async function getExplorePage(req: Request, res: Response) {
 			content: true,
 			author: {
 				select: {
+					id: true,
 					firstName: true,
 					lastName: true,
 					username: true,

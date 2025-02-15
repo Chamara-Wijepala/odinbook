@@ -16,6 +16,7 @@ export default function Login() {
 		password: '',
 	});
 	const setToken = useAuthStore((state) => state.setToken);
+	const setUser = useAuthStore((state) => state.setUser);
 	const navigate = useNavigate();
 	const { theme, toggleTheme } = useTheme();
 
@@ -38,8 +39,10 @@ export default function Login() {
 					'Content-Type': 'application/json',
 				},
 			});
+			const { accessToken, user } = response.data;
 
-			setToken(response.data.accessToken);
+			setToken(accessToken);
+			setUser(user);
 			navigate('/');
 		} catch (error) {
 			if (error instanceof AxiosError) {

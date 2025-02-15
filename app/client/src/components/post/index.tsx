@@ -3,7 +3,8 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from './dialog';
 
 type Props = {
-	id: string;
+	postId: string;
+	authorId: string;
 	firstName: string;
 	lastName: string;
 	username: string;
@@ -11,14 +12,15 @@ type Props = {
 };
 
 export default function Post({
-	id,
+	postId,
+	authorId,
 	firstName,
 	lastName,
 	username,
 	content,
 }: Props) {
 	return (
-		<Link to={`/post/${id}`} draggable="false">
+		<Link to={`/post/${postId}`} draggable="false">
 			<div className="bg-white hover:bg-slate-50 dark:bg-slate-900 hover:dark:bg-slate-800 transition-colors shadow-md p-4 rounded-lg">
 				<div className="flex gap-2">
 					<div
@@ -40,7 +42,7 @@ export default function Post({
 						</div>
 					</div>
 
-					<Dialog postId={id} postContent={content} />
+					<Dialog authorId={authorId} postId={postId} postContent={content} />
 				</div>
 
 				<div className="mt-4">
