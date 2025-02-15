@@ -143,7 +143,7 @@ export default function Dialog({
 				ref={dialogRef}
 				// On -translate-x-[calc(100%-20px)] the 20px is the width of the button
 				// up top. It's used to align the dialog's right side with the button.
-				className="absolute -translate-x-[calc(100%-20px)] bg-slate-100 dark:bg-slate-800 dark:text-white rounded-lg overflow-hidden shadow-lg"
+				className="absolute -translate-x-[calc(100%-20px)] z-50 bg-slate-100 dark:bg-slate-800 dark:text-white rounded-lg overflow-hidden shadow-lg"
 			>
 				<ul className="font-semibold">
 					<li>
