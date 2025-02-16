@@ -22,7 +22,8 @@ export default function Home() {
 				{posts.map((post) => (
 					<Post
 						key={post.id}
-						id={post.id}
+						postId={post.id}
+						authorId={post.author.id}
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
