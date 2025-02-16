@@ -52,28 +52,6 @@ async function createPost(req: Request, res: Response) {
 	});
 }
 
-async function getExplorePage(req: Request, res: Response) {
-	const posts = await prisma.post.findMany({
-		select: {
-			id: true,
-			content: true,
-			author: {
-				select: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					username: true,
-				},
-			},
-		},
-		orderBy: {
-			createdAt: 'desc',
-		},
-	});
-
-	res.status(200).json(posts);
-}
-
 async function updatePost(req: Request, res: Response) {
 	const { postId, content } = req.body;
 
@@ -178,9 +156,63 @@ async function deletePost(req: Request, res: Response) {
 	res.sendStatus(204);
 }
 
+async function getExplorePage(req: Request, res: Response) {
+	const posts = await prisma.post.findMany({
+		select: {
+			id: true,
+			content: true,
+			author: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	});
+
+	res.status(200).json(posts);
+}
+
+async function getHomePage(req: Request, res: Response) {
+	const posts = await prisma.post.findMany({
+		where: {
+			author: {
+				followedBy: {
+					some: {
+						username: req.user.username,
+					},
+				},
+			},
+		},
+		select: {
+			id: true,
+			content: true,
+			author: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	});
+
+	res.status(200).json(posts);
+}
+
 export default {
 	createPost,
-	getExplorePage,
 	updatePost,
 	deletePost,
+	getExplorePage,
+	getHomePage,
 };
