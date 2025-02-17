@@ -32,6 +32,8 @@ export default function Home() {
 							lastName={post.author.lastName}
 							username={post.author.username}
 							content={post.content}
+							createdAt={post.createdAt}
+							updatedAt={post.updatedAt}
 						/>
 					))}
 				</div>
@@ -67,6 +69,8 @@ export default function Home() {
 								lastName={post.author.lastName}
 								username={post.author.username}
 								content={post.content}
+								createdAt={post.createdAt}
+								updatedAt={post.updatedAt}
 							/>
 						))}
 					</div>

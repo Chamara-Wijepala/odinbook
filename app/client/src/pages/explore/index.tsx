@@ -40,6 +40,8 @@ export default function Explore() {
 						lastName={post.author.lastName}
 						username={post.author.username}
 						content={post.content}
+						createdAt={post.createdAt}
+						updatedAt={post.updatedAt}
 					/>
 				))}
 			</div>

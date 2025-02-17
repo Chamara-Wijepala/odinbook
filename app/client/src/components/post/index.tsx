@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from './dialog';
 
@@ -9,6 +10,8 @@ type Props = {
 	lastName: string;
 	username: string;
 	content: string;
+	createdAt: string;
+	updatedAt: string;
 };
 
 export default function Post({
@@ -18,6 +21,8 @@ export default function Post({
 	lastName,
 	username,
 	content,
+	createdAt,
+	updatedAt,
 }: Props) {
 	return (
 		<Link to={`/post/${postId}`} draggable="false">
@@ -33,12 +38,20 @@ export default function Post({
 							</div>
 						</div>
 
-						<div className="text-sm sm:text-base flex flex-col justify-between">
-							<div className="flex gap-1 flex-wrap font-semibold">
-								<p>{firstName}</p>
-								<p>{lastName}</p>
+						<div className="text-sm sm:text-base flex flex-wrap gap-x-1 items-center h-fit">
+							<p className="font-semibold">{firstName}</p>
+							<p className="font-semibold">{lastName}</p>
+							<p className="text-slate-500 text-xs sm:text-sm">@{username}</p>
+							<div className="text-slate-500 text-xs sm:text-sm flex gap-x-1">
+								<span>·</span>
+								<div>
+									{createdAt === updatedAt ? (
+										<p>{DateTime.fromISO(createdAt).toRelative()}</p>
+									) : (
+										<p>Updated {DateTime.fromISO(updatedAt).toRelative()}</p>
+									)}
+								</div>
 							</div>
-							<p className="text-slate-500">@{username}</p>
 						</div>
 					</div>
 

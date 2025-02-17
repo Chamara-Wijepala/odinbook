@@ -161,6 +161,8 @@ async function getExplorePage(req: Request, res: Response) {
 		select: {
 			id: true,
 			content: true,
+			createdAt: true,
+			updatedAt: true,
 			author: {
 				select: {
 					id: true,
@@ -192,6 +194,8 @@ async function getHomePage(req: Request, res: Response) {
 		select: {
 			id: true,
 			content: true,
+			createdAt: true,
+			updatedAt: true,
 			author: {
 				select: {
 					id: true,
