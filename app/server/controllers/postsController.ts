@@ -52,6 +52,40 @@ async function createPost(req: Request, res: Response) {
 	});
 }
 
+async function getPost(req: Request, res: Response) {
+	const post = await prisma.post.findUnique({
+		where: {
+			id: req.params.id,
+		},
+		select: {
+			id: true,
+			content: true,
+			createdAt: true,
+			updatedAt: true,
+			author: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
+	});
+
+	if (!post) {
+		res.status(404).json({
+			toast: {
+				type: 'error',
+				message: "We couldn't find the post you're looking for.",
+			},
+		});
+		return;
+	}
+
+	res.status(200).json(post);
+}
+
 async function updatePost(req: Request, res: Response) {
 	const { postId, content } = req.body;
 
@@ -215,6 +249,7 @@ async function getHomePage(req: Request, res: Response) {
 
 export default {
 	createPost,
+	getPost,
 	updatePost,
 	deletePost,
 	getExplorePage,
