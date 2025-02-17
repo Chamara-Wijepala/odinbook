@@ -139,9 +139,18 @@ export default function Register() {
 						/>
 						<ul className="flex flex-col gap-2 mt-1 list-disc pl-4 text-sm text-rose-500">
 							{!errors?.username && (
-								<li className="text-slate-500 dark:text-slate-300">
-									Must be at least 5 characters
-								</li>
+								<>
+									<li className="text-slate-500 dark:text-slate-300">
+										Must be at least 5 characters.
+									</li>
+									<li className="text-slate-500 dark:text-slate-300">
+										Can contain only letters, numbers, dots, hyphens and
+										underscores.
+									</li>
+									<li className="text-slate-500 dark:text-slate-300">
+										Must start and end with a letter or number.
+									</li>
+								</>
 							)}
 							{errors?.username?.map((error, index) => (
 								<li key={`username-${index}`}>{error}</li>
