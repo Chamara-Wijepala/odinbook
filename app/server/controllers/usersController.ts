@@ -1,6 +1,40 @@
 import { Request, Response } from 'express';
 import prisma from '../db/prisma';
 
+async function getUser(req: Request, res: Response) {
+	const user = await prisma.user.findUnique({
+		where: {
+			username: req.params.username,
+		},
+		select: {
+			id: true,
+			firstName: true,
+			lastName: true,
+			username: true,
+			createdAt: true,
+			_count: {
+				select: {
+					posts: true,
+					followedBy: true,
+					following: true,
+				},
+			},
+		},
+	});
+
+	if (!user) {
+		res.status(404).json({
+			toast: {
+				type: 'error',
+				message: "Couldn't find the user you're looking for.",
+			},
+		});
+		return;
+	}
+
+	res.status(200).json(user);
+}
+
 async function followUser(req: Request, res: Response) {
 	const currentUser = await prisma.user.findUnique({
 		where: {
@@ -66,6 +100,7 @@ async function unfollowUser(req: Request, res: Response) {
 }
 
 export default {
+	getUser,
 	followUser,
 	unfollowUser,
 };

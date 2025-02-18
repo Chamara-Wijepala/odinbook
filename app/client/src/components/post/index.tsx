@@ -32,16 +32,26 @@ export default function Post({
 						onClick={(e) => e.preventDefault()} // stop event bubbling
 						className="flex gap-2"
 					>
-						<div>
-							<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
-								<span>{firstName[0]}</span>
+						<Link to={`/users/${username}`}>
+							<div>
+								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
+									<span>{firstName[0]}</span>
+								</div>
 							</div>
-						</div>
+						</Link>
 
-						<div className="text-sm sm:text-base flex flex-wrap gap-x-1 items-center h-fit">
-							<p className="font-semibold">{firstName}</p>
-							<p className="font-semibold">{lastName}</p>
-							<p className="text-slate-500 text-xs sm:text-sm">@{username}</p>
+						<div className="text-sm sm:text-base flex items-center flex-wrap gap-x-1 h-fit">
+							<Link to={`/users/${username}`} className="hover:underline">
+								<p className="font-semibold">
+									{firstName} {lastName}
+								</p>
+							</Link>
+							<Link
+								to={`/users/${username}`}
+								className="hover:underline decoration-slate-500"
+							>
+								<p className="text-slate-500 text-xs sm:text-sm">@{username}</p>
+							</Link>
 							<div className="text-slate-500 text-xs sm:text-sm flex gap-x-1">
 								<span>·</span>
 								<div>

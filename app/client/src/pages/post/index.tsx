@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { useParams, useNavigate, Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
@@ -56,19 +56,32 @@ export default function PostPage() {
 					<div className="p-4">
 						<div className="flex gap-2">
 							<div>
-								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
-									<span>{post.author.firstName[0]}</span>
-								</div>
+								<Link to={`/users/${post.author.username}`}>
+									<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
+										<span>{post.author.firstName[0]}</span>
+									</div>
+								</Link>
 							</div>
 
 							<div className="text-sm sm:text-base flex flex-col flex-grow gap-x-1 h-fit">
 								<div className="font-semibold flex flex-wrap gap-1">
-									<p>{post.author.firstName}</p>
-									<p>{post.author.lastName}</p>
+									<Link
+										to={`/users/${post.author.username}`}
+										className="hover:underline"
+									>
+										<p>
+											{post.author.firstName} {post.author.lastName}
+										</p>
+									</Link>
 								</div>
-								<p className="text-slate-500 text-xs sm:text-sm">
-									@{post.author.username}
-								</p>
+								<Link
+									to={`/users/${post.author.username}`}
+									className="hover:underline decoration-slate-500"
+								>
+									<p className="text-slate-500 text-xs sm:text-sm">
+										@{post.author.username}
+									</p>
+								</Link>
 							</div>
 
 							<Dialog

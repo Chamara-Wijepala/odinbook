@@ -28,7 +28,7 @@ function App() {
 					<Route element={<NavigationLayout />}>
 						<Route index element={<Home />} />
 						<Route path="explore" element={<Explore />} />
-						<Route path="profile" element={<Profile />} />
+						<Route path="users/:username" element={<Profile />} />
 
 						{/*
 						These pages will be rendered with the navigation layout but won't

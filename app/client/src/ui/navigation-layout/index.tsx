@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router';
 import { IoMenu, IoCloseOutline, IoLogOutOutline } from 'react-icons/io5';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
+import useAuthStore from '../../stores/auth';
 import useNewPostStore from '../../stores/new-post';
 import CreatePost from '../../components/create-post';
 import Modal from '../../components/modal';
@@ -17,6 +18,7 @@ export default function NavigationLayout() {
 	);
 	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const newPostCreated = useNewPostStore((state) => state.newPostCreated);
+	const user = useAuthStore((state) => state.user);
 
 	function toggleSidebar() {
 		setIsOpen(!isOpen);
@@ -103,7 +105,7 @@ export default function NavigationLayout() {
 							Explore
 						</NavLink>
 						<NavLink
-							to="/profile"
+							to={`/users/${user?.username}`}
 							onClick={toggleSidebar}
 							className={({ isActive }) =>
 								`p-3 lg:p-4 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full text-center text-lg font-medium transition-colors ${
