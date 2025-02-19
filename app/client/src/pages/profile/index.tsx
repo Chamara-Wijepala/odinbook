@@ -5,6 +5,7 @@ import { IoIosArrowRoundBack } from 'react-icons/io';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import useAuthStore from '../../stores/auth';
 import useData from '../../hooks/useData';
+import UserPosts from './user-posts';
 import coloredNotification from '../../services/notifications';
 import api from '../../api';
 import { AxiosError } from 'axios';
@@ -69,22 +70,22 @@ export default function Profile() {
 
 	return (
 		<div>
-			<div className="border-b-[1px] border-slate-300 dark:border-slate-800">
-				{/* back button */}
-				<div className="p-4">
-					<button
-						onClick={() => navigate(-1)}
-						className="flex items-center gap-2"
-					>
-						<IoIosArrowRoundBack className="w-8 h-8" />
-						<p className="font-semibold">Back</p>
-					</button>
-				</div>
+			{/* back button */}
+			<div className="p-4">
+				<button
+					onClick={() => navigate(-1)}
+					className="flex items-center gap-2"
+				>
+					<IoIosArrowRoundBack className="w-8 h-8" />
+					<p className="font-semibold">Back</p>
+				</button>
+			</div>
 
-				{isLoading && <Skeleton />}
+			{isLoading && <Skeleton />}
 
-				{!isLoading && user && (
-					<div className="p-4">
+			{!isLoading && user && (
+				<div>
+					<div className="p-4 border-b-[1px] border-slate-300 dark:border-slate-800">
 						<div>
 							{/* profile picture */}
 							<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[80px] sm:w-[100px] aspect-square">
@@ -146,8 +147,10 @@ export default function Profile() {
 							</div>
 						</div>
 					</div>
-				)}
-			</div>
+
+					<UserPosts id={user.id} />
+				</div>
+			)}
 		</div>
 	);
 }

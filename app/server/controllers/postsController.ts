@@ -50,8 +50,14 @@ async function getPost(req: Request, res: Response) {
 }
 
 async function getPosts(req: Request, res: Response) {
-	const { page } = req.query;
+	const { page, userId } = req.query;
 	let posts;
+
+	if (userId) {
+		posts = await postsService.getUserPosts(userId as string);
+		res.status(200).json(posts);
+		return;
+	}
 
 	switch (page) {
 		case 'home':

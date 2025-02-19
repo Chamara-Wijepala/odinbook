@@ -108,6 +108,31 @@ async function getPostPage(id: string) {
 	});
 }
 
+async function getUserPosts(authorId: string) {
+	return await prisma.post.findMany({
+		where: {
+			authorId,
+		},
+		select: {
+			id: true,
+			content: true,
+			createdAt: true,
+			updatedAt: true,
+			author: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
+		orderBy: {
+			createdAt: 'desc',
+		},
+	});
+}
+
 async function updatePost(postId: string, content: string) {
 	return await prisma.post.update({
 		where: {
@@ -133,6 +158,7 @@ export default {
 	getHomePage,
 	getExplorePage,
 	getPostPage,
+	getUserPosts,
 	updatePost,
 	deletePost,
 };
