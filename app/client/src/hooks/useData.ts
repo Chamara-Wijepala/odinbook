@@ -8,6 +8,7 @@ export default function useData<T>(url: string) {
 
 	useEffect(() => {
 		(async () => {
+			setIsLoading(true);
 			try {
 				const response = await api.get(url);
 				setData(response.data);
@@ -17,7 +18,7 @@ export default function useData<T>(url: string) {
 				setIsLoading(false);
 			}
 		})();
-	}, []);
+	}, [url]);
 
 	return {
 		isLoading,
