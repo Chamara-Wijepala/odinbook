@@ -19,8 +19,6 @@ async function createPost(req: Request, res: Response) {
 		},
 		select: {
 			id: true,
-			firstName: true,
-			lastName: true,
 		},
 	});
 
@@ -43,11 +41,6 @@ async function createPost(req: Request, res: Response) {
 		newPost: {
 			id: post.id,
 			content: req.body.content,
-			author: {
-				firstName: user.firstName,
-				lastName: user.lastName,
-				username: req.user.username,
-			},
 		},
 	});
 }

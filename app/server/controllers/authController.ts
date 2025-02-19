@@ -63,6 +63,8 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 		},
 		select: {
 			id: true,
+			firstName: true,
+			lastName: true,
 			username: true,
 			password: true,
 			following: {
@@ -112,6 +114,8 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 			accessToken,
 			user: {
 				id: user.id,
+				firstName: user.firstName,
+				lastName: user.lastName,
 				username: user.username,
 				following: user.following.map((user) => user.id),
 			},

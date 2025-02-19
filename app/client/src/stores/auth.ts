@@ -3,6 +3,8 @@ import { devtools } from 'zustand/middleware';
 
 type User = {
 	id: string;
+	firstName: string;
+	lastName: string;
 	username: string;
 	following: string[];
 };
