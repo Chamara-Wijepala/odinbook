@@ -34,6 +34,8 @@ async function createPost(req: Request, res: Response) {
 		},
 		select: {
 			id: true,
+			createdAt: true,
+			updatedAt: true,
 		},
 	});
 
@@ -41,6 +43,8 @@ async function createPost(req: Request, res: Response) {
 		newPost: {
 			id: post.id,
 			content: req.body.content,
+			createdAt: post.createdAt,
+			updatedAt: post.updatedAt,
 		},
 	});
 }
