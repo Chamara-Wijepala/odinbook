@@ -14,14 +14,14 @@ async function createPost(req: Request, res: Response) {
 		return;
 	}
 
-	const user = await usersService.getUserId(req.user.username);
+	const userId = await usersService.getUserId(req.user.username);
 
 	// Type guard. The only way user might not exist is if user is deleted on one
 	// device while authenticated on another device. This is an edge case, which
 	// is better handled in the verifyJWT middleware than here if needed.
-	if (!user) return;
+	if (!userId) return;
 
-	const post = await postsService.createPost(req.body.content, user.id);
+	const post = await postsService.createPost(req.body.content, userId);
 
 	res.status(200).json({
 		newPost: {

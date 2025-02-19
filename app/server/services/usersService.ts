@@ -1,7 +1,7 @@
 import prisma from '../db/prisma';
 
 async function getUserId(username: string) {
-	return await prisma.user.findUnique({
+	const user = await prisma.user.findUnique({
 		where: {
 			username,
 		},
@@ -9,6 +9,10 @@ async function getUserId(username: string) {
 			id: true,
 		},
 	});
+
+	if (!user) return null;
+
+	return user.id;
 }
 
 async function getUserProfile(username: string) {

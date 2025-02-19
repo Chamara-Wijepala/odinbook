@@ -18,33 +18,33 @@ async function getUserProfile(req: Request, res: Response) {
 }
 
 async function followUser(req: Request, res: Response) {
-	const currentUser = await usersService.getUserId(req.user.username);
+	const currentUserId = await usersService.getUserId(req.user.username);
 
 	// Only case where currentUser might not exist is if user is deleted from the
 	// database while they're is already logged in with a valid access token.
-	if (!currentUser) return;
+	if (!currentUserId) return;
 
 	// If user tries to follow themselves. No real need to handle because the
 	// button will be disabled on the client.
-	if (currentUser.id === req.params.id) return;
+	if (currentUserId === req.params.id) return;
 
-	await usersService.followUser(req.params.id, currentUser.id);
+	await usersService.followUser(req.params.id, currentUserId);
 
 	res.sendStatus(200);
 }
 
 async function unfollowUser(req: Request, res: Response) {
-	const currentUser = await usersService.getUserId(req.user.username);
+	const currentUserId = await usersService.getUserId(req.user.username);
 
 	// Only case where currentUser might not exist is if user is deleted from the
 	// database while they're is already logged in with a valid access token.
-	if (!currentUser) return;
+	if (!currentUserId) return;
 
 	// If user tries to unfollow themselves. No real need to handle because the
 	// button will be disabled on the client.
-	if (currentUser.id === req.params.id) return;
+	if (currentUserId === req.params.id) return;
 
-	await usersService.unfollowUser(req.params.id, currentUser.id);
+	await usersService.unfollowUser(req.params.id, currentUserId);
 
 	res.sendStatus(200);
 }
