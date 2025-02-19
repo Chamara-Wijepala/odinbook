@@ -138,6 +138,8 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 			newToken: accessToken,
 			user: {
 				id: foundToken.User.id,
+				firstName: foundToken.User.firstName,
+				lastName: foundToken.User.lastName,
 				username: foundToken.User.username,
 				following: foundToken.User.following.map((user) => user.id),
 			},

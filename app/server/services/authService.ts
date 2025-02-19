@@ -20,6 +20,8 @@ async function getRefreshToken(token: string) {
 			User: {
 				select: {
 					id: true,
+					firstName: true,
+					lastName: true,
 					username: true,
 					following: true,
 				},
