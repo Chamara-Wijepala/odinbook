@@ -7,10 +7,13 @@ export default function useData<T>(url: string) {
 	const [error, setError] = useState<unknown | null>(null);
 
 	useEffect(() => {
+		const controller = new AbortController();
 		(async () => {
 			setIsLoading(true);
 			try {
-				const response = await api.get(url);
+				const response = await api.get(url, {
+					signal: controller.signal,
+				});
 				setData(response.data);
 			} catch (err) {
 				setError(err);
@@ -18,6 +21,10 @@ export default function useData<T>(url: string) {
 				setIsLoading(false);
 			}
 		})();
+
+		return () => {
+			controller.abort();
+		};
 	}, [url]);
 
 	return {
