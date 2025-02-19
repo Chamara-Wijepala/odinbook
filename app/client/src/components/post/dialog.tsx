@@ -146,80 +146,86 @@ export default function Dialog({
 				className="absolute -translate-x-[calc(100%-20px)] z-50 bg-slate-100 dark:bg-slate-800 dark:text-white rounded-lg overflow-hidden shadow-lg"
 			>
 				<ul className="font-semibold">
-					<li>
-						<button
-							onClick={() => {
-								setModalContent(
-									<div className="w-[600px] max-w-full h-fit">
-										<UpdatePost
-											postId={postId}
-											postContent={postContent}
-											toggleModal={toggleModal}
-										/>
-									</div>
-								);
-								toggleModal();
-							}}
-							className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-						>
-							<FaRegEdit />
-							<span>Update</span>
-						</button>
-					</li>
-
-					<li>
-						<button
-							onClick={() => {
-								setModalContent(
-									<div>
-										<h2 className="text-xl my-4">
-											Are you sure you want to delete this post?
-										</h2>
-										<div className="flex gap-2 justify-end">
-											<button
-												onClick={toggleModal}
-												className="bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-not-allowed py-2 px-4 rounded-full transition-colors"
-											>
-												Cancel
-											</button>
-
-											<button
-												onClick={handleDelete}
-												className="bg-rose-500 hover:bg-rose-400 py-2 px-4 rounded-full transition-colors"
-											>
-												Delete
-											</button>
+					{authorId === user?.id && (
+						<li>
+							<button
+								onClick={() => {
+									setModalContent(
+										<div className="w-[600px] max-w-full h-fit">
+											<UpdatePost
+												postId={postId}
+												postContent={postContent}
+												toggleModal={toggleModal}
+											/>
 										</div>
-									</div>
-								);
-								toggleModal();
-							}}
-							className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
-						>
-							<TiDeleteOutline />
-							<span>Delete</span>
-						</button>
-					</li>
+									);
+									toggleModal();
+								}}
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+							>
+								<FaRegEdit />
+								<span>Update</span>
+							</button>
+						</li>
+					)}
 
-					<li>
-						{user?.following.includes(authorId) ? (
+					{authorId === user?.id && (
+						<li>
 							<button
-								onClick={unfollowUser}
-								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								onClick={() => {
+									setModalContent(
+										<div>
+											<h2 className="text-xl my-4">
+												Are you sure you want to delete this post?
+											</h2>
+											<div className="flex gap-2 justify-end">
+												<button
+													onClick={toggleModal}
+													className="bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-not-allowed py-2 px-4 rounded-full transition-colors"
+												>
+													Cancel
+												</button>
+
+												<button
+													onClick={handleDelete}
+													className="bg-rose-500 hover:bg-rose-400 py-2 px-4 rounded-full transition-colors"
+												>
+													Delete
+												</button>
+											</div>
+										</div>
+									);
+									toggleModal();
+								}}
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
 							>
-								<AiOutlineUserDelete />
-								<span>Unfollow</span>
+								<TiDeleteOutline />
+								<span>Delete</span>
 							</button>
-						) : (
-							<button
-								onClick={followUser}
-								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-							>
-								<AiOutlineUserAdd />
-								<span>Follow</span>
-							</button>
-						)}
-					</li>
+						</li>
+					)}
+
+					{authorId !== user?.id && (
+						<li>
+							{user?.following.includes(authorId) ? (
+								<button
+									onClick={unfollowUser}
+									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								>
+									<AiOutlineUserDelete />
+									<span>Unfollow</span>
+								</button>
+							) : (
+								<button
+									onClick={followUser}
+									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								>
+									<AiOutlineUserAdd />
+									<span>Follow</span>
+								</button>
+							)}
+						</li>
+					)}
 				</ul>
 			</dialog>
 

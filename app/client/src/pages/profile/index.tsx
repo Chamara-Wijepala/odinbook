@@ -104,14 +104,16 @@ export default function Profile() {
 								</div>
 
 								{/* follow button */}
-								<button
-									onClick={handleFollow}
-									className="ml-auto bg-sky-400 hover:bg-sky-300 font-semibold py-1 px-3 rounded-full"
-								>
-									{currentUser?.following.includes(user.id)
-										? 'Unfollow'
-										: 'Follow'}
-								</button>
+								{user.id !== currentUser?.id && (
+									<button
+										onClick={handleFollow}
+										className="ml-auto bg-sky-400 hover:bg-sky-300 font-semibold py-1 px-3 rounded-full"
+									>
+										{currentUser?.following.includes(user.id)
+											? 'Unfollow'
+											: 'Follow'}
+									</button>
+								)}
 							</div>
 
 							{/* join date */}
