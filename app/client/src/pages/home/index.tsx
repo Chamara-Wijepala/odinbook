@@ -10,7 +10,7 @@ export default function Home() {
 	const newPost = useNewPostStore((state) => state.newPost);
 	const currentUser = useAuthStore((state) => state.user);
 	const [newPosts, setNewPosts] = useState<PostType[]>([]);
-	const { isLoading, data: posts } = useData<PostType[]>('/posts/home');
+	const { isLoading, data: posts } = useData<PostType[]>('/posts?page=home');
 
 	useEffect(() => {
 		if (newPost) setNewPosts((prev) => [newPost, ...prev]);

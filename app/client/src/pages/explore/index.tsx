@@ -4,7 +4,7 @@ import type { PostType } from '../../types';
 
 export default function Explore() {
 	// Error isn't needed because endpoint will always return an array.
-	const { isLoading, data: posts } = useData<PostType[]>('/posts/explore');
+	const { isLoading, data: posts } = useData<PostType[]>('/posts?page=explore');
 
 	return (
 		<div className="p-4">

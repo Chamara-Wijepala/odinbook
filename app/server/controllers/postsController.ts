@@ -1,5 +1,6 @@
+import postsService from '../services/postsService';
+import usersService from '../services/usersService';
 import type { Request, Response } from 'express';
-import prisma from '../db/prisma';
 
 async function createPost(req: Request, res: Response) {
 	const { content } = req.body;
@@ -13,31 +14,14 @@ async function createPost(req: Request, res: Response) {
 		return;
 	}
 
-	const user = await prisma.user.findUnique({
-		where: {
-			username: req.user.username,
-		},
-		select: {
-			id: true,
-		},
-	});
+	const user = await usersService.getUserId(req.user.username);
 
 	// Type guard. The only way user might not exist is if user is deleted on one
 	// device while authenticated on another device. This is an edge case, which
 	// is better handled in the verifyJWT middleware than here if needed.
 	if (!user) return;
 
-	const post = await prisma.post.create({
-		data: {
-			content: req.body.content,
-			authorId: user.id,
-		},
-		select: {
-			id: true,
-			createdAt: true,
-			updatedAt: true,
-		},
-	});
+	const post = await postsService.createPost(req.body.content, user.id);
 
 	res.status(200).json({
 		newPost: {
@@ -50,25 +34,7 @@ async function createPost(req: Request, res: Response) {
 }
 
 async function getPost(req: Request, res: Response) {
-	const post = await prisma.post.findUnique({
-		where: {
-			id: req.params.id,
-		},
-		select: {
-			id: true,
-			content: true,
-			createdAt: true,
-			updatedAt: true,
-			author: {
-				select: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					username: true,
-				},
-			},
-		},
-	});
+	const post = await postsService.getPostPage(req.params.id);
 
 	if (!post) {
 		res.status(404).json({
@@ -81,6 +47,22 @@ async function getPost(req: Request, res: Response) {
 	}
 
 	res.status(200).json(post);
+}
+
+async function getPosts(req: Request, res: Response) {
+	const { page } = req.query;
+	let posts;
+
+	switch (page) {
+		case 'home':
+			posts = await postsService.getHomePage(req.user.username);
+			break;
+		case 'explore':
+			posts = await postsService.getExplorePage();
+			break;
+	}
+
+	res.status(200).json(posts);
 }
 
 async function updatePost(req: Request, res: Response) {
@@ -97,27 +79,15 @@ async function updatePost(req: Request, res: Response) {
 		return;
 	}
 
-	// get post along with author's username
-	const post = await prisma.post.findUnique({
-		where: {
-			id: postId,
-		},
-		select: {
-			author: {
-				select: {
-					username: true,
-				},
-			},
-		},
-	});
+	const author = await postsService.getPostAuthor(postId);
 
-	if (!post) {
+	if (!author) {
 		res.status(404).json({
 			toast: { type: 'error', message: "Couldn't find the post to update." },
 		});
 		return;
 	}
-	if (post.author.username !== req.user.username) {
+	if (author.username !== req.user.username) {
 		res.status(403).json({
 			toast: {
 				type: 'error',
@@ -127,14 +97,7 @@ async function updatePost(req: Request, res: Response) {
 		return;
 	}
 
-	await prisma.post.update({
-		where: {
-			id: postId,
-		},
-		data: {
-			content,
-		},
-	});
+	await postsService.updatePost(postId, content);
 
 	res
 		.status(200)
@@ -144,20 +107,9 @@ async function updatePost(req: Request, res: Response) {
 async function deletePost(req: Request, res: Response) {
 	const postId = req.params.id;
 
-	const post = await prisma.post.findUnique({
-		where: {
-			id: postId,
-		},
-		select: {
-			author: {
-				select: {
-					username: true,
-				},
-			},
-		},
-	});
+	const author = await postsService.getPostAuthor(postId);
 
-	if (!post) {
+	if (!author) {
 		res.status(404).json({
 			toast: {
 				type: 'error',
@@ -168,7 +120,7 @@ async function deletePost(req: Request, res: Response) {
 		return;
 	}
 
-	if (post.author.username !== req.user.username) {
+	if (author.username !== req.user.username) {
 		res.status(403).json({
 			toast: {
 				type: 'error',
@@ -178,77 +130,15 @@ async function deletePost(req: Request, res: Response) {
 		return;
 	}
 
-	await prisma.post.delete({
-		where: {
-			id: postId,
-		},
-	});
+	await postsService.deletePost(postId);
 
 	res.sendStatus(204);
-}
-
-async function getExplorePage(req: Request, res: Response) {
-	const posts = await prisma.post.findMany({
-		select: {
-			id: true,
-			content: true,
-			createdAt: true,
-			updatedAt: true,
-			author: {
-				select: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					username: true,
-				},
-			},
-		},
-		orderBy: {
-			createdAt: 'desc',
-		},
-	});
-
-	res.status(200).json(posts);
-}
-
-async function getHomePage(req: Request, res: Response) {
-	const posts = await prisma.post.findMany({
-		where: {
-			author: {
-				followedBy: {
-					some: {
-						username: req.user.username,
-					},
-				},
-			},
-		},
-		select: {
-			id: true,
-			content: true,
-			createdAt: true,
-			updatedAt: true,
-			author: {
-				select: {
-					id: true,
-					firstName: true,
-					lastName: true,
-					username: true,
-				},
-			},
-		},
-		orderBy: {
-			createdAt: 'desc',
-		},
-	});
-
-	res.status(200).json(posts);
 }
 
 export default {
 	createPost,
 	getPost,
+	getPosts,
 	updatePost,
 	deletePost,
-	getExplorePage,
-	getHomePage,
 };
