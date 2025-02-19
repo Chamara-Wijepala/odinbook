@@ -3,7 +3,8 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validateCreateUser } from '@odinbook/utils';
-import prisma from '../db/prisma';
+import authService from '../services/authService';
+import usersService from '../services/usersService';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { Request, Response, NextFunction } from 'express';
 import type { CreateUserErrors } from '@odinbook/types';
@@ -26,13 +27,10 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 		return;
 	}
 
-	const duplicateUsername = await prisma.user.findUnique({
-		where: {
-			username: body.username,
-		},
-	});
+	// used to determine if username is a duplicate or not
+	const userId = await usersService.getUserId(body.username);
 
-	if (duplicateUsername) {
+	if (userId) {
 		const errors: CreateUserErrors = {
 			username: ['This username already exists.'],
 		};
@@ -43,37 +41,16 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 	bcrypt.hash(body.password, 10, async (err, hash) => {
 		if (err) return next(err);
 
-		await prisma.user.create({
-			data: {
-				firstName: body.firstName,
-				lastName: body.lastName,
-				username: body.username,
-				password: hash,
-			},
-		});
+		const { firstName, lastName, username } = body;
+
+		await usersService.createUser(firstName, lastName, username, hash);
 
 		return res.sendStatus(200);
 	});
 }
 
 async function loginUser(req: Request, res: Response, next: NextFunction) {
-	const user = await prisma.user.findUnique({
-		where: {
-			username: req.body.username,
-		},
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			username: true,
-			password: true,
-			following: {
-				select: {
-					id: true,
-				},
-			},
-		},
-	});
+	const user = await usersService.getUserAuthDetails(req.body.username);
 
 	if (!user) {
 		res
@@ -94,12 +71,7 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 		const accessToken = issueAccessToken(user.username);
 		const { refreshToken, expiresIn } = issueRefreshToken(user.username);
 
-		await prisma.refreshToken.create({
-			data: {
-				token: refreshToken,
-				userId: user.id,
-			},
-		});
+		await authService.createRefreshToken(refreshToken, user.id);
 
 		res.cookie('jwt', refreshToken, {
 			httpOnly: true,
@@ -131,22 +103,7 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 	const refreshToken: string = req.cookies.jwt;
 
 	jwt.verify(refreshToken, PUB_KEY, async (err: unknown) => {
-		const foundToken = await prisma.refreshToken.findUnique({
-			where: {
-				token: refreshToken,
-			},
-			select: {
-				token: true,
-				revoked: true,
-				User: {
-					select: {
-						id: true,
-						username: true,
-						following: true,
-					},
-				},
-			},
-		});
+		const foundToken = await authService.getRefreshToken(refreshToken);
 
 		if (!foundToken) {
 			return next(new Error('RefreshTokenExpiredError'));
@@ -157,11 +114,7 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 			foundToken.revoked ||
 			(foundToken && err instanceof TokenExpiredError)
 		) {
-			await prisma.refreshToken.delete({
-				where: {
-					token: foundToken.token,
-				},
-			});
+			await authService.deleteRefreshToken(foundToken.token);
 			return next(new Error('RefreshTokenExpiredError'));
 		}
 
@@ -197,11 +150,7 @@ async function logout(req: Request, res: Response) {
 		res.sendStatus(200);
 	}
 
-	await prisma.refreshToken.delete({
-		where: {
-			token: req.cookies.jwt,
-		},
-	});
+	await authService.deleteRefreshToken(req.cookies.jwt);
 
 	res
 		.clearCookie('jwt', {
