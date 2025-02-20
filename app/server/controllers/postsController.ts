@@ -81,7 +81,15 @@ async function getPosts(req: Request, res: Response) {
 
 	if (userId) {
 		posts = await postsService.getUserPosts(userId as string);
-		res.status(200).json(posts);
+
+		const results = posts?.map((post) => {
+			return {
+				...post,
+				likedBy: post.likedBy.map((like) => like.userId),
+			};
+		});
+
+		res.status(200).json(results);
 		return;
 	}
 
