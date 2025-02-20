@@ -18,6 +18,7 @@ model User {
   posts         Post[]
   followedBy    User[]         @relation("UserFollows")
   following     User[]         @relation("UserFollows")
+  likedPosts    PostLike[]
 }
 
 model RefreshToken {
@@ -29,10 +30,20 @@ model RefreshToken {
 }
 
 model Post {
-  id        String   @id @default(uuid())
+  id        String     @id @default(uuid())
   content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
-  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @default(now()) @updatedAt
+  author    User       @relation(fields: [authorId], references: [id])
   authorId  String
+  likedBy   PostLike[]
+}
+
+model PostLike {
+  postId String
+  post   Post   @relation(fields: [postId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([postId, userId])
 }

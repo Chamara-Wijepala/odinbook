@@ -10,6 +10,11 @@ async function createPost(content: string, authorId: string) {
 			id: true,
 			createdAt: true,
 			updatedAt: true,
+			likedBy: {
+				select: {
+					userId: true,
+				},
+			},
 		},
 	});
 }
@@ -49,6 +54,11 @@ async function getHomePage(username: string) {
 			content: true,
 			createdAt: true,
 			updatedAt: true,
+			likedBy: {
+				select: {
+					userId: true,
+				},
+			},
 			author: {
 				select: {
 					id: true,
@@ -71,6 +81,11 @@ async function getExplorePage() {
 			content: true,
 			createdAt: true,
 			updatedAt: true,
+			likedBy: {
+				select: {
+					userId: true,
+				},
+			},
 			author: {
 				select: {
 					id: true,
@@ -96,6 +111,11 @@ async function getPostPage(id: string) {
 			content: true,
 			createdAt: true,
 			updatedAt: true,
+			likedBy: {
+				select: {
+					userId: true,
+				},
+			},
 			author: {
 				select: {
 					id: true,
@@ -118,6 +138,11 @@ async function getUserPosts(authorId: string) {
 			content: true,
 			createdAt: true,
 			updatedAt: true,
+			likedBy: {
+				select: {
+					userId: true,
+				},
+			},
 			author: {
 				select: {
 					id: true,

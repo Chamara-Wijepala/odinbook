@@ -4,6 +4,7 @@ import { DateTime } from 'luxon';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from '../../components/post/dialog';
+import PostLikes from '../../components/post-likes';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
 import type { PostType } from '../../types';
@@ -102,6 +103,12 @@ export default function PostPage() {
 									· Updated {formatDate(post.updatedAt)}
 								</p>
 							)}
+						</div>
+					</div>
+
+					<div className="p-4">
+						<div className="pt-4 border-t-[1px] border-slate-300 dark:border-slate-800">
+							<PostLikes likedBy={post.likedBy} postId={post.id} />
 						</div>
 					</div>
 				</div>

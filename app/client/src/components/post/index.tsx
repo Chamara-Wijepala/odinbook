@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from './dialog';
+import PostLikes from '../post-likes';
 
 type Props = {
 	postId: string;
@@ -12,6 +13,7 @@ type Props = {
 	content: string;
 	createdAt: string;
 	updatedAt: string;
+	likedBy: string[];
 };
 
 export default function Post({
@@ -23,6 +25,7 @@ export default function Post({
 	content,
 	createdAt,
 	updatedAt,
+	likedBy,
 }: Props) {
 	return (
 		<Link to={`/post/${postId}`} draggable="false">
@@ -70,6 +73,13 @@ export default function Post({
 
 				<div className="mt-4">
 					<p>{content}</p>
+				</div>
+
+				<div
+					onClick={(e) => e.preventDefault()} // stop event bubbling
+					className="pt-2 mt-2 border-t-[1px] border-slate-300 dark:border-slate-800"
+				>
+					<PostLikes likedBy={likedBy} postId={postId} />
 				</div>
 			</div>
 		</Link>

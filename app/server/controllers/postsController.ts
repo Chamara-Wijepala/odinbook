@@ -1,5 +1,6 @@
 import postsService from '../services/postsService';
 import usersService from '../services/usersService';
+import likesService from '../services/likesService';
 import type { Request, Response } from 'express';
 
 async function createPost(req: Request, res: Response) {
@@ -29,8 +30,28 @@ async function createPost(req: Request, res: Response) {
 			content: req.body.content,
 			createdAt: post.createdAt,
 			updatedAt: post.updatedAt,
+			likedBy: post.likedBy.map((like) => like.userId),
 		},
 	});
+}
+
+async function likePost(req: Request, res: Response) {
+	const postId = req.params.id;
+
+	const userId = await usersService.getUserId(req.user.username);
+
+	if (!userId) return;
+
+	const isLiked = await likesService.isPostLiked(postId, userId);
+
+	if (isLiked) {
+		res.sendStatus(409);
+		return;
+	}
+
+	await likesService.likePost(postId, userId);
+
+	res.sendStatus(200);
 }
 
 async function getPost(req: Request, res: Response) {
@@ -46,7 +67,12 @@ async function getPost(req: Request, res: Response) {
 		return;
 	}
 
-	res.status(200).json(post);
+	const result = {
+		...post,
+		likedBy: post.likedBy.map((like) => like.userId),
+	};
+
+	res.status(200).json(result);
 }
 
 async function getPosts(req: Request, res: Response) {
@@ -68,7 +94,14 @@ async function getPosts(req: Request, res: Response) {
 			break;
 	}
 
-	res.status(200).json(posts);
+	const results = posts?.map((post) => {
+		return {
+			...post,
+			likedBy: post.likedBy.map((like) => like.userId),
+		};
+	});
+
+	res.status(200).json(results);
 }
 
 async function updatePost(req: Request, res: Response) {
@@ -141,10 +174,31 @@ async function deletePost(req: Request, res: Response) {
 	res.sendStatus(204);
 }
 
+async function unlikePost(req: Request, res: Response) {
+	const postId = req.params.id;
+
+	const userId = await usersService.getUserId(req.user.username);
+
+	if (!userId) return;
+
+	const isLiked = await likesService.isPostLiked(postId, userId);
+
+	if (!isLiked) {
+		res.sendStatus(409);
+		return;
+	}
+
+	await likesService.unlikePost(postId, userId);
+
+	res.sendStatus(204);
+}
+
 export default {
 	createPost,
+	likePost,
 	getPost,
 	getPosts,
 	updatePost,
 	deletePost,
+	unlikePost,
 };

@@ -63,6 +63,7 @@ export default function UserPosts({ id }: { id: string }) {
 							content={post.content}
 							createdAt={post.createdAt}
 							updatedAt={post.updatedAt}
+							likedBy={post.likedBy}
 						/>
 					))}
 			</div>
@@ -80,6 +81,7 @@ export default function UserPosts({ id }: { id: string }) {
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
+						likedBy={post.likedBy}
 					/>
 				))}
 			</div>
