@@ -21,12 +21,12 @@ export default function Dialog({
 	postContent: string;
 }) {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContent, setModalContent] = useState<React.ReactNode | null>(
 		null
 	);
 	const dialogRef = useRef<HTMLDialogElement | null>(null);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
-	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const navigate = useNavigate();
 	const user = useAuthStore((state) => state.user);
 	const updateUserFollowing = useAuthStore(
@@ -70,11 +70,7 @@ export default function Dialog({
 	}
 
 	function toggleModal() {
-		if (!modalRef.current) return;
-
-		modalRef.current.hasAttribute('open')
-			? modalRef.current.close()
-			: modalRef.current.showModal();
+		setIsModalOpen((prev) => !prev);
 	}
 
 	async function handleDelete() {
@@ -229,9 +225,7 @@ export default function Dialog({
 				</ul>
 			</dialog>
 
-			<Modal toggleModal={toggleModal} ref={modalRef}>
-				{modalContent}
-			</Modal>
+			<Modal isOpen={isModalOpen}>{modalContent}</Modal>
 		</div>
 	);
 }

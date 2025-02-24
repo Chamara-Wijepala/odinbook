@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, NavLink } from 'react-router';
 import { IoMenu, IoCloseOutline, IoLogOutOutline } from 'react-icons/io5';
 import { MdOutlineLightMode, MdOutlineDarkMode } from 'react-icons/md';
@@ -11,12 +11,9 @@ import useTheme from '../../hooks/useTheme';
 
 export default function NavigationLayout() {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const logout = useLogout();
 	const { theme, toggleTheme } = useTheme();
-	const [modalContent, setModalContent] = useState<React.ReactNode | null>(
-		null
-	);
-	const modalRef = useRef<HTMLDialogElement | null>(null);
 	const newPostCreated = useNewPostStore((state) => state.newPostCreated);
 	const user = useAuthStore((state) => state.user);
 
@@ -24,18 +21,10 @@ export default function NavigationLayout() {
 		setIsOpen(!isOpen);
 	}
 
-	function toggleModal() {
-		if (!modalRef.current) return;
-
-		modalRef.current.hasAttribute('open')
-			? modalRef.current.close()
-			: modalRef.current.showModal();
-	}
-
 	// close modal when new post is created
 	useEffect(() => {
-		if (newPostCreated && modalRef.current?.hasAttribute('open')) {
-			modalRef.current.close();
+		if (newPostCreated && isModalOpen) {
+			setIsModalOpen(false);
 		}
 	}, [newPostCreated]);
 
@@ -66,8 +55,10 @@ export default function NavigationLayout() {
 				}`}
 			></div>
 
-			<Modal toggleModal={toggleModal} ref={modalRef}>
-				{modalContent}
+			<Modal isOpen={isModalOpen}>
+				<div className="w-[600px] max-w-full h-fit">
+					<CreatePost />
+				</div>
 			</Modal>
 
 			{/* main part of layout */}
@@ -120,14 +111,7 @@ export default function NavigationLayout() {
 					</nav>
 
 					<button
-						onClick={() => {
-							toggleModal();
-							setModalContent(
-								<div className="w-[600px] max-w-full h-fit">
-									<CreatePost />
-								</div>
-							);
-						}}
+						onClick={() => setIsModalOpen(!isModalOpen)}
 						className="p-3 lg:p-4 mt-4 lg:mt-6 rounded-full text-lg font-medium bg-sky-400 hover:bg-sky-300 w-full"
 					>
 						Post
