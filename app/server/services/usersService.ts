@@ -64,10 +64,24 @@ async function getUserAuthDetails(username: string) {
 			lastName: true,
 			username: true,
 			password: true,
+			tokenVersion: true,
 			following: {
 				select: {
 					id: true,
 				},
+			},
+		},
+	});
+}
+
+async function updateTokenVersion(username: string) {
+	return await prisma.user.update({
+		where: {
+			username,
+		},
+		data: {
+			tokenVersion: {
+				increment: 1,
 			},
 		},
 	});
@@ -104,6 +118,7 @@ export default {
 	getUserId,
 	getUserProfile,
 	getUserAuthDetails,
+	updateTokenVersion,
 	followUser,
 	unfollowUser,
 };

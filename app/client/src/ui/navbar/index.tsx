@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
 import { IoCloseOutline, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
-import useAuthStore from '../stores/auth';
-import useNewPostStore from '../stores/new-post';
-import useTheme from '../hooks/useTheme';
-import useLogout from '../hooks/useLogout';
-import CreatePost from '../components/create-post';
-import Modal from '../components/modal';
+import useAuthStore from '../../stores/auth';
+import useNewPostStore from '../../stores/new-post';
+import useTheme from '../../hooks/useTheme';
+import Dialog from './dialog';
+import CreatePost from '../../components/create-post';
+import Modal from '../../components/modal';
 
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const { theme, toggleTheme } = useTheme();
-	const logout = useLogout();
 	const user = useAuthStore((state) => state.user);
 	const newPostCreated = useNewPostStore((state) => state.newPostCreated);
 
@@ -103,10 +102,7 @@ export default function Navbar() {
 				</button>
 
 				<div className="mt-auto flex gap-4">
-					<button onClick={logout}>
-						<IoLogOutOutline className="w-8 h-8" />
-						<span className="sr-only">Log out</span>
-					</button>
+					<Dialog />
 
 					<button onClick={toggleTheme}>
 						{theme === 'light' ? (

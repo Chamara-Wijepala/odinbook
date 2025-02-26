@@ -8,25 +8,17 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  firstName     String
-  lastName      String
-  username      String         @unique
-  password      String
-  createdAt     DateTime       @default(now())
-  refreshTokens RefreshToken[]
-  posts         Post[]
-  followedBy    User[]         @relation("UserFollows")
-  following     User[]         @relation("UserFollows")
-  likedPosts    PostLike[]
-}
-
-model RefreshToken {
-  id      String  @id @default(uuid())
-  token   String  @unique
-  User    User?   @relation(fields: [userId], references: [id])
-  userId  String?
-  revoked Boolean @default(false)
+  id           String     @id @default(uuid())
+  firstName    String
+  lastName     String
+  username     String     @unique
+  password     String
+  createdAt    DateTime   @default(now())
+  tokenVersion Int        @default(1)
+  posts        Post[]
+  followedBy   User[]     @relation("UserFollows")
+  following    User[]     @relation("UserFollows")
+  likedPosts   PostLike[]
 }
 
 model Post {

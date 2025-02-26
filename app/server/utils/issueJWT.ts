@@ -23,13 +23,14 @@ export function issueAccessToken(username: string) {
 	return jwt.sign(payload, PRIV_KEY, options);
 }
 
-export function issueRefreshToken(username: string) {
+export function issueRefreshToken(username: string, tokenVersion: number) {
 	// when passing in a numeric value, the jsonwebtoken library interprets it as
 	// seconds, not milliseconds
 	const expiresIn =
 		process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60 * 60;
 	const payload = {
 		username,
+		tokenVersion,
 	};
 	const options: SignOptions = {
 		expiresIn,

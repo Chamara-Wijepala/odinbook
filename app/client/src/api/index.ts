@@ -27,6 +27,8 @@ api.interceptors.request.use(async (config) => {
 	// since access tokens are stored in memory and removed when the tab is
 	// refreshed, there might still be a valid refresh token stored in cookies
 	if (!token) {
+		const controller = new AbortController();
+
 		try {
 			const response = await axios.get(`${baseURL}/auth/refresh`, {
 				withCredentials: true,
@@ -40,7 +42,18 @@ api.interceptors.request.use(async (config) => {
 			config.headers['authorization'] = `Bearer ${newToken}`;
 			return config;
 		} catch (error) {
-			return config;
+			if (error instanceof AxiosError) {
+				const { toast } = error.response?.data;
+
+				coloredNotification(toast);
+				navigation.navigate && navigation.navigate('/login');
+				controller.abort();
+			}
+
+			return {
+				...config,
+				signal: controller.signal,
+			};
 		}
 	}
 

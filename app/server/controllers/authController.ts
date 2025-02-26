@@ -3,12 +3,12 @@ import path from 'path';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { validateCreateUser } from '@odinbook/utils';
-import authService from '../services/authService';
 import usersService from '../services/usersService';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { Request, Response, NextFunction } from 'express';
 import type { CreateUserErrors } from '@odinbook/types';
 import { TokenExpiredError } from 'jsonwebtoken';
+import { UserToken } from '../types';
 
 const PUB_KEY = {
 	key: fs.readFileSync(
@@ -69,9 +69,10 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 		}
 
 		const accessToken = issueAccessToken(user.username);
-		const { refreshToken, expiresIn } = issueRefreshToken(user.username);
-
-		await authService.createRefreshToken(refreshToken, user.id);
+		const { refreshToken, expiresIn } = issueRefreshToken(
+			user.username,
+			user.tokenVersion
+		);
 
 		res.cookie('jwt', refreshToken, {
 			httpOnly: true,
@@ -102,28 +103,36 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 
 	const refreshToken: string = req.cookies.jwt;
 
-	jwt.verify(refreshToken, PUB_KEY, async (err: unknown) => {
-		const foundToken = await authService.getRefreshToken(refreshToken);
+	try {
+		const decoded = jwt.verify(refreshToken, PUB_KEY) as UserToken;
 
-		if (!foundToken) {
-			return next(new Error('RefreshTokenExpiredError'));
+		const currentUser = await usersService.getUserAuthDetails(decoded.username);
+
+		// Type guard. User will always exist.
+		if (!currentUser) return;
+
+		// received refresh token is an older version
+		if (currentUser.tokenVersion !== decoded.tokenVersion) {
+			next(new Error('RefreshTokenExpiredError'));
+			return;
 		}
 
-		// refresh token is either expired or flagged as revoked in the db
-		if (
-			foundToken.revoked ||
-			(foundToken && err instanceof TokenExpiredError)
-		) {
-			await authService.deleteRefreshToken(foundToken.token);
-			return next(new Error('RefreshTokenExpiredError'));
-		}
+		const accessToken = issueAccessToken(currentUser.username);
 
-		// Type guard if user doesn't exist. All tokens associated with a user will
-		// be deleted alongside with the user so this isn't really necessary.
-		// But, I'll leave this here in case I need to handle some edge case if it
-		// happens
-		if (!foundToken.User) {
-			return next();
+		res.status(200).json({
+			newToken: accessToken,
+			user: {
+				id: currentUser.id,
+				firstName: currentUser.firstName,
+				lastName: currentUser.lastName,
+				username: currentUser.username,
+				following: currentUser.following.map((user) => user.id),
+			},
+		});
+	} catch (err) {
+		// refresh token is expired
+		if (err instanceof TokenExpiredError) {
+			return next(new Error('RefreshTokenExpiredError'));
 		}
 
 		// since the possibility of err being a TokenExpiredError is handled earlier
@@ -131,20 +140,7 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 		// expired access tokens, if it's returned as is to the error handler
 		// it will call a refresh.
 		if (err) return next(err);
-
-		const accessToken = issueAccessToken(foundToken.User.username);
-
-		res.status(200).json({
-			newToken: accessToken,
-			user: {
-				id: foundToken.User.id,
-				firstName: foundToken.User.firstName,
-				lastName: foundToken.User.lastName,
-				username: foundToken.User.username,
-				following: foundToken.User.following.map((user) => user.id),
-			},
-		});
-	});
+	}
 }
 
 async function logout(req: Request, res: Response) {
@@ -152,7 +148,22 @@ async function logout(req: Request, res: Response) {
 		res.sendStatus(200);
 	}
 
-	await authService.deleteRefreshToken(req.cookies.jwt);
+	res
+		.clearCookie('jwt', {
+			httpOnly: true,
+			sameSite: 'none',
+			secure: true,
+			path: '/auth',
+		})
+		.sendStatus(200);
+}
+
+async function logoutFromAllDevices(req: Request, res: Response) {
+	if (!req.cookies.jwt) {
+		res.sendStatus(200);
+	}
+
+	await usersService.updateTokenVersion(req.user.username);
 
 	res
 		.clearCookie('jwt', {
@@ -169,4 +180,5 @@ export default {
 	loginUser,
 	refresh,
 	logout,
+	logoutFromAllDevices,
 };

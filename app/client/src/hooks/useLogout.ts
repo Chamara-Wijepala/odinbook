@@ -16,5 +16,15 @@ export default function useLogout() {
 		}
 	}
 
-	return logout;
+	async function logoutFromAllDevices() {
+		try {
+			await api.post('/auth/logout-all');
+			clearToken();
+			navigate('/login');
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	return { logout, logoutFromAllDevices };
 }
