@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router';
-import { IoCloseOutline, IoLogOutOutline, IoMenu } from 'react-icons/io5';
+import { IoCloseOutline, IoMenu } from 'react-icons/io5';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import useAuthStore from '../../stores/auth';
 import useNewPostStore from '../../stores/new-post';
@@ -48,7 +48,7 @@ export default function Navbar() {
 			</button>
 
 			<header
-				className={`fixed lg:sticky top-0 bottom-0 z-40 flex flex-col max-h-[100vh] w-[300px] bg-white dark:bg-slate-950 p-4 pt-16 lg:p-8 transition-all ${
+				className={`fixed lg:sticky top-0 bottom-0 z-50 flex flex-col max-h-[100vh] w-[300px] bg-white dark:bg-slate-950 p-4 pt-16 lg:p-8 transition-all ${
 					isOpen ? '' : '-translate-x-full lg:-translate-x-0'
 				}`}
 			>
@@ -122,8 +122,11 @@ export default function Navbar() {
 
 			{/* darkens background when navbar is open */}
 			<div
-				className={`fixed inset-0 lg:hidden pointer-events-none bg-black transition-opacity duration-300 ${
-					isOpen ? 'opacity-25' : 'opacity-0'
+				onClick={toggleNavbar}
+				className={`fixed inset-0 z-40 lg:hidden bg-black transition-opacity duration-300 ${
+					isOpen
+						? 'opacity-25 pointer-events-auto'
+						: 'opacity-0 pointer-events-none'
 				}`}
 			></div>
 		</>
