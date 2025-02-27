@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { IoIosArrowRoundBack } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Dialog from '../../components/post/dialog';
+import Dialog from '../../components/dialog';
+import PostDialogItems from '../../components/post/post-dialog-items';
 import PostLikes from '../../components/post-likes';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
@@ -19,6 +20,8 @@ function formatDate(isoString: string) {
 }
 
 export default function PostPage() {
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const params = useParams();
 	const {
 		isLoading,
@@ -85,11 +88,28 @@ export default function PostPage() {
 								</Link>
 							</div>
 
-							<Dialog
-								authorId={post.author.id}
-								postId={post.id}
-								postContent={post.content}
-							/>
+							<div className="relative">
+								<button
+									ref={buttonRef}
+									onClick={() => setIsDialogOpen(!isDialogOpen)}
+									className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
+								>
+									<BsThreeDotsVertical />
+								</button>
+
+								<Dialog
+									isOpen={isDialogOpen}
+									setIsOpen={setIsDialogOpen}
+									buttonRef={buttonRef}
+									className="-translate-x-[calc(100%-20px)]"
+								>
+									<PostDialogItems
+										authorId={post.author.id}
+										postId={post.id}
+										postContent={post.content}
+									/>
+								</Dialog>
+							</div>
 						</div>
 
 						<div className="my-4">

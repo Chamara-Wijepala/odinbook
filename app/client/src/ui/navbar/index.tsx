@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { NavLink } from 'react-router';
-import { IoCloseOutline, IoMenu } from 'react-icons/io5';
+import { IoCloseOutline, IoLogOutOutline, IoMenu } from 'react-icons/io5';
 import { MdOutlineDarkMode, MdOutlineLightMode } from 'react-icons/md';
 import useAuthStore from '../../stores/auth';
 import useNewPostStore from '../../stores/new-post';
 import useTheme from '../../hooks/useTheme';
-import Dialog from './dialog';
+import useLogout from '../../hooks/useLogout';
+import Dialog from '../../components/dialog';
 import CreatePost from '../../components/create-post';
 import Modal from '../../components/modal';
 
 export default function Navbar() {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const { theme, toggleTheme } = useTheme();
+	const { logout, logoutFromAllDevices } = useLogout();
 	const user = useAuthStore((state) => state.user);
 	const newPostCreated = useNewPostStore((state) => state.newPostCreated);
 
@@ -102,8 +106,44 @@ export default function Navbar() {
 				</button>
 
 				<div className="mt-auto flex gap-4">
-					<Dialog />
+					{/* log out dialog */}
+					<div className="relative">
+						<button
+							ref={buttonRef}
+							onClick={() => setIsDialogOpen(!isDialogOpen)}
+							className="flex items-center" // fix alignment issue with toggle theme button
+						>
+							<IoLogOutOutline className="w-8 h-8" />
+						</button>
 
+						<Dialog
+							isOpen={isDialogOpen}
+							setIsOpen={setIsDialogOpen}
+							buttonRef={buttonRef}
+							className="top-0 -translate-y-[calc(100%+0.5rem)]"
+						>
+							<ul className="text-nowrap font-semibold">
+								<li>
+									<button
+										onClick={logoutFromAllDevices}
+										className="w-full py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+									>
+										Log out from all devices
+									</button>
+								</li>
+								<li>
+									<button
+										onClick={logout}
+										className="w-full py-4 px-6 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+									>
+										Log out
+									</button>
+								</li>
+							</ul>
+						</Dialog>
+					</div>
+
+					{/* toggle theme button */}
 					<button onClick={toggleTheme}>
 						{theme === 'light' ? (
 							<MdOutlineDarkMode className="w-8 h-8" />

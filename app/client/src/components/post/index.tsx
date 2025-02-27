@@ -1,7 +1,9 @@
+import { useState, useRef } from 'react';
 import { Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Dialog from './dialog';
+import Dialog from '../dialog';
+import PostDialogItems from './post-dialog-items';
 import PostLikes from '../post-likes';
 
 type Props = {
@@ -27,6 +29,9 @@ export default function Post({
 	updatedAt,
 	likedBy,
 }: Props) {
+	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const buttonRef = useRef<HTMLButtonElement | null>(null);
+
 	return (
 		<Link to={`/post/${postId}`} draggable="false">
 			<div className="bg-white hover:bg-slate-50 dark:bg-slate-900 hover:dark:bg-slate-800 transition-colors shadow-md p-4 rounded-lg">
@@ -68,7 +73,32 @@ export default function Post({
 						</div>
 					</div>
 
-					<Dialog authorId={authorId} postId={postId} postContent={content} />
+					{/* Dialog */}
+					<div
+						onClick={(e) => e.preventDefault()} // prevent event bubbling
+						className="relative ml-auto"
+					>
+						<button
+							ref={buttonRef}
+							onClick={() => setIsDialogOpen(!isDialogOpen)}
+							className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
+						>
+							<BsThreeDotsVertical />
+						</button>
+
+						<Dialog
+							isOpen={isDialogOpen}
+							setIsOpen={setIsDialogOpen}
+							buttonRef={buttonRef}
+							className="-translate-x-[calc(100%-20px)]"
+						>
+							<PostDialogItems
+								authorId={authorId}
+								postId={postId}
+								postContent={content}
+							/>
+						</Dialog>
+					</div>
 				</div>
 
 				<div className="mt-4">
