@@ -33,7 +33,7 @@ model Post {
 
 model PostLike {
   postId String
-  post   Post   @relation(fields: [postId], references: [id])
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
