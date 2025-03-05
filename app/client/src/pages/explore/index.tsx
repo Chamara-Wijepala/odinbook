@@ -1,10 +1,44 @@
+import { useState, useEffect, useRef } from 'react';
 import Post, { PostSkeleton } from '../../components/post';
 import useData from '../../hooks/useData';
+import useOnScreen from '../../hooks/useOnScreen';
 import type { PostType } from '../../types';
 
+type Data = {
+	nextCursor: string | null;
+	posts: PostType[];
+};
+
 export default function Explore() {
+	const [cursor, setCursor] = useState('');
 	// Error isn't needed because endpoint will always return an array.
-	const { isLoading, data: posts } = useData<PostType[]>('/posts?page=explore');
+	const { isLoading, data } = useData<Data>(
+		`/posts?page=explore&cursor=${cursor}`
+	);
+	const [posts, setPosts] = useState<PostType[]>([]);
+	const loaderRef = useRef<HTMLDivElement>(null);
+	const isOnScreen = useOnScreen(loaderRef);
+
+	useEffect(() => {
+		if (!data) return;
+
+		if (data.posts.length > 0) setPosts((prev) => [...prev, ...data.posts]);
+
+		// loaderRef element must be in the DOM because it's passed to useOnScreen,
+		// so it's hidden instead.
+		// explicitly check for null because server returns null when there are no
+		// more posts to return.
+		if (data.nextCursor === null) loaderRef.current!.className = 'hidden';
+	}, [data]);
+
+	// setting cursor also causes useData to refetch
+	useEffect(() => {
+		if (!data || !data.nextCursor) return;
+
+		if (isOnScreen) {
+			setCursor(data.nextCursor);
+		}
+	}, [isOnScreen]);
 
 	return (
 		<div className="p-4">
@@ -45,6 +79,14 @@ export default function Explore() {
 						likedBy={post.likedBy}
 					/>
 				))}
+			</div>
+
+			<div ref={loaderRef} className="pt-4 flex flex-col gap-4">
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
+				<PostSkeleton />
 			</div>
 		</div>
 	);

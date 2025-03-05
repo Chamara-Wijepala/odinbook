@@ -76,11 +76,11 @@ async function getPost(req: Request, res: Response) {
 }
 
 async function getPosts(req: Request, res: Response) {
-	const { page, userId } = req.query;
+	const { page, userId, cursor } = req.query;
 	let posts;
 
 	if (userId) {
-		posts = await postsService.getUserPosts(userId as string);
+		posts = await postsService.getUserPosts(userId as string, cursor as string);
 
 		const results = posts?.map((post) => {
 			return {
@@ -89,17 +89,33 @@ async function getPosts(req: Request, res: Response) {
 			};
 		});
 
-		res.status(200).json(results);
+		let nextCursor: Date | null;
+		if (
+			posts.length === 0 ||
+			posts[posts.length - 1].createdAt === posts[0].createdAt
+		) {
+			nextCursor = null;
+		} else {
+			nextCursor = posts[posts.length - 1].createdAt;
+		}
+
+		res.status(200).json({ nextCursor, posts: results });
 		return;
 	}
 
 	switch (page) {
 		case 'home':
-			posts = await postsService.getHomePage(req.user.username);
+			posts = await postsService.getHomePage(
+				req.user.username,
+				cursor as string
+			);
 			break;
 		case 'explore':
-			posts = await postsService.getExplorePage();
+			posts = await postsService.getExplorePage(cursor as string);
 			break;
+		default:
+			res.sendStatus(400);
+			return;
 	}
 
 	const results = posts?.map((post) => {
@@ -109,7 +125,17 @@ async function getPosts(req: Request, res: Response) {
 		};
 	});
 
-	res.status(200).json(results);
+	let nextCursor: Date | null;
+	if (
+		posts.length === 0 ||
+		posts[posts.length - 1].createdAt === posts[0].createdAt
+	) {
+		nextCursor = null;
+	} else {
+		nextCursor = posts[posts.length - 1].createdAt;
+	}
+
+	res.status(200).json({ nextCursor, posts: results });
 }
 
 async function updatePost(req: Request, res: Response) {

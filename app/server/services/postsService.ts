@@ -38,7 +38,7 @@ async function getPostAuthor(postId: string) {
 	return post.author;
 }
 
-async function getHomePage(username: string) {
+async function getHomePage(username: string, cursor: string) {
 	return await prisma.post.findMany({
 		where: {
 			author: {
@@ -71,10 +71,13 @@ async function getHomePage(username: string) {
 		orderBy: {
 			createdAt: 'desc',
 		},
+		take: 5,
+		skip: cursor === '' ? 0 : 1,
+		cursor: cursor === '' ? undefined : { createdAt: cursor },
 	});
 }
 
-async function getExplorePage() {
+async function getExplorePage(cursor: string) {
 	return await prisma.post.findMany({
 		select: {
 			id: true,
@@ -98,6 +101,9 @@ async function getExplorePage() {
 		orderBy: {
 			createdAt: 'desc',
 		},
+		take: 5,
+		skip: cursor === '' ? 0 : 1,
+		cursor: cursor === '' ? undefined : { createdAt: cursor },
 	});
 }
 
@@ -128,7 +134,7 @@ async function getPostPage(id: string) {
 	});
 }
 
-async function getUserPosts(authorId: string) {
+async function getUserPosts(authorId: string, cursor: string) {
 	return await prisma.post.findMany({
 		where: {
 			authorId,
@@ -155,6 +161,9 @@ async function getUserPosts(authorId: string) {
 		orderBy: {
 			createdAt: 'desc',
 		},
+		take: 5,
+		skip: cursor === '' ? 0 : 1,
+		cursor: cursor === '' ? undefined : { createdAt: cursor },
 	});
 }
 
