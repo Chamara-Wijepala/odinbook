@@ -1,20 +1,11 @@
-import { useState, useEffect } from 'react';
-import useAuthStore from '../../stores/auth';
-import useNewPostStore from '../../stores/new-post';
 import CreatePost from '../../components/create-post';
 import Post, { PostSkeleton } from '../../components/post';
 import usePosts from '../../hooks/usePosts';
-import { PostType } from '../../types';
+import useNewPosts from '../../hooks/useNewPosts';
 
 export default function Home() {
-	const [newPosts, setNewPosts] = useState<PostType[]>([]);
-	const newPost = useNewPostStore((state) => state.newPost);
-	const currentUser = useAuthStore((state) => state.user);
+	const { newPosts } = useNewPosts();
 	const { isLoading, posts, loaderRef } = usePosts('/posts?page=home');
-
-	useEffect(() => {
-		if (newPost) setNewPosts((prev) => [newPost, ...prev]);
-	}, [newPost]);
 
 	return (
 		<div className="flex flex-col">
@@ -25,21 +16,20 @@ export default function Home() {
 			<div className="p-4">
 				{/* displays newly created posts by current user */}
 				<div className="flex flex-col gap-4">
-					{currentUser &&
-						newPosts.map((post) => (
-							<Post
-								key={post.id}
-								postId={post.id}
-								authorId={currentUser.id}
-								firstName={currentUser.firstName}
-								lastName={currentUser.lastName}
-								username={currentUser.username}
-								content={post.content}
-								createdAt={post.createdAt}
-								updatedAt={post.updatedAt}
-								likedBy={post.likedBy}
-							/>
-						))}
+					{newPosts.map((post) => (
+						<Post
+							key={post.id}
+							postId={post.id}
+							authorId={post.author.id}
+							firstName={post.author.firstName}
+							lastName={post.author.lastName}
+							username={post.author.username}
+							content={post.content}
+							createdAt={post.createdAt}
+							updatedAt={post.updatedAt}
+							likedBy={post.likedBy}
+						/>
+					))}
 				</div>
 
 				{/* display posts from users followed by current user */}

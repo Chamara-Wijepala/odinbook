@@ -29,7 +29,7 @@ export default function CreatePost() {
 			const response = await api.post('/posts', { content });
 			setContent('');
 			setIsPosting(false);
-			setNewPost(response.data.newPost);
+			setNewPost(response.data);
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setError(error.response?.data.error);

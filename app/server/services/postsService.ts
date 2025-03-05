@@ -8,8 +8,17 @@ async function createPost(content: string, authorId: string) {
 		},
 		select: {
 			id: true,
+			content: true,
 			createdAt: true,
 			updatedAt: true,
+			author: {
+				select: {
+					id: true,
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
 			likedBy: {
 				select: {
 					userId: true,

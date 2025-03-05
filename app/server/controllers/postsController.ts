@@ -24,15 +24,12 @@ async function createPost(req: Request, res: Response) {
 
 	const post = await postsService.createPost(req.body.content, userId);
 
-	res.status(200).json({
-		newPost: {
-			id: post.id,
-			content: req.body.content,
-			createdAt: post.createdAt,
-			updatedAt: post.updatedAt,
-			likedBy: post.likedBy.map((like) => like.userId),
-		},
-	});
+	const newPost = {
+		...post,
+		likedBy: post.likedBy.map((like) => like.userId),
+	};
+
+	res.status(200).json(newPost);
 }
 
 async function likePost(req: Request, res: Response) {
