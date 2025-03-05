@@ -1,55 +1,22 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router';
 import CreatePost from '../../components/create-post';
 import Post, { PostSkeleton } from '../../components/post';
 import useAuthStore from '../../stores/auth';
 import useNewPostStore from '../../stores/new-post';
-import useData from '../../hooks/useData';
-import useOnScreen from '../../hooks/useOnScreen';
+import usePosts from '../../hooks/usePosts';
 import { PostType } from '../../types';
 
-type Data = {
-	nextCursor: string | null;
-	posts: PostType[];
-};
-
 export default function UserPosts({ id }: { id: string }) {
-	const [cursor, setCursor] = useState('');
-	const { isLoading, data } = useData<Data>(
-		`/posts?userId=${id}&cursor=${cursor}`
-	);
 	const params = useParams();
 	const currentUser = useAuthStore((state) => state.user);
 	const newPost = useNewPostStore((state) => state.newPost);
 	const [newPosts, setNewPosts] = useState<PostType[]>([]);
-	const [posts, setPosts] = useState<PostType[]>([]);
-	const loaderRef = useRef<HTMLDivElement>(null);
-	const isOnScreen = useOnScreen(loaderRef);
+	const { isLoading, posts, loaderRef } = usePosts(`/posts?userId=${id}`);
 
 	useEffect(() => {
 		if (newPost) setNewPosts((prev) => [newPost, ...prev]);
 	}, [newPost]);
-
-	useEffect(() => {
-		if (!data) return;
-
-		if (data.posts.length > 0) setPosts((prev) => [...prev, ...data.posts]);
-
-		// loaderRef element must be in the DOM because it's passed to useOnScreen,
-		// so it's hidden instead.
-		// explicitly check for null because server returns null when there are no
-		// more posts to return.
-		if (data.nextCursor === null) loaderRef.current!.className = 'hidden';
-	}, [data]);
-
-	// setting cursor also causes useData to refetch
-	useEffect(() => {
-		if (!data || !data.nextCursor) return;
-
-		if (isOnScreen) {
-			setCursor(data.nextCursor);
-		}
-	}, [isOnScreen]);
 
 	return (
 		<div className="pb-4">
