@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import cors from 'cors';
-import express from 'express';
+import express, { Application } from 'express';
 import cookieParser from 'cookie-parser';
 import routes from './routes';
 import verifyJWT from './middleware/verifyJWT';
@@ -8,8 +8,7 @@ import errorHandler from './middleware/errorHandler';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app: Application = express();
 
 app.use(
 	cors({
@@ -30,4 +29,4 @@ app.use('/users', routes.users);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log('Server running'));
+export default app;
