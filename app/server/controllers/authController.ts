@@ -68,10 +68,13 @@ async function loginUser(req: Request, res: Response, next: NextFunction) {
 				.json({ username: '', password: 'The password is incorrect.' });
 		}
 
+		const expiresIn =
+			process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60 * 60;
 		const accessToken = issueAccessToken(user.username);
-		const { refreshToken, expiresIn } = issueRefreshToken(
+		const refreshToken = issueRefreshToken(
 			user.username,
-			user.tokenVersion
+			user.tokenVersion,
+			expiresIn
 		);
 
 		res.cookie('jwt', refreshToken, {

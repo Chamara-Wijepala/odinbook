@@ -23,11 +23,13 @@ export function issueAccessToken(username: string) {
 	return jwt.sign(payload, PRIV_KEY, options);
 }
 
-export function issueRefreshToken(username: string, tokenVersion: number) {
-	// when passing in a numeric value, the jsonwebtoken library interprets it as
+export function issueRefreshToken(
+	username: string,
+	tokenVersion: number,
+	// When passing in a numeric value, the jsonwebtoken library interprets it as
 	// seconds, not milliseconds
-	const expiresIn =
-		process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60 * 60;
+	expiresIn: number
+) {
 	const payload = {
 		username,
 		tokenVersion,
@@ -37,8 +39,5 @@ export function issueRefreshToken(username: string, tokenVersion: number) {
 		algorithm: 'RS256',
 	};
 
-	return {
-		refreshToken: jwt.sign(payload, PRIV_KEY, options),
-		expiresIn,
-	};
+	return jwt.sign(payload, PRIV_KEY, options);
 }
