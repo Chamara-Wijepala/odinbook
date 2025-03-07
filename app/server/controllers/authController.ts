@@ -149,6 +149,7 @@ async function refresh(req: Request, res: Response, next: NextFunction) {
 async function logout(req: Request, res: Response) {
 	if (!req.cookies.jwt) {
 		res.sendStatus(200);
+		return;
 	}
 
 	res
@@ -164,6 +165,7 @@ async function logout(req: Request, res: Response) {
 async function logoutFromAllDevices(req: Request, res: Response) {
 	if (!req.cookies.jwt) {
 		res.sendStatus(200);
+		return;
 	}
 
 	await usersService.updateTokenVersion(req.user.username);

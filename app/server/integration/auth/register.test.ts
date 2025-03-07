@@ -3,8 +3,8 @@ import {
 	test,
 	expect,
 	expectTypeOf,
-	beforeEach,
-	afterEach,
+	beforeAll,
+	afterAll,
 } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
@@ -43,20 +43,20 @@ describe('when passed invalid data', () => {
 
 describe('when passed valid data', () => {
 	const userData: CreateUser = {
-		firstName: 'Jane',
-		lastName: 'Doe',
-		username: 'JaneDoe1990',
+		firstName: 'register',
+		lastName: 'tester',
+		username: 'register-tester',
 		password: 'helloworld',
 		confirmPassword: 'helloworld',
 	};
 
-	beforeEach(async () => {
+	beforeAll(async () => {
 		await prisma.user.deleteMany({
 			where: { username: userData.username },
 		});
 	});
 
-	afterEach(async () => {
+	afterAll(async () => {
 		await prisma.user.deleteMany({
 			where: { username: userData.username },
 		});
