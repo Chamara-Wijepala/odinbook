@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import cookie from 'cookie';
-import { issueRefreshToken } from '../utils/issueJWT';
+import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 
 export const userData = {
 	firstName: 'John',
@@ -13,6 +13,10 @@ export const hash = bcrypt.hashSync(userData.password, 10);
 
 export const jwtRegex =
 	/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/;
+
+export function getAccessToken(username?: string) {
+	return issueAccessToken(username ? username : userData.username, '5m');
+}
 
 export function getCookieWithRefreshToken(
 	username: string,
