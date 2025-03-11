@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import cookie from 'cookie';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
+import prisma from '../db/prisma';
 
 export const userData = {
 	firstName: 'John',
@@ -10,6 +11,15 @@ export const userData = {
 };
 
 export const hash = bcrypt.hashSync(userData.password, 10);
+
+export const janeDoe = {
+	firstName: 'Jane',
+	lastName: 'Doe',
+	username: 'JaneDoe2000',
+	password: 'helloworld',
+};
+
+export const janesHash = bcrypt.hashSync(janeDoe.password, 10);
 
 export const jwtRegex =
 	/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/;
@@ -37,4 +47,15 @@ export function getCookieWithRefreshToken(
 
 export function getCookieWithoutRefreshToken() {
 	return cookie.serialize('foo', 'bar');
+}
+
+export async function getUserId(username: string) {
+	const user = await prisma.user.findUnique({
+		where: { username },
+		select: { id: true },
+	});
+
+	if (!user) return null;
+
+	return user.id;
 }
