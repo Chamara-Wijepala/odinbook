@@ -10,8 +10,7 @@ const PRIV_KEY = {
 	passphrase: process.env.KEY_PASSPHRASE,
 };
 
-export function issueAccessToken(username: string) {
-	const expiresIn = '15m';
+export function issueAccessToken(username: string, expiresIn: string | number) {
 	const payload = {
 		username,
 	};

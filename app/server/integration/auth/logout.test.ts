@@ -40,7 +40,7 @@ describe('POST /logout-all', () => {
 		username: 'logout-tester',
 		password: 'helloworld',
 	};
-	const accessToken = issueAccessToken(localUser.username);
+	const accessToken = issueAccessToken(localUser.username, 60);
 
 	beforeAll(async () => {
 		await prisma.user.create({ data: localUser });

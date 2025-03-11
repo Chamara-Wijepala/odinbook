@@ -43,7 +43,10 @@ function errorHandler(
 				});
 			return;
 		}
-		if (err.message === 'MissingHeaderOrTokenError') {
+		if (
+			err.message === 'MissingHeaderError' ||
+			err.message === 'MissingBearerTokenError'
+		) {
 			res.status(401).json({
 				toast: {
 					type: 'error',
