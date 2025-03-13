@@ -59,3 +59,11 @@ export async function getUserId(username: string) {
 
 	return user.id;
 }
+
+export async function getFirstPostId() {
+	const post = await prisma.post.findFirst({ select: { id: true } });
+
+	if (!post) return null;
+
+	return post.id;
+}

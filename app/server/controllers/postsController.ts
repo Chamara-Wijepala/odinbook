@@ -87,10 +87,7 @@ async function getPosts(req: Request, res: Response) {
 		});
 
 		let nextCursor: Date | null;
-		if (
-			posts.length === 0 ||
-			posts[posts.length - 1].createdAt === posts[0].createdAt
-		) {
+		if (posts.length < 5) {
 			nextCursor = null;
 		} else {
 			nextCursor = posts[posts.length - 1].createdAt;
@@ -123,10 +120,7 @@ async function getPosts(req: Request, res: Response) {
 	});
 
 	let nextCursor: Date | null;
-	if (
-		posts.length === 0 ||
-		posts[posts.length - 1].createdAt === posts[0].createdAt
-	) {
+	if (posts.length < 5) {
 		nextCursor = null;
 	} else {
 		nextCursor = posts[posts.length - 1].createdAt;
