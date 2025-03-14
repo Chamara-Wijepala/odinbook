@@ -37,6 +37,7 @@ async function likePost(req: Request, res: Response) {
 
 	const userId = await usersService.getUserId(req.user.username);
 
+	// type guard. userId will always exist.
 	if (!userId) return;
 
 	const isLiked = await likesService.isPostLiked(postId, userId);
@@ -203,6 +204,7 @@ async function unlikePost(req: Request, res: Response) {
 
 	const userId = await usersService.getUserId(req.user.username);
 
+	// type guard. userId will always exist.
 	if (!userId) return;
 
 	const isLiked = await likesService.isPostLiked(postId, userId);
