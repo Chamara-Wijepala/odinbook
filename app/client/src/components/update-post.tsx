@@ -33,7 +33,7 @@ export default function UpdatePost({
 
 		try {
 			setIsPosting(true);
-			const response = await api.patch(`/posts/${postId}`, { postId, content });
+			const response = await api.patch(`/posts/${postId}`, { content });
 			setIsPosting(false);
 			coloredNotification(response.data.toast);
 			toggleModal();

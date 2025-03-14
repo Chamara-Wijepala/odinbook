@@ -130,12 +130,11 @@ async function getPosts(req: Request, res: Response) {
 }
 
 async function updatePost(req: Request, res: Response) {
-	const { postId, content } = req.body;
+	const { content } = req.body;
+	const postId = req.params.id;
 
-	if (!postId || !content) {
-		res.send(400).json({
-			toast: { type: 'error', message: 'The post id or content is missing.' },
-		});
+	if (content.length < 1) {
+		res.status(400).json({ error: 'Post is empty.' });
 		return;
 	}
 	if (content.length > 500) {
