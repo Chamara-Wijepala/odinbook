@@ -1,7 +1,8 @@
 import { describe, test, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
-import { janeDoe, getAccessToken, getFirstPostId } from '../common';
+import prisma from '../../db/prisma';
+import { userData, janeDoe, getAccessToken, getUserId } from '../common';
 import type { Response } from 'supertest';
 
 const johnsToken = getAccessToken();
@@ -17,7 +18,19 @@ function expectToastMessage(response: Response) {
 }
 
 beforeAll(async () => {
-	postId = await getFirstPostId();
+	const johnsId = await getUserId(userData.username);
+
+	const post = await prisma.post.create({
+		data: {
+			content: 'Post to be deleted',
+			authorId: johnsId!,
+		},
+		select: {
+			id: true,
+		},
+	});
+
+	postId = post.id;
 });
 
 describe('when passed an invalid post id', () => {
