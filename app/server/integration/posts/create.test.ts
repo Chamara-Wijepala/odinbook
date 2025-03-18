@@ -1,10 +1,18 @@
-import { describe, test, expect, beforeAll } from 'vitest';
+import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
+import prisma from '../../db/prisma';
 import { getAccessToken } from '../common';
 import type { Response } from 'supertest';
 
 const accessToken = getAccessToken();
+let postId: string;
+
+afterAll(async () => {
+	await prisma.post.delete({
+		where: { id: postId },
+	});
+});
 
 describe('POST /', () => {
 	describe('when passed empty or no content', () => {
@@ -62,6 +70,8 @@ describe('POST /', () => {
 				.post('/posts/')
 				.set('authorization', `Bearer ${accessToken}`)
 				.send({ content: 'Hello, World!' });
+
+			postId = response.body.id;
 		});
 
 		test('should return a 200 http status', () => {
