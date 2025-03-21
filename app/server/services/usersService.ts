@@ -1,21 +1,5 @@
 import prisma from '../db/prisma';
 
-async function createUser(
-	firstName: string,
-	lastName: string,
-	username: string,
-	hash: string
-) {
-	return await prisma.user.create({
-		data: {
-			firstName: firstName,
-			lastName: lastName,
-			username: username,
-			password: hash,
-		},
-	});
-}
-
 async function getUserId(username: string) {
 	const user = await prisma.user.findUnique({
 		where: {
@@ -53,40 +37,6 @@ async function getUserProfile(username: string) {
 	});
 }
 
-async function getUserAuthDetails(username: string) {
-	return await prisma.user.findUnique({
-		where: {
-			username,
-		},
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			username: true,
-			password: true,
-			tokenVersion: true,
-			following: {
-				select: {
-					id: true,
-				},
-			},
-		},
-	});
-}
-
-async function updateTokenVersion(username: string) {
-	return await prisma.user.update({
-		where: {
-			username,
-		},
-		data: {
-			tokenVersion: {
-				increment: 1,
-			},
-		},
-	});
-}
-
 async function followUser(userId: string, currentUserId: string) {
 	return await prisma.user.update({
 		where: {
@@ -114,11 +64,8 @@ async function unfollowUser(userId: string, currentUserId: string) {
 }
 
 export default {
-	createUser,
 	getUserId,
 	getUserProfile,
-	getUserAuthDetails,
-	updateTokenVersion,
 	followUser,
 	unfollowUser,
 };
