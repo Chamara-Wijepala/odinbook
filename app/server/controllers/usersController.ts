@@ -1,52 +1,47 @@
 import usersService from '../services/usersService';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
-async function getUserProfile(req: Request, res: Response) {
-	const user = await usersService.getUserProfile(req.params.username);
+async function getUserProfile(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status, error, data } = await usersService.getUserProfile(
+			req.params.username
+		);
 
-	if (!user) {
-		res.status(404).json({
-			toast: {
-				type: 'error',
-				message: "Couldn't find the user you're looking for.",
-			},
-		});
-		return;
+		if (error) {
+			res.status(status).json(error);
+			return;
+		}
+
+		res.status(200).json(data);
+	} catch (error) {
+		next(error);
 	}
-
-	res.status(200).json(user);
 }
 
-async function followUser(req: Request, res: Response) {
-	const currentUserId = await usersService.getUserId(req.user.username);
+async function followUser(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status } = await usersService.followUser(
+			req.user.username,
+			req.params.id
+		);
 
-	// Only case where currentUser might not exist is if user is deleted from the
-	// database while they're is already logged in with a valid access token.
-	if (!currentUserId) return;
-
-	// If user tries to follow themselves. No real need to handle because the
-	// button will be disabled on the client.
-	if (currentUserId === req.params.id) return;
-
-	await usersService.followUser(req.params.id, currentUserId);
-
-	res.sendStatus(200);
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
 }
 
-async function unfollowUser(req: Request, res: Response) {
-	const currentUserId = await usersService.getUserId(req.user.username);
+async function unfollowUser(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status } = await usersService.unfollowUser(
+			req.user.username,
+			req.params.id
+		);
 
-	// Only case where currentUser might not exist is if user is deleted from the
-	// database while they're is already logged in with a valid access token.
-	if (!currentUserId) return;
-
-	// If user tries to unfollow themselves. No real need to handle because the
-	// button will be disabled on the client.
-	if (currentUserId === req.params.id) return;
-
-	await usersService.unfollowUser(req.params.id, currentUserId);
-
-	res.sendStatus(200);
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
 }
 
 export default {

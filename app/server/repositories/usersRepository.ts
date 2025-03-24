@@ -41,6 +41,28 @@ async function getLoginData(username: string) {
 	});
 }
 
+async function getProfileData(username: string) {
+	return await prisma.user.findUnique({
+		where: {
+			username,
+		},
+		select: {
+			id: true,
+			firstName: true,
+			lastName: true,
+			username: true,
+			createdAt: true,
+			_count: {
+				select: {
+					posts: true,
+					followedBy: true,
+					following: true,
+				},
+			},
+		},
+	});
+}
+
 async function updateTokenVersion(username: string) {
 	return await prisma.user.update({
 		where: {
@@ -54,9 +76,38 @@ async function updateTokenVersion(username: string) {
 	});
 }
 
+async function followUser(currentUserId: string, userId: string) {
+	return await prisma.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
+			followedBy: {
+				connect: { id: currentUserId },
+			},
+		},
+	});
+}
+
+async function unfollowUser(currentUserId: string, userId: string) {
+	await prisma.user.update({
+		where: {
+			id: userId,
+		},
+		data: {
+			followedBy: {
+				disconnect: { id: currentUserId },
+			},
+		},
+	});
+}
+
 export default {
 	create,
 	findByUsername,
 	getLoginData,
+	getProfileData,
 	updateTokenVersion,
+	followUser,
+	unfollowUser,
 };

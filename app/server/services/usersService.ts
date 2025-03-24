@@ -1,4 +1,5 @@
 import prisma from '../db/prisma';
+import usersRepository from '../repositories/usersRepository';
 
 async function getUserId(username: string) {
 	const user = await prisma.user.findUnique({
@@ -16,51 +17,54 @@ async function getUserId(username: string) {
 }
 
 async function getUserProfile(username: string) {
-	return await prisma.user.findUnique({
-		where: {
-			username,
-		},
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			username: true,
-			createdAt: true,
-			_count: {
-				select: {
-					posts: true,
-					followedBy: true,
-					following: true,
+	const data = await usersRepository.getProfileData(username);
+
+	if (!data) {
+		return {
+			status: 404,
+			error: {
+				toast: {
+					type: 'error',
+					message: "Couldn't find the user you're looking for.",
 				},
 			},
-		},
-	});
+			data: null,
+		};
+	}
+
+	return {
+		status: 200,
+		error: null,
+		data,
+	};
 }
 
-async function followUser(userId: string, currentUserId: string) {
-	return await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			followedBy: {
-				connect: { id: currentUserId },
-			},
-		},
-	});
+async function followUser(username: string, id: string) {
+	const currentUser = await usersRepository.findByUsername(username);
+
+	// Type guard. User will always exist.
+	if (!currentUser) return { status: 404 };
+
+	// If user tries to follow themself.
+	if (currentUser.id === id) return { status: 400 };
+
+	await usersRepository.followUser(currentUser.id, id);
+
+	return { status: 200 };
 }
 
-async function unfollowUser(userId: string, currentUserId: string) {
-	await prisma.user.update({
-		where: {
-			id: userId,
-		},
-		data: {
-			followedBy: {
-				disconnect: { id: currentUserId },
-			},
-		},
-	});
+async function unfollowUser(username: string, id: string) {
+	const currentUser = await usersRepository.findByUsername(username);
+
+	// Type guard. User will always exist.
+	if (!currentUser) return { status: 404 };
+
+	// If user tries to unfollow themself.
+	if (currentUser.id === id) return { status: 400 };
+
+	await usersRepository.unfollowUser(currentUser.id, id);
+
+	return { status: 200 };
 }
 
 export default {
