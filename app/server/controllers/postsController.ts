@@ -1,9 +1,8 @@
 import postsService from '../services/postsService';
-import usersService from '../services/usersService';
 import likesService from '../services/likesService';
-import type { Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
-async function createPost(req: Request, res: Response) {
+async function createPost(req: Request, res: Response, next: NextFunction) {
 	const { content } = req.body;
 
 	if (!content || content.length < 1) {
@@ -15,124 +14,77 @@ async function createPost(req: Request, res: Response) {
 		return;
 	}
 
-	const userId = await usersService.getUserId(req.user.username);
+	try {
+		const { status, data } = await postsService.create(
+			req.user.username,
+			content
+		);
 
-	// Type guard. The only way user might not exist is if user is deleted on one
-	// device while authenticated on another device. This is an edge case, which
-	// is better handled in the verifyJWT middleware than here if needed.
-	if (!userId) return;
-
-	const post = await postsService.createPost(req.body.content, userId);
-
-	const newPost = {
-		...post,
-		likedBy: post.likedBy.map((like) => like.userId),
-	};
-
-	res.status(200).json(newPost);
-}
-
-async function likePost(req: Request, res: Response) {
-	const postId = req.params.id;
-
-	const userId = await usersService.getUserId(req.user.username);
-
-	// type guard. userId will always exist.
-	if (!userId) return;
-
-	const isLiked = await likesService.isPostLiked(postId, userId);
-
-	if (isLiked) {
-		res.sendStatus(409);
-		return;
-	}
-
-	await likesService.likePost(postId, userId);
-
-	res.sendStatus(200);
-}
-
-async function getPost(req: Request, res: Response) {
-	const post = await postsService.getPostPage(req.params.id);
-
-	if (!post) {
-		res.status(404).json({
-			toast: {
-				type: 'error',
-				message: "We couldn't find the post you're looking for.",
-			},
-		});
-		return;
-	}
-
-	const result = {
-		...post,
-		likedBy: post.likedBy.map((like) => like.userId),
-	};
-
-	res.status(200).json(result);
-}
-
-async function getPosts(req: Request, res: Response) {
-	const { page, userId, cursor } = req.query;
-	let posts;
-
-	if (userId) {
-		posts = await postsService.getUserPosts(userId as string, cursor as string);
-
-		const results = posts?.map((post) => {
-			return {
-				...post,
-				likedBy: post.likedBy.map((like) => like.userId),
-			};
-		});
-
-		let nextCursor: Date | null;
-		if (posts.length < 5) {
-			nextCursor = null;
-		} else {
-			nextCursor = posts[posts.length - 1].createdAt;
+		if (!data) {
+			res.sendStatus(status);
+			return;
 		}
 
-		res.status(200).json({ nextCursor, posts: results });
-		return;
+		res.status(status).json(data);
+	} catch (error) {
+		next(error);
 	}
-
-	switch (page) {
-		case 'home':
-			posts = await postsService.getHomePage(
-				req.user.username,
-				cursor as string
-			);
-			break;
-		case 'explore':
-			posts = await postsService.getExplorePage(cursor as string);
-			break;
-		default:
-			res.sendStatus(400);
-			return;
-	}
-
-	const results = posts?.map((post) => {
-		return {
-			...post,
-			likedBy: post.likedBy.map((like) => like.userId),
-		};
-	});
-
-	let nextCursor: Date | null;
-	if (posts.length < 5) {
-		nextCursor = null;
-	} else {
-		nextCursor = posts[posts.length - 1].createdAt;
-	}
-
-	res.status(200).json({ nextCursor, posts: results });
 }
 
-async function updatePost(req: Request, res: Response) {
+async function likePost(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status } = await likesService.likePost(
+			req.user.username,
+			req.params.id
+		);
+
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
+}
+
+async function getPost(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status, error, data } = await postsService.getPostPage(
+			req.params.id
+		);
+
+		if (error) {
+			res.status(status).json(error);
+			return;
+		}
+
+		res.status(status).json(data);
+	} catch (error) {
+		next(error);
+	}
+}
+
+async function getPosts(req: Request, res: Response, next: NextFunction) {
+	const { page, userId, cursor } = req.query;
+
+	try {
+		const { status, data } = await postsService.getPosts(
+			req.user.username,
+			userId as string | undefined,
+			page as string | undefined,
+			cursor as string
+		);
+
+		if (!data) {
+			res.sendStatus(status);
+			return;
+		}
+
+		res.status(status).json(data);
+	} catch (error) {
+		next(error);
+	}
+}
+
+async function updatePost(req: Request, res: Response, next: NextFunction) {
 	const { content } = req.body;
-	const postId = req.params.id;
 
 	if (content.length < 1) {
 		res.status(400).json({ error: 'Post is empty.' });
@@ -143,80 +95,53 @@ async function updatePost(req: Request, res: Response) {
 		return;
 	}
 
-	const author = await postsService.getPostAuthor(postId);
+	try {
+		const { status, error, data } = await postsService.update(
+			req.user.username,
+			req.params.id,
+			content
+		);
 
-	if (!author) {
-		res.status(404).json({
-			toast: { type: 'error', message: "Couldn't find the post to update." },
-		});
-		return;
+		if (error) {
+			res.status(status).json(error);
+			return;
+		}
+
+		res.status(status).json(data);
+	} catch (error) {
+		next(error);
 	}
-	if (author.username !== req.user.username) {
-		res.status(403).json({
-			toast: {
-				type: 'error',
-				message: 'You do not have permission to edit this post.',
-			},
-		});
-		return;
-	}
-
-	await postsService.updatePost(postId, content);
-
-	res
-		.status(200)
-		.json({ toast: { type: 'success', message: 'Post updated!' } });
 }
 
-async function deletePost(req: Request, res: Response) {
-	const postId = req.params.id;
+async function deletePost(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status, error } = await postsService.deletePost(
+			req.user.username,
+			req.params.id
+		);
 
-	const author = await postsService.getPostAuthor(postId);
+		if (error) {
+			res.status(status).json(error);
+			return;
+		}
 
-	if (!author) {
-		res.status(404).json({
-			toast: {
-				type: 'error',
-				message:
-					"Couldn't find post to delete. It might have already been deleted.",
-			},
-		});
-		return;
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
 	}
-
-	if (author.username !== req.user.username) {
-		res.status(403).json({
-			toast: {
-				type: 'error',
-				message: 'You do not have permission to delete this post.',
-			},
-		});
-		return;
-	}
-
-	await postsService.deletePost(postId);
-
-	res.sendStatus(204);
 }
 
-async function unlikePost(req: Request, res: Response) {
-	const postId = req.params.id;
+async function unlikePost(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status } = await likesService.unlikePost(
+			req.user.username,
+			req.params.id
+		);
 
-	const userId = await usersService.getUserId(req.user.username);
-
-	// type guard. userId will always exist.
-	if (!userId) return;
-
-	const isLiked = await likesService.isPostLiked(postId, userId);
-
-	if (!isLiked) {
-		res.sendStatus(409);
-		return;
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
 	}
-
-	await likesService.unlikePost(postId, userId);
-
-	res.sendStatus(204);
 }
 
 export default {
