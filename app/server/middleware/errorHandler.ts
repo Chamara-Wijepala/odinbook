@@ -58,7 +58,13 @@ function errorHandler(
 		}
 	}
 
-	next(err);
+	console.error(err);
+	res.status(500).json({
+		toast: {
+			type: 'error',
+			message: 'There was an unexpected server error. Please try again later.',
+		},
+	});
 }
 
 export default errorHandler;

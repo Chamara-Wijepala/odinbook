@@ -66,6 +66,18 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
 	(response) => response,
 	async (error) => {
+		// handle unexpected server errors
+		if (error.response.status === 500) {
+			const data = error.response.data;
+
+			if (data.toast) {
+				coloredNotification(data.toast);
+				navigation.navigate && navigation.navigate('/');
+			}
+
+			return Promise.reject(error);
+		}
+
 		if (error.response.status !== 401) {
 			return Promise.reject(error);
 		}
