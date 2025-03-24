@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import api from '../api';
 import coloredNotification from '../services/notifications';
 import { AxiosError } from 'axios';
@@ -18,6 +18,7 @@ export default function UpdatePost({
 	const [isPosting, setIsPosting] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	async function handleClick() {
 		if (content === '') {
@@ -37,7 +38,12 @@ export default function UpdatePost({
 			setIsPosting(false);
 			coloredNotification(response.data.toast);
 			toggleModal();
-			navigate(`/post/${postId}`);
+			// refresh when on post page, navigate when on other pages.
+			if (location.pathname.split('/')[1] === 'post') {
+				navigate(0);
+			} else {
+				navigate(`/post/${postId}`);
+			}
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				const data = error.response?.data;

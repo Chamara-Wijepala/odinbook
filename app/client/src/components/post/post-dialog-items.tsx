@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { AiOutlineUserAdd, AiOutlineUserDelete } from 'react-icons/ai';
 import { FaRegEdit } from 'react-icons/fa';
 import { TiDeleteOutline } from 'react-icons/ti';
@@ -25,6 +25,7 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 	const updateUserFollowing = useAuthStore((s) => s.updateUserFollowing);
 	const deleteUserFollowing = useAuthStore((s) => s.deleteUserFollowing);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	function toggleModal() {
 		setIsModalOpen((prev) => !prev);
@@ -55,7 +56,12 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 			await api.delete(`/posts/${postId}`);
 			toggleModal();
 			coloredNotification({ type: 'success', message: 'Post deleted.' });
-			navigate('/');
+			// navigate to home when on post page, refresh when on other pages.
+			if (location.pathname.split('/')[1] === 'post') {
+				navigate('/');
+			} else {
+				navigate(0);
+			}
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				const { toast } = error.response?.data;
