@@ -68,7 +68,9 @@ export default function Register() {
 	return (
 		<div className="min-h-[100svh] p-4 flex flex-col gap-4 justify-center items-center relative bg-gradient-to-br from-sky-400 to-pink-400 dark:from-sky-800 dark:to-pink-800">
 			<div className="bg-white dark:bg-slate-800 shadow-md rounded-lg max-w-xl p-8 md:p-12 flex-grow-0">
-				<h2 className="text-xl md:text-3xl font-bold">Register</h2>
+				<h2 className="text-xl md:text-3xl font-bold font-norse tracking-wider">
+					Register
+				</h2>
 				<form
 					onSubmit={handleSubmit}
 					className="flex flex-col gap-4 md:gap-6  my-4 md:my-6"

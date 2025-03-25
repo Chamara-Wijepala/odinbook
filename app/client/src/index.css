@@ -100,3 +100,17 @@
 	font-weight: 900;
 	src: url('../public/fonts/roboto-v47-latin-900italic.woff2') format('woff2');
 }
+@font-face {
+	font-display: swap;
+	font-family: 'Norse';
+	font-style: normal;
+	font-weight: normal;
+	src: url('../public/fonts/Norse-KaWl.otf');
+}
+@font-face {
+	font-display: swap;
+	font-family: 'Norse';
+	font-style: normal;
+	font-weight: bold;
+	src: url('../public/fonts/NorseBold-2Kge.otf');
+}

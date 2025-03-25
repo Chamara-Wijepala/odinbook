@@ -5,6 +5,7 @@ export default {
 		extend: {
 			fontFamily: {
 				roboto: ['Roboto', 'arial', 'sans-serif'],
+				norse: ['Norse', 'arial', 'sans-serif'],
 			},
 		},
 	},
