@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { DateTime } from 'luxon';
-import { IoIosArrowRoundBack } from 'react-icons/io';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import useAuthStore from '../../stores/auth';
 import useData from '../../hooks/useData';
 import UserPosts from './user-posts';
+import BackButton from '../../components/back-button';
 import coloredNotification from '../../services/notifications';
 import api from '../../api';
 import { AxiosError } from 'axios';
@@ -70,15 +70,8 @@ export default function Profile() {
 
 	return (
 		<div>
-			{/* back button */}
 			<div className="p-4">
-				<button
-					onClick={() => navigate(-1)}
-					className="flex items-center gap-2"
-				>
-					<IoIosArrowRoundBack className="w-8 h-8" />
-					<p className="font-semibold">Back</p>
-				</button>
+				<BackButton />
 			</div>
 
 			{isLoading && <Skeleton />}

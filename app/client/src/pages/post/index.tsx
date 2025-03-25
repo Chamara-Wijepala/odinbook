@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router';
 import { DateTime } from 'luxon';
-import { IoIosArrowRoundBack } from 'react-icons/io';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from '../../components/dialog';
 import PostDialogItems from '../../components/post/post-dialog-items';
 import PostLikes from '../../components/post-likes';
+import BackButton from '../../components/back-button';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
 import type { PostType } from '../../types';
@@ -44,13 +44,7 @@ export default function PostPage() {
 	return (
 		<div>
 			<div className="p-4">
-				<button
-					onClick={() => navigate(-1)}
-					className="flex items-center gap-2"
-				>
-					<IoIosArrowRoundBack className="w-8 h-8" />
-					<p className="font-semibold">Back</p>
-				</button>
+				<BackButton />
 			</div>
 
 			{isLoading && <Skeleton />}
