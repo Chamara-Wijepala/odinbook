@@ -7,6 +7,7 @@ import Profile from './pages/profile';
 import Register from './pages/auth/register';
 import Login from './pages/auth/login';
 import PostPage from './pages/post';
+import NotFound from './pages/not-found';
 import NavigationLayout from './ui/navigation-layout';
 import PageLoader from './ui/page-loader';
 import navigationService from './services/navigation';
@@ -37,6 +38,8 @@ function App() {
 						<Route path="post/:id" element={<PostPage />} />
 					</Route>
 				</Route>
+
+				<Route path="*" element={<NotFound />} />
 			</Routes>
 			<ToastContainer />
 		</div>
