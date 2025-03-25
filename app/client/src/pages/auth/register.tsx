@@ -20,6 +20,7 @@ export default function Register() {
 	const { theme, toggleTheme } = useTheme();
 	const navigate = useNavigate();
 	const setToken = useAuthStore((state) => state.setToken);
+	const setUser = useAuthStore((state) => state.setUser);
 
 	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 		const { name, value } = e.target;
@@ -42,21 +43,14 @@ export default function Register() {
 		setErrors(null);
 
 		try {
-			await api.post('/auth/register', formData, {
-				headers: {
-					'Content-Type': 'application/json',
-				},
+			await api.post('/auth/register', formData);
+			const response = await api.post('/auth/login', {
+				username: formData.username,
+				password: formData.password,
 			});
-			const response = await api.post(
-				'/auth/login',
-				{
-					username: formData.username,
-					password: formData.password,
-				},
-				{ headers: { 'Content-Type': 'application/json' } }
-			);
 
 			setToken(response.data.accessToken);
+			setUser(response.data.user);
 			navigate('/');
 		} catch (error) {
 			if (error instanceof AxiosError) {
