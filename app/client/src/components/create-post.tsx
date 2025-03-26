@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { validatePost } from '@odinbook/utils';
 import useNewPostStore from '../stores/new-post';
 import api from '../api';
 import { AxiosError } from 'axios';
@@ -13,12 +14,10 @@ export default function CreatePost() {
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
 
-		if (content === '') {
-			setError('Post is empty.');
-			return;
-		}
-		if (content.length > 500) {
-			setError('Post exceeds maximum character limit.');
+		const validation = validatePost(content);
+
+		if (validation.error) {
+			setError(validation.error);
 			return;
 		}
 

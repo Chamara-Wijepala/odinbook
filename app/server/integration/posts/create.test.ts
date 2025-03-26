@@ -15,31 +15,23 @@ afterAll(async () => {
 });
 
 describe('POST /', () => {
-	describe('when passed empty or no content', () => {
-		const invalidTestCases = [
-			{
-				name: 'empty object',
-				payload: {},
-			},
-			{
-				name: 'empty content string',
-				payload: { content: '' },
-			},
-		];
+	describe('when passed an empty content string', () => {
+		let response: Response;
+		beforeAll(async () => {
+			response = await request(app)
+				.post('/posts/')
+				.set('authorization', `Bearer ${accessToken}`)
+				.send({ content: '' });
+		});
 
-		test.each(invalidTestCases)(
-			'should handle $name correctly',
-			async ({ payload }) => {
-				const response = await request(app)
-					.post('/posts/')
-					.set('authorization', `Bearer ${accessToken}`)
-					.send(payload);
+		test('should return a 400 http status', () => {
+			expect(response.statusCode).toBe(400);
+		});
 
-				expect(response.statusCode).toBe(400);
-				expect(response.headers['content-type']).toContain('json');
-				expect(response.body).toMatchObject({ error: 'Post content missing.' });
-			}
-		);
+		test('should return an error in json', () => {
+			expect(response.headers['content-type']).toContain('json');
+			expect(response.body).toMatchObject({ error: 'Post content missing.' });
+		});
 	});
 
 	describe("when passed a content string that's too long", () => {

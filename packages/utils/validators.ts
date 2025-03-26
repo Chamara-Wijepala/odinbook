@@ -1,4 +1,4 @@
-import { CreateUserSchema } from '@odinbook/zod';
+import { CreateUserSchema, PostSchema } from '@odinbook/zod';
 import type { CreateUser } from '@odinbook/zod';
 import type { CreateUserErrors } from '@odinbook/types';
 
@@ -17,4 +17,15 @@ export function validateCreateUser(body: CreateUser) {
 	}
 
 	return { success: true, errors: null };
+}
+
+export function validatePost(content: string) {
+	const validation = PostSchema.safeParse(content);
+
+	if (!validation.success) {
+		// There will only be one error at a time
+		return { success: false, error: validation.error.issues[0].message };
+	}
+
+	return { success: true, error: null };
 }

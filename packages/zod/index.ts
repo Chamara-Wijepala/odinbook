@@ -42,3 +42,9 @@ export const CreateUserSchema = z
 	});
 
 export type CreateUser = z.infer<typeof CreateUserSchema>;
+
+export const PostSchema = z
+	.string()
+	.trim()
+	.min(1, 'Post content missing.')
+	.max(500, 'Post exceeds maximum character limit.');

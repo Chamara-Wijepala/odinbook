@@ -1,3 +1,4 @@
+import { validatePost } from '@odinbook/utils';
 import postsService from '../services/postsService';
 import likesService from '../services/likesService';
 import type { NextFunction, Request, Response } from 'express';
@@ -5,12 +6,10 @@ import type { NextFunction, Request, Response } from 'express';
 async function createPost(req: Request, res: Response, next: NextFunction) {
 	const { content } = req.body;
 
-	if (!content || content.length < 1) {
-		res.status(400).json({ error: 'Post content missing.' });
-		return;
-	}
-	if (content.length > 500) {
-		res.status(400).json({ error: 'Post exceeds maximum character limit.' });
+	const validation = validatePost(content);
+
+	if (validation.error) {
+		res.status(400).json({ error: validation.error });
 		return;
 	}
 
@@ -86,12 +85,10 @@ async function getPosts(req: Request, res: Response, next: NextFunction) {
 async function updatePost(req: Request, res: Response, next: NextFunction) {
 	const { content } = req.body;
 
-	if (content.length < 1) {
-		res.status(400).json({ error: 'Post is empty.' });
-		return;
-	}
-	if (content.length > 500) {
-		res.status(400).json({ error: 'Post exceeds maximum character limit.' });
+	const validation = validatePost(content);
+
+	if (validation.error) {
+		res.status(400).json({ error: validation.error });
 		return;
 	}
 

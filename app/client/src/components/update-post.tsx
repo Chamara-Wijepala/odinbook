@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+import { validatePost } from '@odinbook/utils';
 import api from '../api';
 import coloredNotification from '../services/notifications';
 import { AxiosError } from 'axios';
@@ -21,12 +22,10 @@ export default function UpdatePost({
 	const location = useLocation();
 
 	async function handleClick() {
-		if (content === '') {
-			setError('Post is empty.');
-			return;
-		}
-		if (content.length > 500) {
-			setError('Post exceeds maximum character limit.');
+		const validation = validatePost(content);
+
+		if (validation.error) {
+			setError(validation.error);
 			return;
 		}
 
