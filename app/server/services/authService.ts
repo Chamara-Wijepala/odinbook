@@ -31,10 +31,12 @@ async function register({
 	if (duplicate) {
 		const result: {
 			status: number;
-			errors: CreateUserErrors;
+			errors: {
+				errors: CreateUserErrors;
+			};
 		} = {
 			status: 409,
-			errors: { username: ['This username already exists.'] },
+			errors: { errors: { username: ['This username already exists.'] } },
 		};
 		return result;
 	}
