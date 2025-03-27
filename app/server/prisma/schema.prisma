@@ -8,17 +8,19 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  firstName    String
-  lastName     String
-  username     String     @unique
-  password     String
-  createdAt    DateTime   @default(now())
-  tokenVersion Int        @default(1)
-  posts        Post[]
-  followedBy   User[]     @relation("UserFollows")
-  following    User[]     @relation("UserFollows")
-  likedPosts   PostLike[]
+  id            String        @id @default(uuid())
+  firstName     String
+  lastName      String
+  username      String        @unique
+  password      String
+  createdAt     DateTime      @default(now())
+  tokenVersion  Int           @default(1)
+  posts         Post[]
+  followedBy    User[]        @relation("UserFollows")
+  following     User[]        @relation("UserFollows")
+  likedPosts    PostLike[]
+  comments      Comment[]
+  likedComments CommentLike[]
 }
 
 model Post {
@@ -29,6 +31,7 @@ model Post {
   author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
   likedBy   PostLike[]
+  comments  Comment[]
 }
 
 model PostLike {
@@ -38,4 +41,28 @@ model PostLike {
   user   User   @relation(fields: [userId], references: [id])
 
   @@id([postId, userId])
+}
+
+model Comment {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  content   String
+  postId    String
+  post      Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorId  String?
+  author    User?         @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  replyToId Int?
+  replyTo   Comment?      @relation("CommentReply", fields: [replyToId], references: [id])
+  replies   Comment[]     @relation("CommentReply")
+  likes     CommentLike[]
+}
+
+model CommentLike {
+  commentId Int
+  comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([commentId, userId])
 }
