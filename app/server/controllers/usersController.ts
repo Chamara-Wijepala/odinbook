@@ -21,7 +21,7 @@ async function getUserProfile(req: Request, res: Response, next: NextFunction) {
 async function followUser(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { status } = await usersService.followUser(
-			req.user.username,
+			req.user.id,
 			req.params.id
 		);
 
@@ -34,7 +34,7 @@ async function followUser(req: Request, res: Response, next: NextFunction) {
 async function unfollowUser(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { status } = await usersService.unfollowUser(
-			req.user.username,
+			req.user.id,
 			req.params.id
 		);
 

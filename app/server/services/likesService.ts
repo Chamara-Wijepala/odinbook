@@ -1,13 +1,7 @@
-import usersRepository from '../repositories/usersRepository';
 import likesRepository from '../repositories/likesRepository';
 
-async function likePost(username: string, postId: string) {
-	const user = await usersRepository.findByUsername(username);
-
-	// type guard. user will always exist.
-	if (!user) return { status: 404 };
-
-	const like = await likesRepository.findLike(postId, user.id);
+async function likePost(userId: string, username: string, postId: string) {
+	const like = await likesRepository.findLike(postId, userId);
 
 	if (like) {
 		return {
@@ -15,18 +9,13 @@ async function likePost(username: string, postId: string) {
 		};
 	}
 
-	await likesRepository.likePost(postId, user.id);
+	await likesRepository.likePost(postId, userId);
 
 	return { status: 200 };
 }
 
-async function unlikePost(username: string, postId: string) {
-	const user = await usersRepository.findByUsername(username);
-
-	// type guard. user will always exist.
-	if (!user) return { status: 404 };
-
-	const like = await likesRepository.findLike(postId, user.id);
+async function unlikePost(userId: string, username: string, postId: string) {
+	const like = await likesRepository.findLike(postId, userId);
 
 	if (!like) {
 		return {
@@ -34,7 +23,7 @@ async function unlikePost(username: string, postId: string) {
 		};
 	}
 
-	await likesRepository.unlikePost(postId, user.id);
+	await likesRepository.unlikePost(postId, userId);
 
 	return { status: 204 };
 }

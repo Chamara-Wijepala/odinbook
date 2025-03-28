@@ -1,20 +1,7 @@
-import usersRepository from '../repositories/usersRepository';
 import postsRepository from '../repositories/postsRepository';
 
-async function create(username: string, content: string) {
-	const currentUser = await usersRepository.findByUsername(username);
-
-	// Type guard. The only way user might not exist is if user is deleted on one
-	// device while authenticated on another device. This is an edge case, which
-	// is better handled in the verifyJWT middleware than here if needed.
-	if (!currentUser) {
-		return {
-			status: 404,
-			data: null,
-		};
-	}
-
-	const post = await postsRepository.create(content, currentUser.id);
+async function create(userId: string, username: string, content: string) {
+	const post = await postsRepository.create(content, userId);
 
 	const newPost = {
 		...post,

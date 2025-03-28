@@ -23,30 +23,20 @@ async function getUserProfile(username: string) {
 	};
 }
 
-async function followUser(username: string, id: string) {
-	const currentUser = await usersRepository.findByUsername(username);
-
-	// Type guard. User will always exist.
-	if (!currentUser) return { status: 404 };
-
+async function followUser(currentUserId: string, id: string) {
 	// If user tries to follow themself.
-	if (currentUser.id === id) return { status: 400 };
+	if (currentUserId === id) return { status: 400 };
 
-	await usersRepository.followUser(currentUser.id, id);
+	await usersRepository.followUser(currentUserId, id);
 
 	return { status: 200 };
 }
 
-async function unfollowUser(username: string, id: string) {
-	const currentUser = await usersRepository.findByUsername(username);
-
-	// Type guard. User will always exist.
-	if (!currentUser) return { status: 404 };
-
+async function unfollowUser(currentUserId: string, id: string) {
 	// If user tries to unfollow themself.
-	if (currentUser.id === id) return { status: 400 };
+	if (currentUserId === id) return { status: 400 };
 
-	await usersRepository.unfollowUser(currentUser.id, id);
+	await usersRepository.unfollowUser(currentUserId, id);
 
 	return { status: 200 };
 }

@@ -15,6 +15,7 @@ async function createPost(req: Request, res: Response, next: NextFunction) {
 
 	try {
 		const { status, data } = await postsService.create(
+			req.user.id,
 			req.user.username,
 			content
 		);
@@ -33,6 +34,7 @@ async function createPost(req: Request, res: Response, next: NextFunction) {
 async function likePost(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { status } = await likesService.likePost(
+			req.user.id,
 			req.user.username,
 			req.params.id
 		);
@@ -131,6 +133,7 @@ async function deletePost(req: Request, res: Response, next: NextFunction) {
 async function unlikePost(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { status } = await likesService.unlikePost(
+			req.user.id,
 			req.user.username,
 			req.params.id
 		);
