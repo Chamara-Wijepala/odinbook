@@ -5,8 +5,8 @@ import prisma from '../../db/prisma';
 import { userData, janeDoe, getAccessToken, getUserId } from '../common';
 import type { Response } from 'supertest';
 
-const johnsToken = getAccessToken();
-const janesToken = getAccessToken(janeDoe.username);
+let johnsToken: string;
+let janesToken: string;
 let postId: string | null;
 
 function expectToastMessage(response: Response) {
@@ -19,6 +19,10 @@ function expectToastMessage(response: Response) {
 
 beforeAll(async () => {
 	const johnsId = await getUserId(userData.username);
+	const janesId = await getUserId(janeDoe.username);
+
+	johnsToken = getAccessToken(johnsId!, userData.username);
+	janesToken = getAccessToken(janesId!, janeDoe.username);
 
 	const post = await prisma.post.create({
 		data: {

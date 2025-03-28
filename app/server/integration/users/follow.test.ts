@@ -1,21 +1,25 @@
 import { describe, test, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
-import { janeDoe, getAccessToken, getUserId } from '../common';
+import { userData, janeDoe, getAccessToken, getUserId } from '../common';
 import type { Response } from 'supertest';
 
-const accessToken = getAccessToken();
-let userId: string | null = null;
+let johnsId: string | null = null;
+let janesId: string | null = null;
+let accessToken: string;
 
 beforeAll(async () => {
-	userId = await getUserId(janeDoe.username);
+	johnsId = await getUserId(userData.username);
+	janesId = await getUserId(janeDoe.username);
+
+	accessToken = getAccessToken(johnsId!, userData.username);
 });
 
 describe('PATCH /:id/follow', () => {
 	let response: Response;
 	beforeAll(async () => {
 		response = await request(app)
-			.patch(`/users/${userId}/follow`)
+			.patch(`/users/${janesId}/follow`)
 			.set('authorization', `Bearer ${accessToken}`);
 	});
 
@@ -28,7 +32,7 @@ describe('PATCH /:id/unfollow', () => {
 	let response: Response;
 	beforeAll(async () => {
 		response = await request(app)
-			.patch(`/users/${userId}/unfollow`)
+			.patch(`/users/${janesId}/unfollow`)
 			.set('authorization', `Bearer ${accessToken}`);
 	});
 

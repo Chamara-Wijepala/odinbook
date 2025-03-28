@@ -44,7 +44,7 @@ describe('when passed an invalid jwt as bearer', () => {
 describe('when passed a valid token', () => {
 	describe('if the token is expired', () => {
 		test('should call next function with "jwt expired" TokenExpiredError', () => {
-			const token = issueAccessToken('username', -10);
+			const token = issueAccessToken('id', 'username', -10);
 			const mockReq = { headers: { authorization: `Bearer ${token}` } };
 
 			verifyJWT(mockReq as Request, mockRes, mockNext);
@@ -58,7 +58,7 @@ describe('when passed a valid token', () => {
 	});
 
 	describe('if the token is not expired', () => {
-		const token = issueAccessToken('username', 60);
+		const token = issueAccessToken('id', 'username', 60);
 		const mockReq = { headers: { authorization: `Bearer ${token}` } };
 
 		verifyJWT(mockReq as Request, mockRes, mockNext);

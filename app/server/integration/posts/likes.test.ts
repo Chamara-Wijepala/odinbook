@@ -1,13 +1,16 @@
 import { describe, test, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
-import { getAccessToken, getFirstPostId } from '../common';
+import { userData, getUserId, getAccessToken, getFirstPostId } from '../common';
 import type { Response } from 'supertest';
 
-const token = getAccessToken();
 let postId: string | null;
+let token: string;
 
 beforeAll(async () => {
+	const id = await getUserId(userData.username);
+
+	token = getAccessToken(id!, userData.username);
 	postId = await getFirstPostId();
 });
 

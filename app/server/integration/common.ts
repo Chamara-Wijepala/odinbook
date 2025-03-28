@@ -24,8 +24,8 @@ export const janesHash = bcrypt.hashSync(janeDoe.password, 10);
 export const jwtRegex =
 	/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/;
 
-export function getAccessToken(username?: string) {
-	return issueAccessToken(username ? username : userData.username, '5m');
+export function getAccessToken(id: string, username: string) {
+	return issueAccessToken(id, username, '5m');
 }
 
 export function getCookieWithRefreshToken(

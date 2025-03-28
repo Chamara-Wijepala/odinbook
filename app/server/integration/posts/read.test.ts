@@ -10,8 +10,8 @@ import {
 } from '../common';
 import type { Response } from 'supertest';
 
-const johnsToken = getAccessToken();
-const janesToken = getAccessToken(janeDoe.username);
+let johnsToken: string;
+let janesToken: string;
 let johnsId: string;
 let janesId: string;
 
@@ -53,6 +53,9 @@ async function expectArrayOfLength(response: Response, length: number) {
 beforeAll(async () => {
 	johnsId = (await getUserId(userData.username)) as string;
 	janesId = (await getUserId(janeDoe.username)) as string;
+
+	johnsToken = getAccessToken(johnsId!, userData.username);
+	janesToken = getAccessToken(janesId!, janeDoe.username);
 
 	// follow John Doe as Jane Doe
 	await request(app)

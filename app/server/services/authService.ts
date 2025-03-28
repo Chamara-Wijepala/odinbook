@@ -74,7 +74,7 @@ async function login(username: string, password: string) {
 
 	const expiresIn =
 		process.env.NODE_ENV === 'production' ? 24 * 60 * 60 : 60 * 60;
-	const accessToken = issueAccessToken(user.username, '15m');
+	const accessToken = issueAccessToken(user.id, user.username, '15m');
 	const refreshToken = issueRefreshToken(
 		user.username,
 		user.tokenVersion,
@@ -119,7 +119,11 @@ async function refresh(refreshToken: string) {
 			};
 		}
 
-		const accessToken = issueAccessToken(currentUser.username, '15m');
+		const accessToken = issueAccessToken(
+			currentUser.id,
+			currentUser.username,
+			'15m'
+		);
 
 		return {
 			status: 200,
