@@ -26,6 +26,7 @@ app.use(verifyJWT);
 
 app.use('/posts', routes.posts);
 app.use('/users', routes.users);
+app.use('/posts/:postId/comments', routes.comments);
 
 app.use(errorHandler);
 

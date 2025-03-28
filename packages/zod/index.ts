@@ -48,3 +48,9 @@ export const PostSchema = z
 	.trim()
 	.min(1, 'Post content missing.')
 	.max(500, 'Post exceeds maximum character limit.');
+
+export const CommentSchema = z
+	.string()
+	.trim()
+	.min(1, 'Comment content missing.')
+	.max(250, 'Comment exceeds maximum character limit.');
