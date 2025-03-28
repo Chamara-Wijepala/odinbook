@@ -1,20 +1,4 @@
-import prisma from '../db/prisma';
 import usersRepository from '../repositories/usersRepository';
-
-async function getUserId(username: string) {
-	const user = await prisma.user.findUnique({
-		where: {
-			username,
-		},
-		select: {
-			id: true,
-		},
-	});
-
-	if (!user) return null;
-
-	return user.id;
-}
 
 async function getUserProfile(username: string) {
 	const data = await usersRepository.getProfileData(username);
@@ -68,7 +52,6 @@ async function unfollowUser(username: string, id: string) {
 }
 
 export default {
-	getUserId,
 	getUserProfile,
 	followUser,
 	unfollowUser,
