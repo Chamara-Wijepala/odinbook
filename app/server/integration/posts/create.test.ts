@@ -2,11 +2,16 @@ import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
 import prisma from '../../db/prisma';
-import { getAccessToken } from '../common';
+import { getAccessToken, userData, getUserId } from '../common';
 import type { Response } from 'supertest';
 
-const accessToken = getAccessToken();
 let postId: string;
+let accessToken: string;
+
+beforeAll(async () => {
+	const id = await getUserId(userData.username);
+	accessToken = getAccessToken(id!, userData.username);
+});
 
 afterAll(async () => {
 	await prisma.post.delete({

@@ -1,10 +1,15 @@
 import { describe, test, expect, expectTypeOf, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
-import { userData, getAccessToken } from '../common';
+import { userData, getUserId, getAccessToken } from '../common';
 import type { Response } from 'supertest';
 
-const accessToken = getAccessToken();
+let accessToken: string;
+
+beforeAll(async () => {
+	const id = await getUserId(userData.username);
+	accessToken = getAccessToken(id!, userData.username);
+});
 
 describe('GET /:username', () => {
 	describe('when passed an invalid username parameter', () => {

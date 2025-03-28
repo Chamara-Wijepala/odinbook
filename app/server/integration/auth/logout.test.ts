@@ -2,8 +2,24 @@ import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
 import prisma from '../../db/prisma';
-import { issueAccessToken } from '../../utils/issueJWT';
-import { userData, getCookieWithRefreshToken } from '../common';
+import { userData, getAccessToken, getCookieWithRefreshToken } from '../common';
+
+const localUser = {
+	firstName: 'logout',
+	lastName: 'tester',
+	username: 'logout-tester',
+	password: 'helloworld',
+};
+let accessToken: string;
+
+beforeAll(async () => {
+	const user = await prisma.user.create({ data: localUser });
+	accessToken = getAccessToken(user.id, user.username);
+});
+
+afterAll(async () => {
+	await prisma.user.deleteMany({ where: { username: localUser.username } });
+});
 
 describe('POST /logout', () => {
 	describe('when no cookie is passed', () => {
@@ -34,22 +50,6 @@ describe('POST /logout', () => {
 });
 
 describe('POST /logout-all', () => {
-	const localUser = {
-		firstName: 'logout',
-		lastName: 'tester',
-		username: 'logout-tester',
-		password: 'helloworld',
-	};
-	const accessToken = issueAccessToken(localUser.username, 60);
-
-	beforeAll(async () => {
-		await prisma.user.create({ data: localUser });
-	});
-
-	afterAll(async () => {
-		await prisma.user.deleteMany({ where: { username: localUser.username } });
-	});
-
 	describe('when no cookie is passed', () => {
 		test('should return a 200 http status', async () => {
 			const response = await request(app)

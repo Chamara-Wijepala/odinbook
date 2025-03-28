@@ -10,8 +10,13 @@ const PRIV_KEY = {
 	passphrase: process.env.KEY_PASSPHRASE,
 };
 
-export function issueAccessToken(username: string, expiresIn: string | number) {
+export function issueAccessToken(
+	id: string,
+	username: string,
+	expiresIn: string | number
+) {
 	const payload = {
+		id,
 		username,
 	};
 	const options: SignOptions = {
