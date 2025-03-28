@@ -7,6 +7,7 @@ import PostDialogItems from '../../components/post/post-dialog-items';
 import PostLikes from '../../components/post-likes';
 import BackButton from '../../components/back-button';
 import CreateComment from '../../components/create-comment';
+import CommentSection from './comment-section';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
 import type { PostType } from '../../types';
@@ -139,6 +140,8 @@ export default function PostPage() {
 					<div className="p-4 border-b-[1px] border-slate-300 dark:border-slate-800">
 						<CreateComment url={`/posts/${post.id}/comments`} />
 					</div>
+
+					<CommentSection postId={post.id} />
 				</>
 			)}
 		</div>

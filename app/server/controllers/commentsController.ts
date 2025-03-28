@@ -22,6 +22,17 @@ async function create(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function getComments(req: Request, res: Response, next: NextFunction) {
+	try {
+		const result = await commentsService.getComments(req.params.postId);
+
+		res.status(200).json(result);
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	create,
+	getComments,
 };
