@@ -1,8 +1,13 @@
 import prisma from '../db/prisma';
 
-async function create(content: string, postId: string, authorId: string) {
+async function create(
+	content: string,
+	postId: string,
+	authorId: string,
+	replyToId: number | null
+) {
 	return await prisma.comment.create({
-		data: { content, postId, authorId },
+		data: { content, postId, authorId, replyToId },
 		select: {
 			id: true,
 			createdAt: true,

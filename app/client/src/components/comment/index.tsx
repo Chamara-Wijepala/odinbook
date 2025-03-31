@@ -2,13 +2,14 @@ import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDots } from 'react-icons/bs';
-import { FaRegEdit } from 'react-icons/fa';
+import { FaRegEdit, FaRegComment, FaCommentSlash } from 'react-icons/fa';
 import { TiDeleteOutline } from 'react-icons/ti';
 import useAuthStore from '../../stores/auth';
 import coloredNotification from '../../services/notifications';
 import Dialog from '../dialog';
 import Modal from '../modal';
 import UpdateComment from './update-comment';
+import Reply from './reply';
 import api from '../../api';
 import type { CommentType } from '@odinbook/types';
 import { AxiosError } from 'axios';
@@ -28,6 +29,7 @@ export default function Comment({
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isBeingUpdated, setIsBeingUpdated] = useState(false);
+	const [isBeingRepliedTo, setIsBeingRepliedTo] = useState(false);
 	const [isPending, setIsPending] = useState(false);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const currentUser = useAuthStore((s) => s.user);
@@ -123,7 +125,20 @@ export default function Comment({
 				</div>
 
 				{/* toolbar */}
-				<div>
+				<div className="flex items-center gap-1">
+					{/* reply button */}
+					<button
+						onClick={() => setIsBeingRepliedTo((prev) => !prev)}
+						className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors ${
+							isBeingRepliedTo
+								? 'text-rose-400 hover:bg-rose-200 hover:dark:bg-rose-950'
+								: 'text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700'
+						}`}
+					>
+						{isBeingRepliedTo ? <FaCommentSlash /> : <FaRegComment />}
+						<span className="text-sm font-bold">Reply</span>
+					</button>
+
 					{/* dialog */}
 					{currentUser &&
 						currentUser.username === author?.username &&
@@ -165,6 +180,15 @@ export default function Comment({
 							</div>
 						)}
 				</div>
+
+				{isBeingRepliedTo && (
+					<div className="mt-2">
+						<Reply
+							url={`/posts/${postId}/comments/${id}`}
+							setIsBeingRepliedTo={setIsBeingRepliedTo}
+						/>
+					</div>
+				)}
 			</div>
 
 			<Modal isOpen={isModalOpen}>

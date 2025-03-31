@@ -1,8 +1,14 @@
 import commentsRepository from '../repositories/commentsRepository';
 import { CommentType } from '@odinbook/types';
 
-async function create(content: string, postId: string, authorId: string) {
-	return await commentsRepository.create(content, postId, authorId);
+async function create(
+	content: string,
+	postId: string,
+	authorId: string,
+	commentId: string | undefined
+) {
+	const id = commentId ? Number(commentId) : null;
+	return await commentsRepository.create(content, postId, authorId, id);
 }
 
 async function getComments(postId: string) {

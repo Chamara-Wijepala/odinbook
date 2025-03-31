@@ -3,6 +3,8 @@ import commentsService from '../services/commentsService';
 import type { Request, Response, NextFunction } from 'express';
 
 async function create(req: Request, res: Response, next: NextFunction) {
+	const commentId: string | undefined = req.params.commentId;
+
 	const validation = validateComment(req.body.content);
 
 	if (!validation.success) {
@@ -14,7 +16,8 @@ async function create(req: Request, res: Response, next: NextFunction) {
 		const comment = await commentsService.create(
 			req.body.content,
 			req.params.postId,
-			req.user.id
+			req.user.id,
+			commentId
 		);
 		res.status(200).json(comment);
 	} catch (error) {
