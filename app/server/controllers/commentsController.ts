@@ -52,7 +52,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 		);
 
 		if (error) {
-			res.status(status).json(error.toast);
+			res.status(status).json(error);
 			return;
 		}
 
