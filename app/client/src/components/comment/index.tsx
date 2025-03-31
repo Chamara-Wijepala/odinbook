@@ -105,7 +105,8 @@ export default function Comment({
 							</p>
 						) : (
 							<p className="text-xs">
-								Updated {DateTime.fromISO(`${updatedAt}`).toRelative()}
+								{author ? 'Updated' : 'Deleted'}{' '}
+								{DateTime.fromISO(`${updatedAt}`).toRelative()}
 							</p>
 						)}
 					</div>
@@ -113,7 +114,7 @@ export default function Comment({
 
 				{/* content */}
 				<div className="py-2 text-slate-800 dark:text-slate-200">
-					{isBeingUpdated && (
+					{isBeingUpdated && content && (
 						<UpdateComment
 							url={`/posts/${postId}/comments/${id}`}
 							content={content}
@@ -121,7 +122,15 @@ export default function Comment({
 						/>
 					)}
 
-					{!isBeingUpdated && <p>{content}</p>}
+					{!isBeingUpdated && (
+						<p>
+							{content ? (
+								content
+							) : (
+								<span className="text-slate-500">comment deleted</span>
+							)}
+						</p>
+					)}
 				</div>
 
 				{/* toolbar */}

@@ -10,7 +10,7 @@ export type CommentType = {
 	id: number;
 	createdAt: Date;
 	updatedAt: Date;
-	content: string;
+	content: string | null;
 	author: {
 		firstName: string;
 		lastName: string;

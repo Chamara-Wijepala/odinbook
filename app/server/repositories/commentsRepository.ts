@@ -58,8 +58,12 @@ async function update(postId: string, commentId: number, content: string) {
 }
 
 async function deleteComment(id: number) {
-	return await prisma.comment.delete({
+	return await prisma.comment.update({
 		where: { id },
+		data: {
+			content: null,
+			authorId: null,
+		},
 	});
 }
 
