@@ -32,7 +32,38 @@ async function getComments(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function update(req: Request, res: Response, next: NextFunction) {
+	const { postId, commentId } = req.params;
+	const { content } = req.body;
+
+	const validation = validateComment(content);
+
+	if (!validation.success) {
+		res.status(400).json(validation.error);
+		return;
+	}
+
+	try {
+		const { status, error } = await commentsService.update(
+			req.user.id,
+			postId,
+			commentId,
+			content
+		);
+
+		if (error) {
+			res.status(status).json(error.toast);
+			return;
+		}
+
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	create,
 	getComments,
+	update,
 };

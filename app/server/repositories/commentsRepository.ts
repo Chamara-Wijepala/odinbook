@@ -19,6 +19,13 @@ async function create(content: string, postId: string, authorId: string) {
 	});
 }
 
+async function findAuthorByCommentId(commentId: number) {
+	return await prisma.comment.findUnique({
+		where: { id: commentId },
+		select: { author: true },
+	});
+}
+
 async function getComments(postId: string) {
 	return await prisma.comment.findMany({
 		where: { postId, replyToId: null },
@@ -38,7 +45,16 @@ async function getComments(postId: string) {
 	});
 }
 
+async function update(postId: string, commentId: number, content: string) {
+	return await prisma.comment.update({
+		where: { postId, id: commentId },
+		data: { content },
+	});
+}
+
 export default {
 	create,
+	findAuthorByCommentId,
 	getComments,
+	update,
 };

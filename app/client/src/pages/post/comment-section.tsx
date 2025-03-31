@@ -17,7 +17,9 @@ export default function CommentSection({ postId }: { postId: string }) {
 			)}
 
 			{!isLoading &&
-				comments.map((comment) => <Comment key={comment.id} {...comment} />)}
+				comments.map((comment) => (
+					<Comment key={comment.id} postId={postId} {...comment} />
+				))}
 		</div>
 	);
 }

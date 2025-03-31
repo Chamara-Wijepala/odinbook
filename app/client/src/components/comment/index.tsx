@@ -2,18 +2,28 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDots } from 'react-icons/bs';
+import { FaRegEdit } from 'react-icons/fa';
+import useAuthStore from '../../stores/auth';
 import Dialog from '../dialog';
+import UpdateComment from './update-comment';
 import type { CommentType } from '@odinbook/types';
 
+type Props = CommentType & {
+	postId: string;
+};
+
 export default function Comment({
+	postId,
 	id,
 	createdAt,
 	updatedAt,
 	content,
 	author,
-}: CommentType) {
+}: Props) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
+	const [isBeingUpdated, setIsBeingUpdated] = useState(false);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
+	const currentUser = useAuthStore((s) => s.user);
 
 	return (
 		<div className="p-2">
@@ -77,31 +87,52 @@ export default function Comment({
 
 			{/* content */}
 			<div className="py-2 text-slate-800 dark:text-slate-200">
-				<p>{content}</p>
+				{isBeingUpdated && (
+					<UpdateComment
+						postId={postId}
+						commentId={id}
+						content={content}
+						setIsBeingUpdated={setIsBeingUpdated}
+					/>
+				)}
+
+				{!isBeingUpdated && <p>{content}</p>}
 			</div>
 
 			{/* toolbar */}
 			<div>
 				{/* dialog */}
-				<div onClick={(e) => e.preventDefault()} className="relative">
-					<button
-						ref={buttonRef}
-						onClick={() => setIsDialogOpen(!isDialogOpen)}
-						className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
-					>
-						<BsThreeDots className="text-slate-800 dark:text-slate-200" />
-					</button>
+				{currentUser &&
+					currentUser.username === author?.username &&
+					!isBeingUpdated && (
+						<div onClick={(e) => e.preventDefault()} className="relative">
+							<button
+								ref={buttonRef}
+								onClick={() => setIsDialogOpen(!isDialogOpen)}
+								className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
+							>
+								<BsThreeDots className="text-slate-800 dark:text-slate-200" />
+							</button>
 
-					<Dialog
-						isOpen={isDialogOpen}
-						setIsOpen={setIsDialogOpen}
-						buttonRef={buttonRef}
-						className=""
-					>
-						<div>update</div>
-						<div>delete</div>
-					</Dialog>
-				</div>
+							<Dialog
+								isOpen={isDialogOpen}
+								setIsOpen={setIsDialogOpen}
+								buttonRef={buttonRef}
+								className=""
+							>
+								<button
+									onClick={() => {
+										setIsBeingUpdated(true);
+										setIsDialogOpen(false);
+									}}
+									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								>
+									<FaRegEdit />
+									<span>Update</span>
+								</button>
+							</Dialog>
+						</div>
+					)}
 			</div>
 		</div>
 	);
