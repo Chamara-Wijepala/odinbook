@@ -52,9 +52,16 @@ async function update(postId: string, commentId: number, content: string) {
 	});
 }
 
+async function deleteComment(id: number) {
+	return await prisma.comment.delete({
+		where: { id },
+	});
+}
+
 export default {
 	create,
 	findAuthorByCommentId,
 	getComments,
 	update,
+	deleteComment,
 };

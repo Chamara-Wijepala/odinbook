@@ -62,8 +62,27 @@ async function update(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function deleteComment(req: Request, res: Response, next: NextFunction) {
+	try {
+		const { status, error } = await commentsService.deleteComment(
+			Number(req.params.commentId as string),
+			req.user.id
+		);
+
+		if (error) {
+			res.status(status).json(error);
+			return;
+		}
+
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	create,
 	getComments,
 	update,
+	deleteComment,
 };

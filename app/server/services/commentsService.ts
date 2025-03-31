@@ -52,8 +52,34 @@ async function update(
 	return { status: 200, error: null };
 }
 
+async function deleteComment(commentId: number, currentUserId: string) {
+	const comment = await commentsRepository.findAuthorByCommentId(commentId);
+
+	if (!comment) {
+		return { status: 204, error: null };
+	}
+
+	// user is trying to delete a comment by a another user or a deleted user
+	if (!comment.author || comment.author.id !== currentUserId) {
+		return {
+			status: 403,
+			error: {
+				toast: {
+					type: 'error',
+					message: 'You do not have permission to delete this post.',
+				},
+			},
+		};
+	}
+
+	await commentsRepository.deleteComment(commentId);
+
+	return { status: 204, error: null };
+}
+
 export default {
 	create,
 	getComments,
 	update,
+	deleteComment,
 };
