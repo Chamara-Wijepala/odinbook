@@ -6,13 +6,11 @@ import api from '../../api';
 import { AxiosError } from 'axios';
 
 export default function UpdateComment({
-	postId,
-	commentId,
+	url,
 	content,
 	setIsBeingUpdated,
 }: {
-	postId: string;
-	commentId: number;
+	url: string;
 	content: string;
 	setIsBeingUpdated: (isBeingUpdated: boolean) => void;
 }) {
@@ -34,7 +32,7 @@ export default function UpdateComment({
 
 		try {
 			setIsPending(true);
-			await api.patch(`/posts/${postId}/comments/${commentId}`, {
+			await api.patch(url, {
 				content: commentBody,
 			});
 			navigate(0);

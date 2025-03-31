@@ -113,8 +113,7 @@ export default function Comment({
 				<div className="py-2 text-slate-800 dark:text-slate-200">
 					{isBeingUpdated && (
 						<UpdateComment
-							postId={postId}
-							commentId={id}
+							url={`/posts/${postId}/comments/${id}`}
 							content={content}
 							setIsBeingUpdated={setIsBeingUpdated}
 						/>
