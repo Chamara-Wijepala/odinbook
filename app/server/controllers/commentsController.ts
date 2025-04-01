@@ -27,7 +27,10 @@ async function create(req: Request, res: Response, next: NextFunction) {
 
 async function getComments(req: Request, res: Response, next: NextFunction) {
 	try {
-		const result = await commentsService.getComments(req.params.postId);
+		const result = await commentsService.getComments(
+			req.params.postId,
+			req.query.cursor as string
+		);
 
 		res.status(200).json(result);
 	} catch (error) {

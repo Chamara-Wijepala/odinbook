@@ -11,10 +11,21 @@ async function create(
 	return await commentsRepository.create(content, postId, authorId, id);
 }
 
-async function getComments(postId: string) {
-	const comments: CommentType[] = await commentsRepository.getComments(postId);
+async function getComments(postId: string, cursor: string) {
+	const c = cursor === 'undefined' ? undefined : Number(cursor);
+	const comments: CommentType[] = await commentsRepository.getComments(
+		postId,
+		c
+	);
 
-	return { comments };
+	let nextCursor: number | null;
+	if (comments.length < 5) {
+		nextCursor = null;
+	} else {
+		nextCursor = comments[comments.length - 1].id;
+	}
+
+	return { nextCursor, comments };
 }
 
 async function update(

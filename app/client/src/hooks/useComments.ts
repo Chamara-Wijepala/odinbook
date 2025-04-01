@@ -3,12 +3,19 @@ import useData from './useData';
 import type { CommentType } from '@odinbook/types';
 
 type Data = {
+	nextCursor: number | null;
 	comments: CommentType[];
 };
 
 export default function useComments(url: string) {
+	const [cursor, setCursor] = useState<number>();
 	const [comments, setComments] = useState<CommentType[]>([]);
-	const { isLoading, data } = useData<Data>(url);
+	const { isLoading, data } = useData<Data>(url + `?cursor=${cursor}`);
+
+	function loadMore() {
+		if (!data || !data.nextCursor) return;
+		setCursor(data.nextCursor);
+	}
 
 	useEffect(() => {
 		if (!data) return;
@@ -18,5 +25,5 @@ export default function useComments(url: string) {
 		}
 	}, [data]);
 
-	return { isLoading, comments };
+	return { isLoading, comments, loadMore, nextCursor: data?.nextCursor };
 }
