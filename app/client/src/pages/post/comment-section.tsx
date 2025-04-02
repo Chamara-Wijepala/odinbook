@@ -1,14 +1,26 @@
-import Comment, { CommentSkeleton } from '../../components/comment';
+import { useEffect, useMemo } from 'react';
+import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
+import Comment, { CommentSkeleton } from '../../components/comment';
 
 export default function CommentSection({ postId }: { postId: string }) {
-	const { isLoading, comments, loadMore, nextCursor } = useComments(
+	const clearComments = useCommentsStore((s) => s.clearComments);
+	const comments = useCommentsStore((s) => s.comments);
+	const rootComments = useMemo(
+		() => comments.filter((c) => !c.replyToId),
+		[comments]
+	);
+	const { isLoading, loadMore, nextCursor } = useComments(
 		`/posts/${postId}/comments`
 	);
 
+	useEffect(() => {
+		return () => clearComments();
+	}, []);
+
 	return (
 		<div className="p-2">
-			{isLoading && comments.length < 1 && (
+			{isLoading && rootComments.length < 1 && (
 				<>
 					<CommentSkeleton />
 					<CommentSkeleton />
@@ -18,9 +30,9 @@ export default function CommentSection({ postId }: { postId: string }) {
 				</>
 			)}
 
-			{comments.length > 0 && (
+			{rootComments.length > 0 && (
 				<>
-					{comments.map((comment) => (
+					{rootComments.map((comment) => (
 						<Comment key={comment.id} postId={postId} {...comment} />
 					))}
 

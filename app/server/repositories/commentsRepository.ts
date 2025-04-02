@@ -39,6 +39,7 @@ async function getComments(postId: string, cursor: number | undefined) {
 			createdAt: true,
 			updatedAt: true,
 			content: true,
+			replyToId: true,
 			author: {
 				select: {
 					firstName: true,

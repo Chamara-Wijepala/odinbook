@@ -11,6 +11,7 @@ export type CommentType = {
 	createdAt: Date;
 	updatedAt: Date;
 	content: string | null;
+	replyToId: number | null;
 	author: {
 		firstName: string;
 		lastName: string;

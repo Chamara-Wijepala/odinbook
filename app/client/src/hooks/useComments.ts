@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import useCommentsStore from '../stores/comments';
 import useData from './useData';
 import type { CommentType } from '@odinbook/types';
 
@@ -9,8 +10,8 @@ type Data = {
 
 export default function useComments(url: string) {
 	const [cursor, setCursor] = useState<number>();
-	const [comments, setComments] = useState<CommentType[]>([]);
 	const { isLoading, data } = useData<Data>(url + `?cursor=${cursor}`);
+	const setComments = useCommentsStore((s) => s.setComments);
 
 	function loadMore() {
 		if (!data || !data.nextCursor) return;
@@ -21,9 +22,9 @@ export default function useComments(url: string) {
 		if (!data) return;
 
 		if (data.comments.length > 0) {
-			setComments((prev) => [...prev, ...data.comments]);
+			setComments(data.comments);
 		}
 	}, [data]);
 
-	return { isLoading, comments, loadMore, nextCursor: data?.nextCursor };
+	return { isLoading, loadMore, nextCursor: data?.nextCursor };
 }
