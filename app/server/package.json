@@ -9,6 +9,9 @@
 		"dev": "tsx watch ./server.ts",
 		"create-keys": "tsx ./utils/createKeyPair.ts"
 	},
+	"prisma": {
+		"seed": "tsx prisma/seed.ts"
+	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
