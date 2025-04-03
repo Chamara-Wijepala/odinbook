@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react';
 import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
-import Comment, { CommentSkeleton } from '../../components/comment';
+import { CommentSkeleton } from '../../components/comment';
+import CommentThread from '../../components/comment-thread';
 
 export default function CommentSection({ postId }: { postId: string }) {
 	const clearComments = useCommentsStore((s) => s.clearComments);
@@ -32,9 +33,16 @@ export default function CommentSection({ postId }: { postId: string }) {
 
 			{rootComments.length > 0 && (
 				<>
-					{rootComments.map((comment) => (
-						<Comment key={comment.id} postId={postId} {...comment} />
-					))}
+					<div className="flex flex-col gap-2 mb-2">
+						{rootComments.map((comment) => (
+							<div
+								key={comment.id}
+								className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md"
+							>
+								<CommentThread depth={1} postId={postId} comment={comment} />
+							</div>
+						))}
+					</div>
 
 					<div className="flex justify-center">
 						<button

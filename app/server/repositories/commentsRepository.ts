@@ -31,9 +31,13 @@ async function findAuthorByCommentId(commentId: number) {
 	});
 }
 
-async function getComments(postId: string, cursor: number | undefined) {
+async function getComments(
+	postId: string,
+	cursor: number | undefined,
+	replyToId: number | undefined
+) {
 	return await prisma.comment.findMany({
-		where: { postId, replyToId: null },
+		where: { postId, replyToId },
 		select: {
 			id: true,
 			createdAt: true,

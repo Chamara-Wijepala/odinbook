@@ -11,11 +11,13 @@ async function create(
 	return await commentsRepository.create(content, postId, authorId, id);
 }
 
-async function getComments(postId: string, cursor: string) {
+async function getComments(postId: string, cursor: string, commentId: string) {
 	const c = cursor === 'undefined' ? undefined : Number(cursor);
+	const replyToId = commentId === 'undefined' ? undefined : Number(commentId);
 	const comments: CommentType[] = await commentsRepository.getComments(
 		postId,
-		c
+		c,
+		replyToId
 	);
 
 	let nextCursor: number | null;
