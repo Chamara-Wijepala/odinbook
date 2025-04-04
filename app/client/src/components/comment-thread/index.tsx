@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { GoPlusCircle } from 'react-icons/go';
 import useCommentsStore from '../../stores/comments';
 import Comment from '../comment';
+import filterDuplicateComments from '../../services/filter-duplicate-comments';
 import api from '../../api';
 import { CommentType } from '@odinbook/types';
 
@@ -95,6 +96,7 @@ function LoadMore({
 	// here to hide the load more button
 	const [cursor, setCursor] = useState<number | undefined | null>();
 	const [isLoading, setIsLoading] = useState(false);
+	const comments = useCommentsStore((s) => s.comments);
 	const setComments = useCommentsStore((s) => s.setComments);
 	const controllerRef = useRef<AbortController>();
 	useEffect(() => {
@@ -114,8 +116,11 @@ function LoadMore({
 			);
 
 			setCursor(response.data.nextCursor);
+
 			if (response.data.comments.length > 0) {
-				setComments(response.data.comments);
+				// there will be comments in the store at this point, so no need to
+				// check for comment.length
+				setComments(filterDuplicateComments(comments, response.data.comments));
 			}
 		} catch (err) {
 			console.log(err);
