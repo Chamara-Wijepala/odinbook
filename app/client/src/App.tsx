@@ -35,7 +35,11 @@ function App() {
 						These pages will be rendered with the navigation layout but won't
 						have a navlink associated with them
 						*/}
-						<Route path="post/:id" element={<PostPage />} />
+						<Route path="post/:postId" element={<PostPage />} />
+						<Route
+							path="post/:postId/thread/:commentId"
+							element={<PostPage />}
+						/>
 					</Route>
 				</Route>
 

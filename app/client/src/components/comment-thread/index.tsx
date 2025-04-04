@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, PropsWithChildren } from 'react';
 import { Link } from 'react-router';
 import { GoPlusCircle } from 'react-icons/go';
 import useCommentsStore from '../../stores/comments';
@@ -6,54 +6,24 @@ import Comment from '../comment';
 import api from '../../api';
 import { CommentType } from '@odinbook/types';
 
-export default function CommentThread({
-	depth,
-	postId,
-	comment,
-}: {
-	depth: number;
+type CommentThreadProps = PropsWithChildren & {
 	postId: string;
 	comment: CommentType;
-}) {
-	// null is returned by the server when there are no more comments and is used
-	// here to hide the load more button
-	const [cursor, setCursor] = useState<number | undefined | null>();
-	const [isLoading, setIsLoading] = useState(false);
+	depth: number;
+};
+
+export default function CommentThread({
+	children,
+	postId,
+	comment,
+	depth,
+}: CommentThreadProps) {
 	const [isExpanded, setIsExpanded] = useState(true);
-	const controllerRef = useRef<AbortController>();
-	const setComments = useCommentsStore((s) => s.setComments);
 	const comments = useCommentsStore((s) => s.comments);
 	const replies = useMemo(
 		() => comments.filter((c) => c.replyToId === comment.id),
 		[comments]
 	);
-
-	async function getReplies() {
-		controllerRef.current = new AbortController();
-
-		setIsLoading(true);
-		try {
-			const response = await api.get(
-				`/posts/${postId}/comments/${comment.id}?cursor=${cursor}`,
-				{
-					signal: controllerRef.current.signal,
-				}
-			);
-
-			setCursor(response.data.nextCursor);
-			if (response.data.comments.length > 0) {
-				setComments(response.data.comments);
-			}
-		} catch (err) {
-			console.log(err);
-		} finally {
-			setIsLoading(false);
-		}
-	}
-
-	useEffect(() => {
-		return () => controllerRef.current?.abort();
-	}, []);
 
 	return (
 		<div>
@@ -74,10 +44,16 @@ export default function CommentThread({
 						{replies.map((reply) => (
 							<CommentThread
 								key={reply.id}
-								depth={depth + 1}
 								postId={postId}
 								comment={reply}
-							/>
+								depth={depth + 1}
+							>
+								<LoadMore
+									postId={postId}
+									commentId={reply.id}
+									depth={depth + 1}
+								/>
+							</CommentThread>
 						))}
 					</div>
 				)}
@@ -101,28 +77,75 @@ export default function CommentThread({
 				)}
 			</div>
 
-			{depth === 5 ? (
-				// Link to single thread
-				<Link
-					to={`/post/${postId}/thread/${comment.id}`}
-					className="flex items-center gap-1 py-1 px-2 rounded-full max-w-fit transition-colors text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700"
-				>
-					<GoPlusCircle />
-					<span>Continue thread</span>
-				</Link>
-			) : (
-				// Load more button
-				<button
-					onClick={getReplies}
-					disabled={isLoading}
-					className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700 ${
-						cursor === null && 'hidden'
-					}`}
-				>
-					<GoPlusCircle />
-					<span>More replies</span>
-				</button>
-			)}
+			{children}
 		</div>
 	);
 }
+
+function LoadMore({
+	postId,
+	commentId,
+	depth,
+}: {
+	postId: string;
+	commentId: number;
+	depth: number;
+}) {
+	// null is returned by the server when there are no more comments and is used
+	// here to hide the load more button
+	const [cursor, setCursor] = useState<number | undefined | null>();
+	const [isLoading, setIsLoading] = useState(false);
+	const setComments = useCommentsStore((s) => s.setComments);
+	const controllerRef = useRef<AbortController>();
+	useEffect(() => {
+		return () => controllerRef.current?.abort();
+	}, []);
+
+	async function getReplies() {
+		controllerRef.current = new AbortController();
+
+		setIsLoading(true);
+		try {
+			const response = await api.get(
+				`/posts/${postId}/comments/${commentId}?cursor=${cursor}`,
+				{
+					signal: controllerRef.current.signal,
+				}
+			);
+
+			setCursor(response.data.nextCursor);
+			if (response.data.comments.length > 0) {
+				setComments(response.data.comments);
+			}
+		} catch (err) {
+			console.log(err);
+		} finally {
+			setIsLoading(false);
+		}
+	}
+
+	return depth === 5 ? (
+		// Link to single thread
+		<Link
+			to={`/post/${postId}/thread/${commentId}`}
+			className="flex items-center gap-1 py-1 px-2 rounded-full max-w-fit transition-colors text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700"
+		>
+			<GoPlusCircle />
+			<span>Continue thread</span>
+		</Link>
+	) : (
+		// Load more button
+		<button
+			onClick={getReplies}
+			disabled={isLoading}
+			className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700 ${
+				cursor === null && 'hidden'
+			}`}
+		>
+			<GoPlusCircle />
+			<span>More replies</span>
+		</button>
+	);
+}
+
+CommentThread.LoadMore = LoadMore;

@@ -39,6 +39,23 @@ async function getComments(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function getSingleThread(
+	req: Request,
+	res: Response,
+	next: NextFunction
+) {
+	try {
+		const result = await commentsService.getSingleThread(
+			req.params.postId,
+			req.params.commentId
+		);
+
+		res.status(200).json(result);
+	} catch (error) {
+		next(error);
+	}
+}
+
 async function update(req: Request, res: Response, next: NextFunction) {
 	const { postId, commentId } = req.params;
 	const { content } = req.body;
@@ -90,6 +107,7 @@ async function deleteComment(req: Request, res: Response, next: NextFunction) {
 export default {
 	create,
 	getComments,
+	getSingleThread,
 	update,
 	deleteComment,
 };

@@ -39,7 +39,13 @@ export default function CommentSection({ postId }: { postId: string }) {
 								key={comment.id}
 								className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md"
 							>
-								<CommentThread depth={1} postId={postId} comment={comment} />
+								<CommentThread postId={postId} comment={comment} depth={1}>
+									<CommentThread.LoadMore
+										postId={postId}
+										commentId={comment.id}
+										depth={1}
+									/>
+								</CommentThread>
 							</div>
 						))}
 					</div>

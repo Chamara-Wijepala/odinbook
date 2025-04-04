@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import useCommentsStore from '../stores/comments';
 import useData from './useData';
-import type { CommentType } from '@odinbook/types';
+import type { CommentType, ICommentWithReplies } from '@odinbook/types';
 
 type Data = {
 	nextCursor: number | null;
-	comments: CommentType[];
+	comments: CommentType[] | ICommentWithReplies;
 };
 
 export default function useComments(url: string) {
@@ -21,9 +21,14 @@ export default function useComments(url: string) {
 	useEffect(() => {
 		if (!data) return;
 
-		if (data.comments.length > 0) {
+		if (Array.isArray(data.comments)) {
 			setComments(data.comments);
+			return;
 		}
+
+		const { replies, ...parentComment } = data.comments;
+
+		setComments([parentComment, ...replies]);
 	}, [data]);
 
 	return { isLoading, loadMore, nextCursor: data?.nextCursor };

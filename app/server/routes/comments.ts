@@ -7,6 +7,7 @@ router.post('/', commentsController.create);
 router.post('/:commentId', commentsController.create);
 router.get('/', commentsController.getComments);
 router.get('/:commentId', commentsController.getComments);
+router.get('/:commentId/thread', commentsController.getSingleThread);
 router.patch('/:commentId', commentsController.update);
 router.delete('/:commentId', commentsController.deleteComment);
 

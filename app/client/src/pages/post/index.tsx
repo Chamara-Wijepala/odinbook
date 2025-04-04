@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, useNavigate, Link } from 'react-router';
+import { useParams, useNavigate, useLocation, Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Dialog from '../../components/dialog';
@@ -8,6 +8,7 @@ import PostLikes from '../../components/post-likes';
 import BackButton from '../../components/back-button';
 import CreateComment from '../../components/create-comment';
 import CommentSection from './comment-section';
+import SingleThread from './single-thread';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
 import type { PostType } from '../../types';
@@ -29,8 +30,9 @@ export default function PostPage() {
 		isLoading,
 		data: post,
 		error,
-	} = useData<PostType>(`/posts/${params.id}`);
+	} = useData<PostType>(`/posts/${params.postId}`);
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	useEffect(() => {
 		if (!error) return;
@@ -141,7 +143,15 @@ export default function PostPage() {
 						<CreateComment url={`/posts/${post.id}/comments`} />
 					</div>
 
-					<CommentSection postId={post.id} />
+					{/* comments */}
+					{location.pathname.split('thread').length === 2 ? ( // will split the string in two if 'thread' exists
+						<SingleThread
+							postId={post.id}
+							commentId={Number(location.pathname.split('/').at(-1))}
+						/>
+					) : (
+						<CommentSection postId={post.id} />
+					)}
 				</>
 			)}
 		</div>

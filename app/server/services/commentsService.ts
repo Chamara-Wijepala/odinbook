@@ -30,6 +30,15 @@ async function getComments(postId: string, cursor: string, commentId: string) {
 	return { nextCursor, comments };
 }
 
+async function getSingleThread(postId: string, commentId: string) {
+	const thread = await commentsRepository.getSingleThread(
+		postId,
+		Number(commentId)
+	);
+
+	return { nextCursor: null, comments: thread };
+}
+
 async function update(
 	userId: string,
 	postId: string,
@@ -99,6 +108,7 @@ async function deleteComment(commentId: number, currentUserId: string) {
 export default {
 	create,
 	getComments,
+	getSingleThread,
 	update,
 	deleteComment,
 };

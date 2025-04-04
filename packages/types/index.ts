@@ -18,3 +18,7 @@ export type CommentType = {
 		username: string;
 	} | null;
 };
+
+export interface ICommentWithReplies extends CommentType {
+	replies: CommentType[];
+}

@@ -58,6 +58,45 @@ async function getComments(
 	});
 }
 
+async function getSingleThread(postId: string, commentId: number) {
+	return await prisma.comment.findUnique({
+		where: { postId, id: commentId },
+		select: {
+			id: true,
+			createdAt: true,
+			updatedAt: true,
+			content: true,
+			replyToId: true,
+			author: {
+				select: {
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+			replies: {
+				select: {
+					id: true,
+					createdAt: true,
+					updatedAt: true,
+					content: true,
+					replyToId: true,
+					author: {
+						select: {
+							firstName: true,
+							lastName: true,
+							username: true,
+						},
+					},
+				},
+				take: 5,
+				skip: 0,
+				cursor: undefined,
+			},
+		},
+	});
+}
+
 async function update(postId: string, commentId: number, content: string) {
 	return await prisma.comment.update({
 		where: { postId, id: commentId },
@@ -79,6 +118,7 @@ export default {
 	create,
 	findAuthorByCommentId,
 	getComments,
+	getSingleThread,
 	update,
 	deleteComment,
 };
