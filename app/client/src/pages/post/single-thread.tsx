@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
 import { CommentSkeleton } from '../../components/comment';
@@ -22,6 +22,13 @@ export default function SingleThread({
 		`/posts/${postId}/comments/${commentId}/thread`
 	);
 	const navigate = useNavigate();
+	const location = useLocation();
+
+	// fixes the issue with the more replies button being rendered when going back
+	// on a single thread.
+	useEffect(() => {
+		clearComments();
+	}, [location.pathname]);
 
 	useEffect(() => {
 		return () => clearComments();
