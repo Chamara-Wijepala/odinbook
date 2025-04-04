@@ -40,42 +40,40 @@ export default function CommentThread({
 				</button>
 
 				{/* replies */}
-				{isExpanded && (
-					<div className="w-full">
-						{replies.map((reply) => (
-							<CommentThread
-								key={reply.id}
+				<div className={`w-full ${!isExpanded && 'hidden'}`}>
+					{replies.map((reply) => (
+						<CommentThread
+							key={reply.id}
+							postId={postId}
+							comment={reply}
+							depth={depth + 1}
+						>
+							<LoadMore
 								postId={postId}
-								comment={reply}
+								commentId={reply.id}
 								depth={depth + 1}
-							>
-								<LoadMore
-									postId={postId}
-									commentId={reply.id}
-									depth={depth + 1}
-								/>
-							</CommentThread>
-						))}
-					</div>
-				)}
+							/>
+						</CommentThread>
+					))}
+				</div>
 
 				{/* expand thread button */}
-				{!isExpanded && (
-					<button
-						onClick={() => setIsExpanded(true)}
-						className="flex items-center gap-1 lg:gap-2"
-					>
-						<GoPlusCircle />
+				<button
+					onClick={() => setIsExpanded(true)}
+					className={`flex items-center gap-1 lg:gap-2 ${
+						isExpanded && 'hidden'
+					}`}
+				>
+					<GoPlusCircle />
 
-						<div>
-							{!comment.author && <p className="text-slate-500">deleted</p>}
+					<div>
+						{!comment.author && <p className="text-slate-500">deleted</p>}
 
-							{comment.author && (
-								<p className="text-sm font-bold">{comment.author.username}</p>
-							)}
-						</div>
-					</button>
-				)}
+						{comment.author && (
+							<p className="text-sm font-bold">{comment.author.username}</p>
+						)}
+					</div>
+				</button>
 			</div>
 
 			{children}
