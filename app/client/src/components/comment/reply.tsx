@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
 import { validateComment } from '@odinbook/utils';
+import useCommentsStore from '../../stores/comments';
 import coloredNotification from '../../services/notifications';
 import api from '../../api';
 import { AxiosError } from 'axios';
@@ -16,7 +16,7 @@ export default function Reply({
 	const [isPending, setIsPending] = useState(false);
 	const [error, setError] = useState('');
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-	const navigate = useNavigate();
+	const setComments = useCommentsStore((s) => s.setComments);
 
 	async function handleSubmit() {
 		const validation = validateComment(content);
@@ -30,10 +30,11 @@ export default function Reply({
 
 		try {
 			setIsPending(true);
-			await api.post(url, {
+			const response = await api.post(url, {
 				content,
 			});
-			navigate(0);
+			setComments([response.data.comment]);
+			setIsBeingRepliedTo(false);
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				const data = error.response?.data;

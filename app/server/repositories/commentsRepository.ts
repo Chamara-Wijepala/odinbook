@@ -13,6 +13,7 @@ async function create(
 			createdAt: true,
 			updatedAt: true,
 			content: true,
+			replyToId: true,
 			author: {
 				select: {
 					firstName: true,
@@ -101,6 +102,20 @@ async function update(postId: string, commentId: number, content: string) {
 	return await prisma.comment.update({
 		where: { postId, id: commentId },
 		data: { content },
+		select: {
+			id: true,
+			createdAt: true,
+			updatedAt: true,
+			content: true,
+			replyToId: true,
+			author: {
+				select: {
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
+		},
 	});
 }
 
@@ -110,6 +125,20 @@ async function deleteComment(id: number) {
 		data: {
 			content: null,
 			authorId: null,
+		},
+		select: {
+			id: true,
+			createdAt: true,
+			updatedAt: true,
+			content: true,
+			replyToId: true,
+			author: {
+				select: {
+					firstName: true,
+					lastName: true,
+					username: true,
+				},
+			},
 		},
 	});
 }

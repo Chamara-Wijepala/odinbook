@@ -19,7 +19,7 @@ async function create(req: Request, res: Response, next: NextFunction) {
 			req.user.id,
 			commentId
 		);
-		res.status(200).json(comment);
+		res.status(200).json({ comment });
 	} catch (error) {
 		next(error);
 	}
@@ -68,7 +68,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 	}
 
 	try {
-		const { status, error } = await commentsService.update(
+		const { status, error, data } = await commentsService.update(
 			req.user.id,
 			postId,
 			commentId,
@@ -80,7 +80,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 			return;
 		}
 
-		res.sendStatus(status);
+		res.status(status).json({ comment: data });
 	} catch (error) {
 		next(error);
 	}
@@ -88,7 +88,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 
 async function deleteComment(req: Request, res: Response, next: NextFunction) {
 	try {
-		const { status, error } = await commentsService.deleteComment(
+		const { status, error, data } = await commentsService.deleteComment(
 			Number(req.params.commentId as string),
 			req.user.id
 		);
@@ -98,7 +98,7 @@ async function deleteComment(req: Request, res: Response, next: NextFunction) {
 			return;
 		}
 
-		res.sendStatus(status);
+		res.status(status).json({ comment: data });
 	} catch (error) {
 		next(error);
 	}

@@ -59,6 +59,7 @@ async function update(
 					message: "The comment you are trying to update doesn't exist.",
 				},
 			},
+			data: null,
 		};
 	}
 
@@ -72,19 +73,24 @@ async function update(
 					message: 'You do not have permission to edit this post.',
 				},
 			},
+			data: null,
 		};
 	}
 
-	await commentsRepository.update(postId, Number(commentId), content);
+	const updatedComment = await commentsRepository.update(
+		postId,
+		Number(commentId),
+		content
+	);
 
-	return { status: 200, error: null };
+	return { status: 200, error: null, data: updatedComment };
 }
 
 async function deleteComment(commentId: number, currentUserId: string) {
 	const comment = await commentsRepository.findAuthorByCommentId(commentId);
 
 	if (!comment) {
-		return { status: 204, error: null };
+		return { status: 204, error: null, data: null };
 	}
 
 	// user is trying to delete a comment by a another user or a deleted user
@@ -97,12 +103,14 @@ async function deleteComment(commentId: number, currentUserId: string) {
 					message: 'You do not have permission to delete this post.',
 				},
 			},
+			data: null,
 		};
 	}
 
-	await commentsRepository.deleteComment(commentId);
+	const data = await commentsRepository.deleteComment(commentId);
 
-	return { status: 204, error: null };
+	// cannot send data with a 204
+	return { status: 200, error: null, data };
 }
 
 export default {

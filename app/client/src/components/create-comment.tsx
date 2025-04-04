@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { validateComment } from '@odinbook/utils';
+import useCommentsStore from '../stores/comments';
 import api from '../api';
 import { AxiosError } from 'axios';
 
@@ -8,6 +9,7 @@ export default function CreateComment({ url }: { url: string }) {
 	const [error, setError] = useState('');
 	const [isPending, setIsPending] = useState(false);
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+	const setComments = useCommentsStore((s) => s.setComments);
 
 	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
@@ -26,7 +28,7 @@ export default function CreateComment({ url }: { url: string }) {
 			const response = await api.post(url, { content });
 			setContent('');
 			setIsPending(false);
-			console.log(response);
+			setComments([response.data.comment]);
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				setError(error.response?.data.error);

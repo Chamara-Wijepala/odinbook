@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDots } from 'react-icons/bs';
 import { FaRegEdit, FaRegComment, FaCommentSlash } from 'react-icons/fa';
 import { TiDeleteOutline } from 'react-icons/ti';
 import useAuthStore from '../../stores/auth';
+import useCommentsStore from '../../stores/comments';
 import coloredNotification from '../../services/notifications';
 import Dialog from '../dialog';
 import Modal from '../modal';
@@ -33,14 +34,14 @@ export default function Comment({
 	const [isPending, setIsPending] = useState(false);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 	const currentUser = useAuthStore((s) => s.user);
-	const navigate = useNavigate();
+	const updateComment = useCommentsStore((s) => s.updateComment);
 
 	async function handleDelete() {
 		try {
 			setIsPending(true);
-			await api.delete(`/posts/${postId}/comments/${id}`);
+			const response = await api.delete(`/posts/${postId}/comments/${id}`);
+			updateComment(response.data.comment);
 			setIsModalOpen(false);
-			navigate(0);
 		} catch (error) {
 			if (error instanceof AxiosError) {
 				coloredNotification(error.response?.data.toast);
