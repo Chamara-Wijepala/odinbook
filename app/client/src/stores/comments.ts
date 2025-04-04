@@ -22,11 +22,11 @@ const useCommentsStore = create(
 
 			updateComment: (newComment) => {
 				const { comments } = get();
-				const filtered = comments.filter(
-					(comment) => comment.id !== newComment.id
-				);
-				filtered.push(newComment);
-				set(() => ({ comments: filtered }));
+				const updated = comments.map((comment) => {
+					if (comment.id === newComment.id) return newComment;
+					return comment;
+				});
+				set(() => ({ comments: updated }));
 			},
 
 			clearComments: () => set(() => ({ comments: [] })),
