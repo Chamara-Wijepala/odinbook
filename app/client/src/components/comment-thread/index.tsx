@@ -48,11 +48,13 @@ export default function CommentThread({
 							comment={reply}
 							depth={depth + 1}
 						>
-							<LoadMore
-								postId={postId}
-								commentId={reply.id}
-								depth={depth + 1}
-							/>
+							{reply._count.replies > 0 && (
+								<LoadMore
+									postId={postId}
+									commentId={reply.id}
+									depth={depth + 1}
+								/>
+							)}
 						</CommentThread>
 					))}
 				</div>

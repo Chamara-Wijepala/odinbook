@@ -40,11 +40,13 @@ export default function CommentSection({ postId }: { postId: string }) {
 								className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md"
 							>
 								<CommentThread postId={postId} comment={comment} depth={1}>
-									<CommentThread.LoadMore
-										postId={postId}
-										commentId={comment.id}
-										depth={1}
-									/>
+									{comment._count.replies > 0 && (
+										<CommentThread.LoadMore
+											postId={postId}
+											commentId={comment.id}
+											depth={1}
+										/>
+									)}
 								</CommentThread>
 							</div>
 						))}

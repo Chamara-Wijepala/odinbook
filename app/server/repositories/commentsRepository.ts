@@ -14,6 +14,9 @@ async function create(
 			updatedAt: true,
 			content: true,
 			replyToId: true,
+			_count: {
+				select: { replies: true },
+			},
 			author: {
 				select: {
 					firstName: true,
@@ -45,6 +48,9 @@ async function getComments(
 			updatedAt: true,
 			content: true,
 			replyToId: true,
+			_count: {
+				select: { replies: true },
+			},
 			author: {
 				select: {
 					firstName: true,
@@ -68,6 +74,9 @@ async function getSingleThread(postId: string, commentId: number) {
 			updatedAt: true,
 			content: true,
 			replyToId: true,
+			_count: {
+				select: { replies: true },
+			},
 			author: {
 				select: {
 					firstName: true,
@@ -82,6 +91,9 @@ async function getSingleThread(postId: string, commentId: number) {
 					updatedAt: true,
 					content: true,
 					replyToId: true,
+					_count: {
+						select: { replies: true },
+					},
 					author: {
 						select: {
 							firstName: true,
@@ -108,6 +120,9 @@ async function update(postId: string, commentId: number, content: string) {
 			updatedAt: true,
 			content: true,
 			replyToId: true,
+			_count: {
+				select: { replies: true },
+			},
 			author: {
 				select: {
 					firstName: true,
@@ -132,6 +147,9 @@ async function deleteComment(id: number) {
 			updatedAt: true,
 			content: true,
 			replyToId: true,
+			_count: {
+				select: { replies: true },
+			},
 			author: {
 				select: {
 					firstName: true,

@@ -12,6 +12,9 @@ export type CommentType = {
 	updatedAt: Date;
 	content: string | null;
 	replyToId: number | null;
+	_count: {
+		replies: number;
+	};
 	author: {
 		firstName: string;
 		lastName: string;
