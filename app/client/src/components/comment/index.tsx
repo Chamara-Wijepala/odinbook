@@ -88,7 +88,7 @@ export default function Comment({
 									className="hover:underline text-slate-500"
 								>
 									<p className="text-slate-500 text-xs sm:text-sm">
-										{author.username}
+										@{author.username}
 									</p>
 								</Link>
 							</div>
