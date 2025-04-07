@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
-import { CommentSkeleton } from '../../components/comment';
+import CommentSkeleton from '../../components/comment/comment-skeleton';
 import CommentThread from '../../components/comment-thread';
 
 export default function SingleThread({
@@ -55,10 +55,17 @@ export default function SingleThread({
 			{isLoading && threadParent.length < 1 && (
 				<>
 					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
+
+					<div className="flex">
+						<div className="min-w-4 flex justify-center">
+							<span className="min-w-[1px] bg-slate-300 dark:bg-slate-800 animate-pulse"></span>
+						</div>
+
+						<div className="w-full">
+							<CommentSkeleton />
+							<CommentSkeleton />
+						</div>
+					</div>
 				</>
 			)}
 

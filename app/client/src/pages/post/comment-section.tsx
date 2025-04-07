@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
-import { CommentSkeleton } from '../../components/comment';
+import CommentSkeleton from '../../components/comment/comment-skeleton';
 import CommentThread from '../../components/comment-thread';
 
 export default function CommentSection({ postId }: { postId: string }) {
@@ -23,11 +23,21 @@ export default function CommentSection({ postId }: { postId: string }) {
 		<div className="p-2">
 			{isLoading && rootComments.length < 1 && (
 				<>
-					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
-					<CommentSkeleton />
+					<div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md">
+						<CommentSkeleton />
+					</div>
+					<div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md">
+						<CommentSkeleton />
+					</div>
+					<div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md">
+						<CommentSkeleton />
+					</div>
+					<div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md">
+						<CommentSkeleton />
+					</div>
+					<div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md">
+						<CommentSkeleton />
+					</div>
 				</>
 			)}
 

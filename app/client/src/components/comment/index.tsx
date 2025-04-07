@@ -239,7 +239,3 @@ export default function Comment({
 		</>
 	);
 }
-
-export function CommentSkeleton() {
-	return <div>Comment Skeleton</div>;
-}
