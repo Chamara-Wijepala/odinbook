@@ -10,5 +10,6 @@ router.get('/:commentId', commentsController.getComments);
 router.get('/:commentId/thread', commentsController.getSingleThread);
 router.patch('/:commentId', commentsController.update);
 router.delete('/:commentId', commentsController.deleteComment);
+router.patch('/:commentId/like', commentsController.like);
 
 export default router;

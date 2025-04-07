@@ -10,6 +10,7 @@ import coloredNotification from '../../services/notifications';
 import Dialog from '../dialog';
 import Modal from '../modal';
 import UpdateComment from './update-comment';
+import CommentLike from './like';
 import Reply from './reply';
 import api from '../../api';
 import type { CommentType } from '@odinbook/types';
@@ -26,6 +27,7 @@ export default function Comment({
 	updatedAt,
 	content,
 	author,
+	likes,
 }: Props) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -136,6 +138,16 @@ export default function Comment({
 
 				{/* toolbar */}
 				<div className="flex items-center gap-1">
+					{/* like button */}
+					<CommentLike
+						likesLength={likes.length}
+						isLiked={
+							likes.find((l) => l.userId === currentUser?.id) ? true : false
+						}
+						postId={postId}
+						commentId={id}
+					/>
+
 					{/* reply button */}
 					<button
 						onClick={() => setIsBeingRepliedTo((prev) => !prev)}

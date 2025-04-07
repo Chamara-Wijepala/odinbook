@@ -24,6 +24,9 @@ async function create(
 					username: true,
 				},
 			},
+			likes: {
+				select: { userId: true },
+			},
 		},
 	});
 }
@@ -58,6 +61,9 @@ async function getComments(
 					username: true,
 				},
 			},
+			likes: {
+				select: { userId: true },
+			},
 		},
 		take: 5,
 		skip: cursor ? 1 : 0,
@@ -84,6 +90,9 @@ async function getSingleThread(postId: string, commentId: number) {
 					username: true,
 				},
 			},
+			likes: {
+				select: { userId: true },
+			},
 			replies: {
 				select: {
 					id: true,
@@ -100,6 +109,9 @@ async function getSingleThread(postId: string, commentId: number) {
 							lastName: true,
 							username: true,
 						},
+					},
+					likes: {
+						select: { userId: true },
 					},
 				},
 				take: 5,
@@ -130,6 +142,9 @@ async function update(postId: string, commentId: number, content: string) {
 					username: true,
 				},
 			},
+			likes: {
+				select: { userId: true },
+			},
 		},
 	});
 }
@@ -157,7 +172,29 @@ async function deleteComment(id: number) {
 					username: true,
 				},
 			},
+			likes: {
+				select: { userId: true },
+			},
 		},
+	});
+}
+
+// likes
+async function like(commentId: number, userId: string) {
+	return await prisma.commentLike.create({
+		data: { commentId, userId },
+	});
+}
+
+async function findLike(commentId: number, userId: string) {
+	return await prisma.commentLike.findUnique({
+		where: { commentId_userId: { commentId, userId } },
+	});
+}
+
+async function unlike(commentId: number, userId: string) {
+	return await prisma.commentLike.delete({
+		where: { commentId_userId: { commentId, userId } },
 	});
 }
 
@@ -168,4 +205,7 @@ export default {
 	getSingleThread,
 	update,
 	deleteComment,
+	like,
+	findLike,
+	unlike,
 };

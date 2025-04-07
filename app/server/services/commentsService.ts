@@ -113,10 +113,23 @@ async function deleteComment(commentId: number, currentUserId: string) {
 	return { status: 200, error: null, data };
 }
 
+async function like(commentId: number, userId: string) {
+	const isLiked = await commentsRepository.findLike(commentId, userId);
+
+	if (isLiked) {
+		await commentsRepository.unlike(commentId, userId);
+		return 204;
+	} else {
+		await commentsRepository.like(commentId, userId);
+		return 200;
+	}
+}
+
 export default {
 	create,
 	getComments,
 	getSingleThread,
 	update,
 	deleteComment,
+	like,
 };

@@ -20,6 +20,9 @@ export type CommentType = {
 		lastName: string;
 		username: string;
 	} | null;
+	likes: {
+		userId: string;
+	}[];
 };
 
 export interface ICommentWithReplies extends CommentType {

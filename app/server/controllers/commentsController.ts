@@ -104,10 +104,23 @@ async function deleteComment(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function like(req: Request, res: Response, next: NextFunction) {
+	try {
+		const status = await commentsService.like(
+			Number(req.params.commentId),
+			req.user.id
+		);
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	create,
 	getComments,
 	getSingleThread,
 	update,
 	deleteComment,
+	like,
 };
