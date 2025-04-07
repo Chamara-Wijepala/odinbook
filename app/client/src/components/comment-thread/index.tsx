@@ -143,7 +143,7 @@ function LoadMore({
 		<button
 			onClick={getReplies}
 			disabled={isLoading}
-			className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors text-sm text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700 ${
+			className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors text-sm text-slate-800 disabled:text-slate-400 dark:text-slate-200 disabled:dark:text-slate-600 hover:bg-slate-300 hover:dark:bg-slate-700 disabled:cursor-not-allowed ${
 				cursor === null && 'hidden'
 			}`}
 		>
