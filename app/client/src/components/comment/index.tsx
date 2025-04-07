@@ -150,45 +150,44 @@ export default function Comment({
 					</button>
 
 					{/* dialog */}
-					{currentUser &&
-						currentUser.username === author?.username &&
-						!isBeingUpdated && (
-							<div onClick={(e) => e.preventDefault()} className="relative">
+					{currentUser && currentUser.username === author?.username && (
+						<div onClick={(e) => e.preventDefault()} className="relative">
+							<button
+								ref={buttonRef}
+								onClick={() => setIsDialogOpen(!isDialogOpen)}
+								disabled={isBeingUpdated || isBeingRepliedTo}
+								className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors group/dialog"
+							>
+								<BsThreeDots className="text-slate-800 dark:text-slate-200 group-disabled/dialog:text-slate-400" />
+							</button>
+
+							<Dialog
+								isOpen={isDialogOpen}
+								setIsOpen={setIsDialogOpen}
+								buttonRef={buttonRef}
+								className=""
+							>
 								<button
-									ref={buttonRef}
-									onClick={() => setIsDialogOpen(!isDialogOpen)}
-									className="w-6 h-6 flex rounded-full items-center justify-center hover:text-sky-600 hover:bg-sky-100 hover:dark:text-sky-300 hover:dark:bg-sky-900 transition-colors"
+									onClick={() => {
+										setIsBeingUpdated(true);
+										setIsDialogOpen(false);
+									}}
+									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
 								>
-									<BsThreeDots className="text-slate-800 dark:text-slate-200" />
+									<FaRegEdit />
+									<span>Update</span>
 								</button>
 
-								<Dialog
-									isOpen={isDialogOpen}
-									setIsOpen={setIsDialogOpen}
-									buttonRef={buttonRef}
-									className=""
+								<button
+									onClick={() => setIsModalOpen(true)}
+									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
 								>
-									<button
-										onClick={() => {
-											setIsBeingUpdated(true);
-											setIsDialogOpen(false);
-										}}
-										className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-									>
-										<FaRegEdit />
-										<span>Update</span>
-									</button>
-
-									<button
-										onClick={() => setIsModalOpen(true)}
-										className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
-									>
-										<TiDeleteOutline />
-										<span>Delete</span>
-									</button>
-								</Dialog>
-							</div>
-						)}
+									<TiDeleteOutline />
+									<span>Delete</span>
+								</button>
+							</Dialog>
+						</div>
+					)}
 				</div>
 
 				{isBeingRepliedTo && (
