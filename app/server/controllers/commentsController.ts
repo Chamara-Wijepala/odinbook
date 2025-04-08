@@ -14,7 +14,7 @@ async function create(req: Request, res: Response, next: NextFunction) {
 
 	try {
 		const comment = await commentsService.create(
-			req.body.content,
+			validation.data,
 			req.params.postId,
 			req.user.id,
 			commentId
@@ -72,7 +72,7 @@ async function update(req: Request, res: Response, next: NextFunction) {
 			req.user.id,
 			postId,
 			commentId,
-			content
+			validation.data
 		);
 
 		if (error) {

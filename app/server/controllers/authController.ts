@@ -12,7 +12,7 @@ async function createUser(req: Request, res: Response, next: NextFunction) {
 	}
 
 	try {
-		const { status, errors } = await authService.register(body);
+		const { status, errors } = await authService.register(validation.data);
 
 		if (errors) {
 			res.status(status).json(errors);

@@ -1,6 +1,6 @@
 import postsRepository from '../repositories/postsRepository';
 
-async function create(userId: string, username: string, content: string) {
+async function create(userId: string, content: string) {
 	const post = await postsRepository.create(content, userId);
 
 	const newPost = {

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt, { TokenExpiredError } from 'jsonwebtoken';
 import usersRepository from '../repositories/usersRepository';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
+import type { CreateUser } from '@odinbook/zod';
 import type { CreateUserErrors } from '@odinbook/types';
 import type { UserToken } from '../types';
 
@@ -20,12 +21,7 @@ async function register({
 	lastName,
 	username,
 	password,
-}: {
-	firstName: string;
-	lastName: string;
-	username: string;
-	password: string;
-}) {
+}: CreateUser) {
 	const duplicate = await usersRepository.findByUsername(username);
 
 	if (duplicate) {

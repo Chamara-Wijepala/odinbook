@@ -8,7 +8,7 @@ async function createPost(req: Request, res: Response, next: NextFunction) {
 
 	const validation = validatePost(content);
 
-	if (validation.error) {
+	if (!validation.success) {
 		res.status(400).json({ error: validation.error });
 		return;
 	}
@@ -16,8 +16,7 @@ async function createPost(req: Request, res: Response, next: NextFunction) {
 	try {
 		const { status, data } = await postsService.create(
 			req.user.id,
-			req.user.username,
-			content
+			validation.data
 		);
 
 		if (!data) {
@@ -89,7 +88,7 @@ async function updatePost(req: Request, res: Response, next: NextFunction) {
 
 	const validation = validatePost(content);
 
-	if (validation.error) {
+	if (!validation.success) {
 		res.status(400).json({ error: validation.error });
 		return;
 	}
@@ -98,7 +97,7 @@ async function updatePost(req: Request, res: Response, next: NextFunction) {
 		const { status, error, data } = await postsService.update(
 			req.user.username,
 			req.params.id,
-			content
+			validation.data
 		);
 
 		if (error) {
