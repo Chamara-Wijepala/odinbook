@@ -1,8 +1,21 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router';
+import useNewPostStore from '../../stores/new-post';
 import Post, { PostSkeleton } from '../../components/post';
 import usePosts from '../../hooks/usePosts';
 
 export default function Explore() {
 	const { isLoading, posts, loaderRef } = usePosts('/posts?page=explore');
+	const newPost = useNewPostStore((s) => s.newPost);
+	const navigate = useNavigate();
+
+	// Navigate to post page when a new post is created. This is only done here as
+	// new posts are rendered on home and profile pages.
+	useEffect(() => {
+		if (newPost) {
+			navigate(`/post/${newPost.id}`);
+		}
+	}, [newPost]);
 
 	return (
 		<div className="p-4">
