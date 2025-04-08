@@ -7,11 +7,13 @@ export default function CommentLike({
 	isLiked,
 	postId,
 	commentId,
+	disabled,
 }: {
 	likesLength: number;
 	isLiked: boolean;
 	postId: string;
 	commentId: number;
+	disabled: boolean;
 }) {
 	const [likeCount, setLikeCount] = useState(likesLength);
 	const [likeStatus, setLikeStatus] = useState(isLiked);
@@ -36,28 +38,36 @@ export default function CommentLike({
 
 	return (
 		<div className="flex items-center	gap-1">
-			<p>
-				{likeCount}
-				<span className="sr-only">likes</span>
-			</p>
+			{!disabled && (
+				<p>
+					{likeCount}
+					<span className="sr-only">likes</span>
+				</p>
+			)}
 
-			<button
-				onClick={handleClick}
-				className="flex justify-center items-center w-6 h-6 rounded-full text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700 transition-colors"
-			>
-				<div className="relative w-[18px] h-[18px]">
-					<IoHeartSharp
-						className={`absolute top-0 left-0 transition-all duration-[400ms] w-[18px] h-[18px] ${
-							likeStatus ? 'opacity-100 text-rose-500' : 'opacity-0'
-						}`}
-					/>
-					<IoHeartOutline
-						className={`absolute top-0 left-0 transition-all duration-[400ms] w-[18px] h-[18px] ${
-							likeStatus ? 'opacity-0 text-rose-500' : 'opacity-100'
-						}`}
-					/>
+			{disabled ? (
+				<div className="w-[18px] h-[18px]">
+					<IoHeartOutline className="w-[18px] h-[18px] text-slate-500" />
 				</div>
-			</button>
+			) : (
+				<button
+					onClick={handleClick}
+					className="flex justify-center items-center w-6 h-6 rounded-full text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700 transition-colors"
+				>
+					<div className="relative w-[18px] h-[18px]">
+						<IoHeartSharp
+							className={`absolute top-0 left-0 transition-all duration-[400ms] w-[18px] h-[18px] ${
+								likeStatus ? 'opacity-100 text-rose-500' : 'opacity-0'
+							}`}
+						/>
+						<IoHeartOutline
+							className={`absolute top-0 left-0 transition-all duration-[400ms] w-[18px] h-[18px] ${
+								likeStatus ? 'opacity-0 text-rose-500' : 'opacity-100'
+							}`}
+						/>
+					</div>
+				</button>
+			)}
 		</div>
 	);
 }

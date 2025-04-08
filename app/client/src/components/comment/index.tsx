@@ -146,12 +146,14 @@ export default function Comment({
 						}
 						postId={postId}
 						commentId={id}
+						disabled={!author}
 					/>
 
 					{/* reply button */}
 					<button
+						disabled={!author}
 						onClick={() => setIsBeingRepliedTo((prev) => !prev)}
-						className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors ${
+						className={`flex items-center gap-1 py-1 px-2 rounded-full transition-colors disabled:cursor-default disabled:text-slate-500 disabled:hover:bg-transparent ${
 							isBeingRepliedTo
 								? 'text-rose-400 hover:bg-rose-200 hover:dark:bg-rose-950'
 								: 'text-slate-800 dark:text-slate-200 hover:bg-slate-300 hover:dark:bg-slate-700'
