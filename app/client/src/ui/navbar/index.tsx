@@ -36,7 +36,7 @@ export default function Navbar() {
 			{/* toggle navbar button */}
 			<button
 				onClick={toggleNavbar}
-				className="sticky top-2 pl-2 z-50 max-w-8 max-h-8 lg:hidden"
+				className="sticky top-2 pl-2 z-[999] max-w-8 max-h-8 lg:hidden"
 			>
 				{isOpen ? (
 					<>
