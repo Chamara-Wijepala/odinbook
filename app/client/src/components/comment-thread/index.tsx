@@ -9,6 +9,7 @@ import { CommentType } from '@odinbook/types';
 
 type CommentThreadProps = PropsWithChildren & {
 	postId: string;
+	postAuthor: string;
 	comment: CommentType;
 	depth: number;
 };
@@ -16,6 +17,7 @@ type CommentThreadProps = PropsWithChildren & {
 export default function CommentThread({
 	children,
 	postId,
+	postAuthor,
 	comment,
 	depth,
 }: CommentThreadProps) {
@@ -28,7 +30,7 @@ export default function CommentThread({
 
 	return (
 		<div>
-			<Comment postId={postId} {...comment} />
+			<Comment postId={postId} postAuthor={postAuthor} {...comment} />
 
 			<div className="flex">
 				{/* collapse thread button */}
@@ -45,6 +47,7 @@ export default function CommentThread({
 						<CommentThread
 							key={reply.id}
 							postId={postId}
+							postAuthor={postAuthor}
 							comment={reply}
 							depth={depth + 1}
 						>

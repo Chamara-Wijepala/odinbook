@@ -7,9 +7,11 @@ import CommentThread from '../../components/comment-thread';
 
 export default function SingleThread({
 	postId,
+	postAuthor,
 	commentId,
 }: {
 	postId: string;
+	postAuthor: string;
 	commentId: number;
 }) {
 	const clearComments = useCommentsStore((s) => s.clearComments);
@@ -71,7 +73,12 @@ export default function SingleThread({
 
 			{threadParent.length > 0 && (
 				<div className="flex flex-col gap-2 mb-2">
-					<CommentThread postId={postId} comment={threadParent[0]} depth={1} />
+					<CommentThread
+						postId={postId}
+						postAuthor={postAuthor}
+						comment={threadParent[0]}
+						depth={1}
+					/>
 				</div>
 			)}
 		</div>

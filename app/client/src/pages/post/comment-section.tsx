@@ -4,7 +4,13 @@ import useComments from '../../hooks/useComments';
 import CommentSkeleton from '../../components/comment/comment-skeleton';
 import CommentThread from '../../components/comment-thread';
 
-export default function CommentSection({ postId }: { postId: string }) {
+export default function CommentSection({
+	postId,
+	postAuthor,
+}: {
+	postId: string;
+	postAuthor: string;
+}) {
 	const clearComments = useCommentsStore((s) => s.clearComments);
 	const comments = useCommentsStore((s) => s.comments);
 	const rootComments = useMemo(
@@ -49,7 +55,12 @@ export default function CommentSection({ postId }: { postId: string }) {
 								key={comment.id}
 								className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-md"
 							>
-								<CommentThread postId={postId} comment={comment} depth={1}>
+								<CommentThread
+									postId={postId}
+									postAuthor={postAuthor}
+									comment={comment}
+									depth={1}
+								>
 									{comment._count.replies > 0 && (
 										<CommentThread.LoadMore
 											postId={postId}

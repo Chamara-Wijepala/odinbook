@@ -18,10 +18,12 @@ import { AxiosError } from 'axios';
 
 type Props = CommentType & {
 	postId: string;
+	postAuthor: string;
 };
 
 export default function Comment({
 	postId,
+	postAuthor,
 	id,
 	createdAt,
 	updatedAt,
@@ -82,7 +84,15 @@ export default function Comment({
 									to={`/users/${author.username}`}
 									className="hover:underline"
 								>
-									<p className="text-sm font-bold">
+									<p
+										className={`text-sm font-bold ${
+											postAuthor === author.username &&
+											'text-emerald-600 dark:text-emerald-400'
+										} ${
+											author.username === currentUser?.username &&
+											'text-amber-600 dark:text-amber-400'
+										}`}
+									>
 										{author.firstName} {author.lastName}
 									</p>
 								</Link>

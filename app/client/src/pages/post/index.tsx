@@ -154,10 +154,14 @@ export default function PostPage() {
 					{location.pathname.split('thread').length === 2 ? ( // will split the string in two if 'thread' exists
 						<SingleThread
 							postId={post.id}
+							postAuthor={post.author.username}
 							commentId={Number(location.pathname.split('/').at(-1))}
 						/>
 					) : (
-						<CommentSection postId={post.id} />
+						<CommentSection
+							postId={post.id}
+							postAuthor={post.author.username}
+						/>
 					)}
 				</>
 			)}
