@@ -105,11 +105,12 @@ export default function Post({
 					<p>{content}</p>
 				</div>
 
-				<div
-					onClick={(e) => e.preventDefault()} // stop event bubbling
-					className="pt-2 mt-2 border-t-[1px] border-slate-300 dark:border-slate-800"
-				>
-					<PostLikes likedBy={likedBy} postId={postId} />
+				<div className="flex pt-2 mt-2 border-t-[1px] border-slate-300 dark:border-slate-800">
+					<div
+						onClick={(e) => e.preventDefault()} // stop event bubbling
+					>
+						<PostLikes likedBy={likedBy} postId={postId} />
+					</div>
 				</div>
 			</div>
 		</Link>
