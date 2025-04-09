@@ -118,7 +118,7 @@ export default function PostPage() {
 
 							{/* content */}
 							<div className="my-4">
-								<p>{post.content}</p>
+								<p className="break-all">{post.content}</p>
 							</div>
 
 							{/* dates */}

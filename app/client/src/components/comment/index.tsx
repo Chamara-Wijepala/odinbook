@@ -126,7 +126,7 @@ export default function Comment({
 					)}
 
 					{!isBeingUpdated && (
-						<p>
+						<p className="break-all">
 							{content ? (
 								content
 							) : (

@@ -114,7 +114,7 @@ export default function Post({
 
 				{/* content */}
 				<div className="mt-4">
-					<p>{content}</p>
+					<p className="break-all">{content}</p>
 				</div>
 
 				{/* control group */}
