@@ -86,11 +86,11 @@ export default function Comment({
 								>
 									<p
 										className={`text-sm font-bold ${
+											author.username === currentUser?.username &&
+											'!text-amber-600 !dark:text-amber-400'
+										} ${
 											postAuthor === author.username &&
 											'text-emerald-600 dark:text-emerald-400'
-										} ${
-											author.username === currentUser?.username &&
-											'text-amber-600 dark:text-amber-400'
 										}`}
 									>
 										{author.firstName} {author.lastName}
