@@ -7,6 +7,7 @@ import api from '../../api';
 import { AxiosError } from 'axios'; // importing as type doesn't allow using it as a value
 
 export default function Login() {
+	const [isPending, setIsPending] = useState(false);
 	const [formData, setFormData] = useState({
 		username: '',
 		password: '',
@@ -34,6 +35,7 @@ export default function Login() {
 		setErrors({ username: '', password: '' });
 
 		try {
+			setIsPending(true);
 			const response = await api.post('/auth/login', formData, {
 				headers: {
 					'Content-Type': 'application/json',
@@ -48,6 +50,8 @@ export default function Login() {
 			if (error instanceof AxiosError) {
 				setErrors(error.response?.data);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -109,7 +113,8 @@ export default function Login() {
 
 					<button
 						type="submit"
-						className="bg-sky-400 hover:bg-sky-300 transition-colors duration-250 p-2 md:p-4 rounded-lg"
+						disabled={isPending}
+						className="bg-sky-400 hover:bg-sky-300 transition-colors duration-250 p-2 md:p-4 rounded-lg disabled:opacity-50 disabled:hover:bg-sky-400 disabled:cursor-wait"
 					>
 						Log In
 					</button>

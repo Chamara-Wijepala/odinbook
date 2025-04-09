@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function DialogItems({ authorId, postId, postContent }: Props) {
+	const [isPending, setIsPending] = useState(false);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalContent, setModalContent] = useState<React.ReactNode | null>(
 		null
@@ -33,26 +34,33 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 
 	async function followUser() {
 		try {
+			setIsPending(true);
 			await api.patch(`/users/${authorId}/follow`);
 
 			updateUserFollowing(authorId);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setIsPending(false);
 		}
 	}
 
 	async function unfollowUser() {
 		try {
+			setIsPending(true);
 			await api.patch(`/users/${authorId}/unfollow`);
 
 			deleteUserFollowing(authorId);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			setIsPending(false);
 		}
 	}
 
 	async function handleDelete() {
 		try {
+			setIsPending(true);
 			await api.delete(`/posts/${postId}`);
 			toggleModal();
 			coloredNotification({ type: 'success', message: 'Post deleted.' });
@@ -70,6 +78,8 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 			}
 
 			console.log(error);
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -117,8 +127,9 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 											</button>
 
 											<button
+												disabled={isPending}
 												onClick={handleDelete}
-												className="bg-rose-500 hover:bg-rose-400 py-2 px-4 rounded-full transition-colors"
+												className="bg-rose-500 hover:bg-rose-400 py-2 px-4 rounded-full disabled:cursor-wait disabled:opacity-50 disabled:hover:bg-rose-500 transition-colors"
 											>
 												Delete
 											</button>
@@ -139,16 +150,18 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 					<li>
 						{user?.following.includes(authorId) ? (
 							<button
+								disabled={isPending}
 								onClick={unfollowUser}
-								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:text-slate-500 disabled:hover:bg-transparent disabled:cursor-wait transition-colors"
 							>
 								<AiOutlineUserDelete />
 								<span>Unfollow</span>
 							</button>
 						) : (
 							<button
+								disabled={isPending}
 								onClick={followUser}
-								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+								className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:text-slate-500 disabled:hover:bg-transparent disabled:cursor-wait transition-colors"
 							>
 								<AiOutlineUserAdd />
 								<span>Follow</span>

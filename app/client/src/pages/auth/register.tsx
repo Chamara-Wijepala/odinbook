@@ -9,6 +9,7 @@ import { AxiosError } from 'axios'; // importing as type doesn't allow using it 
 import type { CreateUserErrors } from '@odinbook/types';
 
 export default function Register() {
+	const [isPending, setIsPending] = useState(false);
 	const [formData, setFormData] = useState({
 		firstName: '',
 		lastName: '',
@@ -43,6 +44,7 @@ export default function Register() {
 		setErrors(null);
 
 		try {
+			setIsPending(true);
 			await api.post('/auth/register', formData);
 			const response = await api.post('/auth/login', {
 				username: formData.username,
@@ -56,6 +58,8 @@ export default function Register() {
 			if (error instanceof AxiosError) {
 				setErrors(error.response?.data.errors);
 			}
+		} finally {
+			setIsPending(false);
 		}
 	}
 
@@ -207,7 +211,8 @@ export default function Register() {
 
 					<button
 						type="submit"
-						className="bg-sky-400 hover:bg-sky-300 transition-colors duration-250 p-2 md:p-4 rounded-lg"
+						disabled={isPending}
+						className="bg-sky-400 hover:bg-sky-300 transition-colors duration-250 p-2 md:p-4 rounded-lg disabled:opacity-50 disabled:hover:bg-sky-400 disabled:cursor-wait"
 					>
 						Submit
 					</button>
