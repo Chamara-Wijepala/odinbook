@@ -1,14 +1,11 @@
-import { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { DateTime } from 'luxon';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 import useAuthStore from '../../stores/auth';
 import useData from '../../hooks/useData';
 import UserPosts from './user-posts';
 import BackButton from '../../components/back-button';
-import coloredNotification from '../../services/notifications';
 import api from '../../api';
-import { AxiosError } from 'axios';
 
 type User = {
 	id: string;
@@ -29,12 +26,7 @@ function formatDate(isoString: string) {
 
 export default function Profile() {
 	const params = useParams();
-	const {
-		isLoading,
-		data: user,
-		error,
-	} = useData<User>(`/users/${params.username}`);
-	const navigate = useNavigate();
+	const { isLoading, data: user } = useData<User>(`/users/${params.username}`);
 	const currentUser = useAuthStore((state) => state.user);
 	const updateUserFollowing = useAuthStore(
 		(state) => state.updateUserFollowing
@@ -59,15 +51,6 @@ export default function Profile() {
 		}
 	}
 
-	useEffect(() => {
-		if (!error) return;
-
-		if (error instanceof AxiosError) {
-			coloredNotification(error.response?.data.toast);
-			navigate('/');
-		}
-	}, [error]);
-
 	return (
 		<div>
 			<div className="p-4">
@@ -75,6 +58,21 @@ export default function Profile() {
 			</div>
 
 			{isLoading && <Skeleton />}
+
+			{!isLoading && !user && (
+				<div className="flex flex-col justify-center items-center p-4 text-center">
+					<h2 className="text-2xl font-bold">
+						We couldn't find the user you're looking for!
+					</h2>
+
+					<p className="text-lg">
+						Go to{' '}
+						<Link to="/" className="text-sky-400 hover:text-sky-300">
+							homepage
+						</Link>
+					</p>
+				</div>
+			)}
 
 			{!isLoading && user && (
 				<div>

@@ -4,23 +4,10 @@ async function getUserProfile(username: string) {
 	const data = await usersRepository.getProfileData(username);
 
 	if (!data) {
-		return {
-			status: 404,
-			error: {
-				toast: {
-					type: 'error',
-					message: "Couldn't find the user you're looking for.",
-				},
-			},
-			data: null,
-		};
+		return null;
 	}
 
-	return {
-		status: 200,
-		error: null,
-		data,
-	};
+	return data;
 }
 
 async function followUser(currentUserId: string, id: string) {

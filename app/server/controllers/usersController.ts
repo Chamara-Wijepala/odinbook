@@ -3,12 +3,10 @@ import { Request, Response, NextFunction } from 'express';
 
 async function getUserProfile(req: Request, res: Response, next: NextFunction) {
 	try {
-		const { status, error, data } = await usersService.getUserProfile(
-			req.params.username
-		);
+		const data = await usersService.getUserProfile(req.params.username);
 
-		if (error) {
-			res.status(status).json(error);
+		if (!data) {
+			res.sendStatus(404);
 			return;
 		}
 
