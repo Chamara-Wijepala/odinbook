@@ -21,6 +21,11 @@ export default function UpdateComment({
 	const updateComment = useCommentsStore((s) => s.updateComment);
 
 	async function handleSubmit() {
+		if (commentBody === content) {
+			setError('No changes have been made.');
+			return;
+		}
+
 		const validation = validateComment(content);
 
 		if (validation.error) {

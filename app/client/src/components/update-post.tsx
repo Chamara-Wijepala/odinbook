@@ -22,6 +22,11 @@ export default function UpdatePost({
 	const location = useLocation();
 
 	async function handleClick() {
+		if (content === postContent) {
+			setError('No changes have been made.');
+			return;
+		}
+
 		const validation = validatePost(content);
 
 		if (validation.error) {
