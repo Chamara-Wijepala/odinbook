@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate, useLocation, Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FaRegComment } from 'react-icons/fa';
 import Dialog from '../../components/dialog';
 import PostDialogItems from '../../components/post/post-dialog-items';
 import PostLikes from '../../components/post-likes';
@@ -133,8 +134,13 @@ export default function PostPage() {
 
 						{/* likes */}
 						<div className="p-4">
-							<div className="pt-4 border-t-[1px] border-slate-300 dark:border-slate-800">
+							<div className="flex gap-2 pt-4 border-t-[1px] border-slate-300 dark:border-slate-800">
 								<PostLikes likedBy={post.likedBy} postId={post.id} />
+
+								<div className="flex items-center gap-2 py-1 px-3 rounded-full text-slate-500">
+									<p>{post._count.comments}</p>
+									<FaRegComment className="w-5 h-5" />
+								</div>
 							</div>
 						</div>
 					</div>

@@ -24,6 +24,7 @@ async function create(content: string, authorId: string) {
 					userId: true,
 				},
 			},
+			_count: { select: { comments: true } },
 		},
 	});
 }
@@ -59,6 +60,7 @@ async function getExplorePage(cursor: string) {
 					username: true,
 				},
 			},
+			_count: { select: { comments: true } },
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -98,6 +100,7 @@ async function getHomePage(username: string, cursor: string) {
 					username: true,
 				},
 			},
+			_count: { select: { comments: true } },
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -131,6 +134,7 @@ async function getUserPosts(authorId: string, cursor: string) {
 					username: true,
 				},
 			},
+			_count: { select: { comments: true } },
 		},
 		orderBy: {
 			createdAt: 'desc',
@@ -164,6 +168,7 @@ async function getPostPage(id: string) {
 					username: true,
 				},
 			},
+			_count: { select: { comments: true } },
 		},
 	});
 }

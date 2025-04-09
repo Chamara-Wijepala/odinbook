@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router';
 import { DateTime } from 'luxon';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import { FaRegComment } from 'react-icons/fa';
 import Dialog from '../dialog';
 import PostDialogItems from './post-dialog-items';
 import PostLikes from '../post-likes';
@@ -16,6 +17,7 @@ type Props = {
 	createdAt: string;
 	updatedAt: string;
 	likedBy: string[];
+	commentCount: number;
 };
 
 export default function Post({
@@ -28,18 +30,21 @@ export default function Post({
 	createdAt,
 	updatedAt,
 	likedBy,
+	commentCount,
 }: Props) {
 	const [isDialogOpen, setIsDialogOpen] = useState(false);
 	const buttonRef = useRef<HTMLButtonElement | null>(null);
 
 	return (
 		<Link to={`/post/${postId}`} draggable="false">
-			<div className="bg-white hover:bg-slate-50 dark:bg-slate-900 hover:dark:bg-slate-800 transition-colors shadow-md p-4 rounded-lg">
+			{/* set bottom padding to 2 so the control group will fit better */}
+			<div className="bg-white hover:bg-slate-50 dark:bg-slate-900 hover:dark:bg-slate-800 transition-colors shadow-md p-4 pb-2 rounded-lg">
 				<div className="flex gap-2">
 					<div
 						onClick={(e) => e.preventDefault()} // stop event bubbling
 						className="flex gap-2"
 					>
+						{/* profile */}
 						<Link to={`/users/${username}`}>
 							<div>
 								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
@@ -49,19 +54,25 @@ export default function Post({
 						</Link>
 
 						<div className="text-sm sm:text-base flex items-center flex-wrap gap-x-1 h-fit">
+							{/* names */}
 							<Link to={`/users/${username}`} className="hover:underline">
 								<p className="font-semibold">
 									{firstName} {lastName}
 								</p>
 							</Link>
+
+							{/* username */}
 							<Link
 								to={`/users/${username}`}
 								className="hover:underline decoration-slate-500"
 							>
 								<p className="text-slate-500 text-xs sm:text-sm">@{username}</p>
 							</Link>
+
 							<div className="text-slate-500 text-xs sm:text-sm flex gap-x-1">
 								<span>·</span>
+
+								{/* dates */}
 								<div>
 									{createdAt === updatedAt ? (
 										<p>{DateTime.fromISO(createdAt).toRelative()}</p>
@@ -101,15 +112,26 @@ export default function Post({
 					</div>
 				</div>
 
+				{/* content */}
 				<div className="mt-4">
 					<p>{content}</p>
 				</div>
 
+				{/* control group */}
 				<div className="flex pt-2 mt-2 border-t-[1px] border-slate-300 dark:border-slate-800">
 					<div
 						onClick={(e) => e.preventDefault()} // stop event bubbling
+						className="flex gap-4"
 					>
 						<PostLikes likedBy={likedBy} postId={postId} />
+
+						<Link
+							to={`/post/${postId}`}
+							className="flex items-center gap-2 py-1 px-3 rounded-full text-slate-500 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+						>
+							<p>{commentCount}</p>
+							<FaRegComment className="w-5 h-5" />
+						</Link>
 					</div>
 				</div>
 			</div>

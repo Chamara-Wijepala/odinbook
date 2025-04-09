@@ -28,6 +28,7 @@ export default function Home() {
 							createdAt={post.createdAt}
 							updatedAt={post.updatedAt}
 							likedBy={post.likedBy}
+							commentCount={post._count.comments}
 						/>
 					))}
 				</div>
@@ -66,6 +67,7 @@ export default function Home() {
 								createdAt={post.createdAt}
 								updatedAt={post.updatedAt}
 								likedBy={post.likedBy}
+								commentCount={post._count.comments}
 							/>
 						))}
 					</div>

@@ -10,4 +10,7 @@ export type PostType = {
 		lastName: string;
 		username: string;
 	};
+	_count: {
+		comments: number;
+	};
 };

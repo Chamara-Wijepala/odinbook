@@ -54,6 +54,7 @@ export default function Explore() {
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
 						likedBy={post.likedBy}
+						commentCount={post._count.comments}
 					/>
 				))}
 			</div>

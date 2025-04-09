@@ -56,6 +56,7 @@ export default function UserPosts({ id }: { id: string }) {
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
 						likedBy={post.likedBy}
+						commentCount={post._count.comments}
 					/>
 				))}
 			</div>
@@ -74,6 +75,7 @@ export default function UserPosts({ id }: { id: string }) {
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
 						likedBy={post.likedBy}
+						commentCount={post._count.comments}
 					/>
 				))}
 			</div>
