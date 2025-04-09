@@ -186,7 +186,7 @@ export default function Comment({
 										setIsBeingUpdated(true);
 										setIsDialogOpen(false);
 									}}
-									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+									className="w-full py-4 px-6 flex items-center gap-2 font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
 								>
 									<FaRegEdit />
 									<span>Update</span>
@@ -194,7 +194,7 @@ export default function Comment({
 
 								<button
 									onClick={() => setIsModalOpen(true)}
-									className="w-full py-4 px-6 flex items-center gap-2 hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
+									className="w-full py-4 px-6 flex items-center gap-2 font-bold hover:bg-rose-200 dark:hover:bg-rose-900 transition-colors"
 								>
 									<TiDeleteOutline />
 									<span>Delete</span>
