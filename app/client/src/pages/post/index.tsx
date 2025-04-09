@@ -9,6 +9,7 @@ import BackButton from '../../components/back-button';
 import CreateComment from '../../components/create-comment';
 import CommentSection from './comment-section';
 import SingleThread from './single-thread';
+import PostSkeleton from './post-skeleton';
 import useData from '../../hooks/useData';
 import coloredNotification from '../../services/notifications';
 import type { PostType } from '../../types';
@@ -51,7 +52,7 @@ export default function PostPage() {
 				<BackButton />
 			</div>
 
-			{isLoading && <Skeleton />}
+			{isLoading && <PostSkeleton />}
 
 			{!isLoading && post && (
 				<>
@@ -154,46 +155,6 @@ export default function PostPage() {
 					)}
 				</>
 			)}
-		</div>
-	);
-}
-
-function Skeleton() {
-	return (
-		<div className="border-b-[1px] border-slate-300 dark:border-slate-800">
-			<div className="p-4">
-				<div className="grid grid-cols-[40px_1fr_auto] sm:grid-cols-[50px_1fr_auto] gap-2">
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center aspect-square animate-pulse"></div>
-
-					<div className="text-sm sm:text-base flex flex-col justify-around animate-pulse">
-						<div className="flex gap-1 flex-wrap font-semibold">
-							<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-16"></div>
-							<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-20"></div>
-						</div>
-						<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-20"></div>
-					</div>
-
-					<div className="text-slate-200 animate-pulse">
-						<BsThreeDotsVertical />
-					</div>
-				</div>
-
-				<div className="my-4 flex flex-wrap gap-2 animate-pulse">
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-full"></div>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-[75%]"></div>
-				</div>
-
-				<div className="flex gap-1 items-center animate-pulse">
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-12"></div>
-					<span className="text-slate-200 dark:text-slate-700">·</span>
-					<div className="bg-slate-200 dark:bg-slate-700 rounded-md h-4 w-20"></div>
-				</div>
-			</div>
 		</div>
 	);
 }
