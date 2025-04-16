@@ -3,7 +3,8 @@ import type { Area } from 'react-easy-crop';
 export default function setCanvasPreview(
 	image: HTMLImageElement,
 	canvas: HTMLCanvasElement,
-	crop: Area
+	crop: Area,
+	dimension: number
 ) {
 	const ctx = canvas.getContext('2d');
 	if (!ctx) {
@@ -11,9 +12,10 @@ export default function setCanvasPreview(
 	}
 
 	const pixelRatio = window.devicePixelRatio;
+	const scaledDimension = Math.floor(dimension * pixelRatio);
 
-	canvas.width = Math.floor(crop.width * pixelRatio);
-	canvas.height = Math.floor(crop.height * pixelRatio);
+	canvas.width = scaledDimension;
+	canvas.height = scaledDimension;
 
 	// the actual number of pixels on the screen may be higher on larger monitors
 	// compared to a css pixel
@@ -21,18 +23,16 @@ export default function setCanvasPreview(
 	ctx.imageSmoothingQuality = 'high';
 	ctx.save();
 
-	// move the crop origin to the canvas origin
-	ctx.translate(-crop.x, -crop.y);
 	ctx.drawImage(
 		image,
+		crop.x,
+		crop.y,
+		crop.width,
+		crop.height,
 		0,
 		0,
-		image.naturalWidth,
-		image.naturalHeight,
-		0,
-		0,
-		image.naturalWidth,
-		image.naturalHeight
+		dimension,
+		dimension
 	);
 
 	ctx.restore();

@@ -109,7 +109,12 @@ export default function ImageCropper({ username }: { username: string }) {
 
 				<button
 					onClick={() => {
-						setCanvasPreview(image!, canvasRef.current!, croppedArea!);
+						setCanvasPreview(
+							image!,
+							canvasRef.current!,
+							croppedArea!,
+							MIN_DIMENSION
+						);
 
 						canvasRef.current?.toBlob(
 							async (blob) => {
