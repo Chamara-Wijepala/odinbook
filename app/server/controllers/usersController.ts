@@ -1,6 +1,11 @@
 import usersService from '../services/usersService';
 import { Request, Response, NextFunction } from 'express';
 
+async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
+	console.log(req.file);
+	res.sendStatus(200);
+}
+
 async function getUserProfile(req: Request, res: Response, next: NextFunction) {
 	try {
 		const data = await usersService.getUserProfile(req.params.username);
@@ -43,6 +48,7 @@ async function unfollowUser(req: Request, res: Response, next: NextFunction) {
 }
 
 export default {
+	uploadAvatar,
 	getUserProfile,
 	followUser,
 	unfollowUser,

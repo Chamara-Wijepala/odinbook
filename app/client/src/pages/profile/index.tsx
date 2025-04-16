@@ -162,7 +162,7 @@ export default function Profile() {
 					</div>
 
 					<Modal isOpen={isModalOpen}>
-						<ImageCropper />
+						<ImageCropper username={user.username} />
 					</Modal>
 				</>
 			)}

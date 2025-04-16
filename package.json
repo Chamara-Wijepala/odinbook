@@ -17,9 +17,10 @@
 	"license": "ISC",
 	"dependencies": {
 		"@odinbook/types": "workspace:*",
-		"@odinbook/zod": "workspace:*",
 		"@odinbook/utils": "workspace:*",
-		"dotenv": "^16.4.7"
+		"@odinbook/zod": "workspace:*",
+		"dotenv": "^16.4.7",
+		"nanoid": "^5.1.5"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.17.0",

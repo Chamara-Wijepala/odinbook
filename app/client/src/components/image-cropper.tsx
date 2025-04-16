@@ -1,12 +1,14 @@
 import { useState, useRef, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
+import { nanoid } from 'nanoid';
 import { IoMdImages } from 'react-icons/io';
 import setCanvasPreview from '../services/setCanvasPreview';
+import api from '../api';
 import type { Area } from 'react-easy-crop';
 
 const MIN_DIMENSION = 80;
 
-export default function ImageCropper() {
+export default function ImageCropper({ username }: { username: string }) {
 	const [imgSrc, setImgSrc] = useState('');
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -108,12 +110,39 @@ export default function ImageCropper() {
 				<button
 					onClick={() => {
 						setCanvasPreview(image!, canvasRef.current!, croppedArea!);
-						const dataURL = canvasRef.current?.toDataURL();
-						console.log(dataURL);
+
+						canvasRef.current?.toBlob(
+							async (blob) => {
+								if (!blob) {
+									throw new Error('blob not created');
+								}
+
+								const formData = new FormData();
+								formData.append(
+									'avatar',
+									blob,
+									`${nanoid(12)}_${MIN_DIMENSION}x${MIN_DIMENSION}.webp`
+								);
+
+								try {
+									const response = await api.post(
+										`/users/${username}/avatar`,
+										formData,
+										// override the content type that's set to application/json in the api config
+										{ headers: { 'Content-Type': 'multipart/form-data' } }
+									);
+									console.log(response);
+								} catch (error) {
+									console.log(error);
+								}
+							},
+							'image/webp',
+							1
+						);
 					}}
 					className="max-w-fit justify-self-end bg-sky-500 hover:bg-sky-400 transition-colors rounded-full py-1 px-2 lg:py-2 lg:px-4"
 				>
-					Crop
+					Upload
 				</button>
 			</div>
 

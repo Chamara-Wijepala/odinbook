@@ -3,3 +3,4 @@ dist
 .env
 *.pem
 app/server/coverage
+app/server/uploads
