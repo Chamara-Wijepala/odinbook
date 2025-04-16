@@ -13,6 +13,7 @@ export default function ImageCropper({
 	dimension: number;
 	username: string;
 }) {
+	const [isPending, setIsPending] = useState(false);
 	const [imgSrc, setImgSrc] = useState('');
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -105,13 +106,15 @@ export default function ImageCropper({
 				/>
 
 				<button
+					disabled={isPending}
 					onClick={() => inputRef.current?.click()}
-					className="bg-slate-300 hover-bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 transition-colors rounded-full py-1 px-2 lg:py-2 lg:px-4"
+					className="bg-slate-300 hover-bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600 disabled:hover:bg-slate-300 disabled:dark:hover:bg-slate-700 disabled:opacity-50 transition-colors rounded-full py-1 px-2 lg:py-2 lg:px-4 disabled:cursor-not-allowed"
 				>
 					Browse...
 				</button>
 
 				<button
+					disabled={isPending || imgSrc === ''}
 					onClick={() => {
 						setCanvasPreview(
 							image!,
@@ -134,6 +137,7 @@ export default function ImageCropper({
 								);
 
 								try {
+									setIsPending(true);
 									const response = await api.post(
 										`/users/${username}/avatar`,
 										formData,
@@ -143,13 +147,15 @@ export default function ImageCropper({
 									console.log(response);
 								} catch (error) {
 									console.log(error);
+								} finally {
+									setIsPending(false);
 								}
 							},
 							'image/webp',
 							1
 						);
 					}}
-					className="max-w-fit justify-self-end bg-sky-500 hover:bg-sky-400 transition-colors rounded-full py-1 px-2 lg:py-2 lg:px-4"
+					className="max-w-fit justify-self-end bg-sky-500 hover:bg-sky-400 disabled:hover:bg-sky-500 disabled:opacity-50 transition-colors rounded-full py-1 px-2 lg:py-2 lg:px-4 disabled:cursor-not-allowed"
 				>
 					Upload
 				</button>
