@@ -11,6 +11,8 @@ import Modal from '../../components/modal';
 import ImageCropper from '../../components/image-cropper';
 import api from '../../api';
 
+const MIN_DIMENSION = 120;
+
 type User = {
 	id: string;
 	firstName: string;
@@ -85,7 +87,9 @@ export default function Profile() {
 						<div className="p-4 border-b-[1px] border-slate-300 dark:border-slate-800">
 							<div>
 								{/* profile picture */}
-								<div className="relative bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[80px] sm:w-[100px] aspect-square">
+								<div
+									className={`relative bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square`}
+								>
 									{user.id === currentUser?.id && (
 										<button
 											onClick={() => setIsModalOpen(!isModalOpen)}
@@ -162,7 +166,7 @@ export default function Profile() {
 					</div>
 
 					<Modal isOpen={isModalOpen}>
-						<ImageCropper username={user.username} />
+						<ImageCropper dimension={MIN_DIMENSION} username={user.username} />
 					</Modal>
 				</>
 			)}

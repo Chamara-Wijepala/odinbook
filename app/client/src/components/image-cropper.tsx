@@ -6,9 +6,13 @@ import setCanvasPreview from '../services/setCanvasPreview';
 import api from '../api';
 import type { Area } from 'react-easy-crop';
 
-const MIN_DIMENSION = 80;
-
-export default function ImageCropper({ username }: { username: string }) {
+export default function ImageCropper({
+	dimension,
+	username,
+}: {
+	dimension: number;
+	username: string;
+}) {
 	const [imgSrc, setImgSrc] = useState('');
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -20,14 +24,14 @@ export default function ImageCropper({ username }: { username: string }) {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
 	// returns max zoom level before the width or height of the cropped area
-	// would drop below the MIN_DIMENSION
+	// would drop below the dimension
 	const calculateMaxZoom = useCallback(() => {
 		const { width, height } = imageSize;
 
 		if (!width || !height) return 1;
 
-		const zoomX = width / MIN_DIMENSION;
-		const zoomY = height / MIN_DIMENSION;
+		const zoomX = width / dimension;
+		const zoomY = height / dimension;
 
 		return Math.min(zoomX, zoomY);
 	}, [imageSize]);
@@ -53,7 +57,7 @@ export default function ImageCropper({ username }: { username: string }) {
 				const { naturalWidth, naturalHeight } =
 					e.currentTarget as HTMLImageElement;
 
-				if (naturalWidth < MIN_DIMENSION || naturalHeight < MIN_DIMENSION) {
+				if (naturalWidth < dimension || naturalHeight < dimension) {
 					setError(true);
 					return setImgSrc('');
 				}
@@ -113,7 +117,7 @@ export default function ImageCropper({ username }: { username: string }) {
 							image!,
 							canvasRef.current!,
 							croppedArea!,
-							MIN_DIMENSION
+							dimension
 						);
 
 						canvasRef.current?.toBlob(
@@ -126,7 +130,7 @@ export default function ImageCropper({ username }: { username: string }) {
 								formData.append(
 									'avatar',
 									blob,
-									`${nanoid(12)}_${MIN_DIMENSION}x${MIN_DIMENSION}.webp`
+									`${nanoid(12)}_${dimension}x${dimension}.webp`
 								);
 
 								try {
@@ -157,7 +161,7 @@ export default function ImageCropper({ username }: { username: string }) {
 						error ? 'text-rose-400' : 'text-slate-600 dark:text-slate-400'
 					}`}
 				>
-					Image must be at least {MIN_DIMENSION} x {MIN_DIMENSION} pixels
+					Image must be at least {dimension} x {dimension} pixels
 				</p>
 			)}
 
@@ -166,8 +170,8 @@ export default function ImageCropper({ username }: { username: string }) {
 					ref={canvasRef}
 					className="mt-4 object-contain hidden"
 					style={{
-						width: MIN_DIMENSION,
-						height: MIN_DIMENSION,
+						width: dimension,
+						height: dimension,
 					}}
 				></canvas>
 			)}
