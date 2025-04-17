@@ -15,12 +15,21 @@ model User {
   password      String
   createdAt     DateTime      @default(now())
   tokenVersion  Int           @default(1)
+  avatarId      String?
+  avatar        Avatar?
   posts         Post[]
   followedBy    User[]        @relation("UserFollows")
   following     User[]        @relation("UserFollows")
   likedPosts    PostLike[]
   comments      Comment[]
   likedComments CommentLike[]
+}
+
+model Avatar {
+  id     String @id @unique
+  url    String
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Post {

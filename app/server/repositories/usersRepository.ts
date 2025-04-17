@@ -102,6 +102,28 @@ async function unfollowUser(currentUserId: string, userId: string) {
 	});
 }
 
+// avatars
+async function createAvatar(id: string, url: string, userId: string) {
+	return await prisma.avatar.create({
+		data: { id, url, userId },
+		select: { url: true },
+	});
+}
+
+async function findAvatar(userId: string) {
+	return await prisma.avatar.findUnique({
+		where: { userId },
+	});
+}
+
+async function updateAvatar(id: string, url: string) {
+	return await prisma.avatar.update({
+		where: { id },
+		data: { url },
+		select: { url: true },
+	});
+}
+
 export default {
 	create,
 	findByUsername,
@@ -110,4 +132,7 @@ export default {
 	updateTokenVersion,
 	followUser,
 	unfollowUser,
+	createAvatar,
+	findAvatar,
+	updateAvatar,
 };

@@ -2,8 +2,23 @@ import usersService from '../services/usersService';
 import { Request, Response, NextFunction } from 'express';
 
 async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
-	console.log(req.file);
-	res.sendStatus(200);
+	const { file } = req;
+
+	if (!file) {
+		res.status(400).json({
+			type: 'error',
+			message: 'There was an error while uploading the image',
+		});
+		return;
+	}
+
+	try {
+		const avatarUrl = await usersService.uploadAvatar(req.user.id, file);
+
+		res.status(200).json({ avatarUrl });
+	} catch (error) {
+		next(error);
+	}
 }
 
 async function getUserProfile(req: Request, res: Response, next: NextFunction) {
