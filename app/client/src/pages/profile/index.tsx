@@ -103,8 +103,17 @@ export default function Profile() {
 									<div
 										className={`bg-sky-500 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square rounded-full overflow-hidden`}
 									>
-										{user.avatar ? (
-											<img src={user.avatar.url} alt={user.username} />
+										{user.avatar || currentUser?.avatarUrl ? (
+											<img
+												// replace url from fetched user for the one in auth store to display the
+												// updated avatar without reloading
+												src={
+													currentUser?.avatarUrl
+														? currentUser.avatarUrl
+														: user.avatar!.url
+												}
+												alt={user.username}
+											/>
 										) : (
 											<p>{user.firstName[0]}</p>
 										)}
@@ -175,7 +184,11 @@ export default function Profile() {
 					</div>
 
 					<Modal isOpen={isModalOpen}>
-						<ImageCropper dimension={MIN_DIMENSION} username={user.username} />
+						<ImageCropper
+							dimension={MIN_DIMENSION}
+							username={user.username}
+							setIsModalOpen={setIsModalOpen}
+						/>
 					</Modal>
 				</>
 			)}

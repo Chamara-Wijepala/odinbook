@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { nanoid } from 'nanoid';
 import { IoMdImages } from 'react-icons/io';
+import useAuthStore from '../stores/auth';
 import setCanvasPreview from '../services/setCanvasPreview';
 import api from '../api';
 import type { Area } from 'react-easy-crop';
@@ -9,9 +10,11 @@ import type { Area } from 'react-easy-crop';
 export default function ImageCropper({
 	dimension,
 	username,
+	setIsModalOpen,
 }: {
 	dimension: number;
 	username: string;
+	setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const [isPending, setIsPending] = useState(false);
 	const [imgSrc, setImgSrc] = useState('');
@@ -23,6 +26,7 @@ export default function ImageCropper({
 	const [croppedArea, setCroppedArea] = useState<Area | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
+	const setAvatarUrl = useAuthStore((s) => s.setAvatarUrl);
 
 	// returns max zoom level before the width or height of the cropped area
 	// would drop below the dimension
@@ -144,7 +148,8 @@ export default function ImageCropper({
 										// override the content type that's set to application/json in the api config
 										{ headers: { 'Content-Type': 'multipart/form-data' } }
 									);
-									console.log(response);
+									setAvatarUrl(response.data.avatarUrl);
+									setIsModalOpen(false);
 								} catch (error) {
 									console.log(error);
 								} finally {

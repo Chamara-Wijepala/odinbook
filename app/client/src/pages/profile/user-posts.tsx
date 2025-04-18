@@ -52,7 +52,13 @@ export default function UserPosts({ id }: { id: string }) {
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
-						avatar={post.author.avatar}
+						// replace url from fetched user for the one in auth store to
+						// display the updated avatar without reloading
+						avatar={
+							currentUser?.avatarUrl
+								? { url: currentUser.avatarUrl }
+								: post.author.avatar
+						}
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
@@ -72,7 +78,13 @@ export default function UserPosts({ id }: { id: string }) {
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
-						avatar={post.author.avatar}
+						// replace url from fetched user for the one in auth store to
+						// display the updated avatar without reloading
+						avatar={
+							currentUser?.avatarUrl
+								? { url: currentUser.avatarUrl }
+								: post.author.avatar
+						}
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
