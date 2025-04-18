@@ -11,6 +11,8 @@ import Modal from '../../components/modal';
 import ImageCropper from '../../components/image-cropper';
 import api from '../../api';
 
+// The width of the profile picture must be equivalent to this in pixels. This
+// cannot be used by itself because of the way Tailwind handles dynamic values.
 const MIN_DIMENSION = 120;
 
 type User = {
@@ -88,9 +90,7 @@ export default function Profile() {
 						<div className="p-4 border-b-[1px] border-slate-300 dark:border-slate-800">
 							<div>
 								{/* profile picture */}
-								<div
-									className={`relative flex items-center justify-center gap-2 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square`}
-								>
+								<div className="relative flex items-center justify-center gap-2 w-[80px] sm:w-[120px] aspect-square">
 									{user.id === currentUser?.id && (
 										<button
 											onClick={() => setIsModalOpen(!isModalOpen)}
@@ -100,9 +100,7 @@ export default function Profile() {
 										</button>
 									)}
 
-									<div
-										className={`bg-sky-500 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square rounded-full overflow-hidden`}
-									>
+									<div className="bg-sky-500 w-[80px] sm:w-[120px] aspect-square rounded-full overflow-hidden">
 										{user.avatar || currentUser?.avatarUrl ? (
 											<img
 												// replace url from fetched user for the one in auth store to display the
