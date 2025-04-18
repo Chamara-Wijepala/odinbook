@@ -19,6 +19,9 @@ export type CommentType = {
 		firstName: string;
 		lastName: string;
 		username: string;
+		avatar: {
+			url: string;
+		} | null;
 	} | null;
 	likes: {
 		userId: string;

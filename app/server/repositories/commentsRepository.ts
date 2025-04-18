@@ -22,6 +22,7 @@ async function create(
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: true,
 				},
 			},
 			likes: {
@@ -59,6 +60,7 @@ async function getComments(
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: true,
 				},
 			},
 			likes: {
@@ -88,6 +90,7 @@ async function getSingleThread(postId: string, commentId: number) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: true,
 				},
 			},
 			likes: {
@@ -108,6 +111,7 @@ async function getSingleThread(postId: string, commentId: number) {
 							firstName: true,
 							lastName: true,
 							username: true,
+							avatar: true,
 						},
 					},
 					likes: {
@@ -140,6 +144,7 @@ async function update(postId: string, commentId: number, content: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: true,
 				},
 			},
 			likes: {
@@ -170,6 +175,7 @@ async function deleteComment(id: number) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: true,
 				},
 			},
 			likes: {

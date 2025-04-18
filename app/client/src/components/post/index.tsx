@@ -13,6 +13,9 @@ type Props = {
 	firstName: string;
 	lastName: string;
 	username: string;
+	avatar: {
+		url: string;
+	} | null;
 	content: string;
 	createdAt: string;
 	updatedAt: string;
@@ -26,6 +29,7 @@ export default function Post({
 	firstName,
 	lastName,
 	username,
+	avatar,
 	content,
 	createdAt,
 	updatedAt,
@@ -47,8 +51,12 @@ export default function Post({
 						{/* profile */}
 						<Link to={`/users/${username}`}>
 							<div>
-								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
-									<span>{firstName[0]}</span>
+								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
+									{avatar ? (
+										<img src={avatar.url} alt={username} />
+									) : (
+										<p>{firstName[0]}</p>
+									)}
 								</div>
 							</div>
 						</Link>

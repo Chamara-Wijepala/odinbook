@@ -9,6 +9,9 @@ export type PostType = {
 		firstName: string;
 		lastName: string;
 		username: string;
+		avatar: {
+			url: string;
+		} | null;
 	};
 	_count: {
 		comments: number;

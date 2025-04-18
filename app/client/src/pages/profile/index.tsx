@@ -24,6 +24,7 @@ type User = {
 		followedBy: number;
 		following: number;
 	};
+	avatar: { url: string } | null;
 };
 
 function formatDate(isoString: string) {
@@ -88,7 +89,7 @@ export default function Profile() {
 							<div>
 								{/* profile picture */}
 								<div
-									className={`relative bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square`}
+									className={`relative flex items-center justify-center gap-2 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square`}
 								>
 									{user.id === currentUser?.id && (
 										<button
@@ -99,7 +100,15 @@ export default function Profile() {
 										</button>
 									)}
 
-									<p>{user.firstName[0]}</p>
+									<div
+										className={`bg-sky-500 w-[80px] sm:w-[${MIN_DIMENSION}px] aspect-square rounded-full overflow-hidden`}
+									>
+										{user.avatar ? (
+											<img src={user.avatar.url} alt={user.username} />
+										) : (
+											<p>{user.firstName[0]}</p>
+										)}
+									</div>
 								</div>
 
 								<div className="my-6 text-sm sm:text-base flex gap-x-1 items-start">

@@ -52,6 +52,7 @@ export default function UserPosts({ id }: { id: string }) {
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
+						avatar={post.author.avatar}
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
@@ -71,6 +72,7 @@ export default function UserPosts({ id }: { id: string }) {
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
+						avatar={post.author.avatar}
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}

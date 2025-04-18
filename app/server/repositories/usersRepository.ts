@@ -59,6 +59,11 @@ async function getProfileData(username: string) {
 					following: true,
 				},
 			},
+			avatar: {
+				select: {
+					url: true,
+				},
+			},
 		},
 	});
 }

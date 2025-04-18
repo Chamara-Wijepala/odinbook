@@ -17,6 +17,9 @@ async function create(content: string, authorId: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: {
+						select: { url: true },
+					},
 				},
 			},
 			likedBy: {
@@ -58,6 +61,9 @@ async function getExplorePage(cursor: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: {
+						select: { url: true },
+					},
 				},
 			},
 			_count: { select: { comments: true } },
@@ -98,6 +104,9 @@ async function getHomePage(username: string, cursor: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: {
+						select: { url: true },
+					},
 				},
 			},
 			_count: { select: { comments: true } },
@@ -132,6 +141,9 @@ async function getUserPosts(authorId: string, cursor: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: {
+						select: { url: true },
+					},
 				},
 			},
 			_count: { select: { comments: true } },
@@ -166,6 +178,9 @@ async function getPostPage(id: string) {
 					firstName: true,
 					lastName: true,
 					username: true,
+					avatar: {
+						select: { url: true },
+					},
 				},
 			},
 			_count: { select: { comments: true } },

@@ -67,8 +67,12 @@ export default function Comment({
 
 						{author && (
 							<Link to={`/users/${author.username}`}>
-								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[20px] sm:w-[25px] aspect-square">
-									<span className="text-xs">{author.firstName[0]}</span>
+								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[20px] sm:w-[25px] aspect-square overflow-hidden">
+									{author.avatar ? (
+										<img src={author.avatar.url} alt={author.username} />
+									) : (
+										<span className="text-xs">{author.firstName[0]}</span>
+									)}
 								</div>
 							</Link>
 						)}

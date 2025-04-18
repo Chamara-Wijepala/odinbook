@@ -63,8 +63,15 @@ export default function PostPage() {
 								{/* profile */}
 								<div>
 									<Link to={`/users/${post.author.username}`}>
-										<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square">
-											<span>{post.author.firstName[0]}</span>
+										<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
+											{post.author.avatar ? (
+												<img
+													src={post.author.avatar.url}
+													alt={post.author.username}
+												/>
+											) : (
+												<p>{post.author.firstName[0]}</p>
+											)}
 										</div>
 									</Link>
 								</div>

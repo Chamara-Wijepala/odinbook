@@ -50,6 +50,7 @@ export default function Explore() {
 						firstName={post.author.firstName}
 						lastName={post.author.lastName}
 						username={post.author.username}
+						avatar={post.author.avatar}
 						content={post.content}
 						createdAt={post.createdAt}
 						updatedAt={post.updatedAt}
