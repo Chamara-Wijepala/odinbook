@@ -59,11 +59,7 @@ async function getProfileData(username: string) {
 					following: true,
 				},
 			},
-			avatar: {
-				select: {
-					url: true,
-				},
-			},
+			avatar: { select: { id: true, url: true } },
 		},
 	});
 }
@@ -111,7 +107,7 @@ async function unfollowUser(currentUserId: string, userId: string) {
 async function createAvatar(id: string, url: string, userId: string) {
 	return await prisma.avatar.create({
 		data: { id, url, userId },
-		select: { url: true },
+		select: { id: true, url: true },
 	});
 }
 
@@ -125,7 +121,13 @@ async function updateAvatar(id: string, url: string) {
 	return await prisma.avatar.update({
 		where: { id },
 		data: { url },
-		select: { url: true },
+		select: { id: true, url: true },
+	});
+}
+
+async function deleteAvatar(id: string, userId: string) {
+	return await prisma.avatar.delete({
+		where: { id, userId },
 	});
 }
 
@@ -140,4 +142,5 @@ export default {
 	createAvatar,
 	findAvatar,
 	updateAvatar,
+	deleteAvatar,
 };

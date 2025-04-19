@@ -8,7 +8,10 @@ type User = {
 	firstName: string;
 	lastName: string;
 	username: string;
-	avatarUrl?: string; // not fetched on login. instead used when adding/updating avatar
+	avatar?: {
+		id: string;
+		url: string;
+	};
 	following: string[];
 };
 
@@ -20,7 +23,7 @@ type AuthStore = {
 	setUser: (user: User) => void;
 	updateUserFollowing: (id: string) => void;
 	deleteUserFollowing: (id: string) => void;
-	setAvatarUrl: (avatarUrl: string) => void;
+	setAvatar: (id: string, url: string) => void;
 };
 
 const useAuthStore = create(
@@ -55,12 +58,12 @@ const useAuthStore = create(
 						},
 					};
 				}),
-			setAvatarUrl: (avatarUrl: string) =>
+			setAvatar: (id: string, url: string) =>
 				set((state) => {
 					if (!state.user) return state;
 
 					return {
-						user: { ...state.user, avatarUrl },
+						user: { ...state.user, avatar: { id, url } },
 					};
 				}),
 		}),

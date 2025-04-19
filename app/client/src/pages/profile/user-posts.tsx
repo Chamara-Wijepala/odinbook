@@ -55,8 +55,8 @@ export default function UserPosts({ id }: { id: string }) {
 						// replace url from fetched user for the one in auth store to
 						// display the updated avatar without reloading
 						avatar={
-							currentUser?.avatarUrl
-								? { url: currentUser.avatarUrl }
+							currentUser?.avatar
+								? { url: currentUser.avatar.url }
 								: post.author.avatar
 						}
 						content={post.content}
@@ -81,8 +81,8 @@ export default function UserPosts({ id }: { id: string }) {
 						// replace url from fetched user for the one in auth store to
 						// display the updated avatar without reloading
 						avatar={
-							currentUser?.avatarUrl
-								? { url: currentUser.avatarUrl }
+							currentUser?.avatar
+								? { url: currentUser.avatar.url }
 								: post.author.avatar
 						}
 						content={post.content}

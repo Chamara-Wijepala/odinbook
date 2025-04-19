@@ -13,5 +13,6 @@ router.post(
 router.get('/:username', usersController.getUserProfile);
 router.patch('/:id/follow', usersController.followUser);
 router.patch('/:id/unfollow', usersController.unfollowUser);
+router.delete('/:username/avatar', usersController.deleteAvatar);
 
 export default router;

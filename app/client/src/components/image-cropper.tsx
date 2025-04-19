@@ -26,7 +26,7 @@ export default function ImageCropper({
 	const [croppedArea, setCroppedArea] = useState<Area | null>(null);
 	const inputRef = useRef<HTMLInputElement | null>(null);
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	const setAvatarUrl = useAuthStore((s) => s.setAvatarUrl);
+	const setAvatar = useAuthStore((s) => s.setAvatar);
 
 	// returns max zoom level before the width or height of the cropped area
 	// would drop below the dimension
@@ -148,8 +148,8 @@ export default function ImageCropper({
 										// override the content type that's set to application/json in the api config
 										{ headers: { 'Content-Type': 'multipart/form-data' } }
 									);
-									setAvatarUrl(response.data.avatarUrl);
-									setIsModalOpen(false);
+									setAvatar(response.data.id, response.data.url);
+									setIsModalOpen((prev) => !prev);
 								} catch (error) {
 									console.log(error);
 								} finally {

@@ -13,9 +13,9 @@ async function uploadAvatar(req: Request, res: Response, next: NextFunction) {
 	}
 
 	try {
-		const avatarUrl = await usersService.uploadAvatar(req.user.id, file);
+		const data = await usersService.uploadAvatar(req.user.id, file);
 
-		res.status(200).json({ avatarUrl });
+		res.status(200).json(data);
 	} catch (error) {
 		next(error);
 	}
@@ -62,9 +62,23 @@ async function unfollowUser(req: Request, res: Response, next: NextFunction) {
 	}
 }
 
+async function deleteAvatar(req: Request, res: Response, next: NextFunction) {
+	try {
+		const status = await usersService.deleteAvatar(
+			req.query.avatarId as string,
+			req.user.id
+		);
+
+		res.sendStatus(status);
+	} catch (error) {
+		next(error);
+	}
+}
+
 export default {
 	uploadAvatar,
 	getUserProfile,
 	followUser,
 	unfollowUser,
+	deleteAvatar,
 };

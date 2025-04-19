@@ -45,10 +45,35 @@ async function uploadAvatar(userId: string, file: Express.Multer.File) {
 			);
 		}
 
-		return avatar.url;
+		return { id: avatar.id, url: avatar.url };
 	} catch (error) {
 		throw error; // unexpected error
 	}
+}
+
+async function deleteAvatar(id: string, userId: string) {
+	/**
+	 * Getting the avatar to verify the user is expensive, but it's harder to
+	 * handle prisma's RecordNotFound error thrown when it can't find the record
+	 * to update or delete.
+	 *
+	 * Otherwise, trying to delete the record directly using the id and userId
+	 * would preferable.
+	 */
+	const avatar = await usersRepository.findAvatar(userId);
+
+	if (!avatar) {
+		return 403;
+	}
+
+	await cloudinary.uploader.destroy(id, {
+		resource_type: 'image',
+		invalidate: true,
+	});
+
+	await usersRepository.deleteAvatar(id, userId);
+
+	return 204;
 }
 
 async function getUserProfile(username: string) {
@@ -81,6 +106,7 @@ async function unfollowUser(currentUserId: string, id: string) {
 
 export default {
 	uploadAvatar,
+	deleteAvatar,
 	getUserProfile,
 	followUser,
 	unfollowUser,
