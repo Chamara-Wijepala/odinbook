@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
-import { nanoid } from 'nanoid';
 import { IoMdImages } from 'react-icons/io';
 import useAuthStore from '../stores/auth';
 import setCanvasPreview from '../services/setCanvasPreview';
@@ -134,11 +133,7 @@ export default function ImageCropper({
 								}
 
 								const formData = new FormData();
-								formData.append(
-									'avatar',
-									blob,
-									`${nanoid(12)}_${dimension}x${dimension}.webp`
-								);
+								formData.append('avatar', blob);
 
 								try {
 									setIsPending(true);

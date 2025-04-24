@@ -9,24 +9,12 @@ async function uploadAvatar(userId: string, file: Express.Multer.File) {
 	const existingAvatar = await usersRepository.findAvatar(userId);
 
 	let options: UploadApiOptions = {
-		use_filename: true,
-		unique_filename: false,
+		// Keeps the public_id consistent so the avatar can be overwritten
+		public_id: existingAvatar ? existingAvatar.id : undefined,
 		overwrite: true,
 		asset_folder: 'avatars',
 		resource_type: 'image',
 	};
-
-	/**
-	 * Set the filename_override to the previous avatar's id so that the filename,
-	 * which is also the public_id, is consistent whenever an update happens. This
-	 * is used to overwrite the previous avatar on cloudinary.
-	 *
-	 * Doing things like this makes the generated filename on the client obsolete
-	 * however. It would need to be refactored to work with cloudinary.
-	 */
-	existingAvatar
-		? (options.filename_override = existingAvatar.id)
-		: (options.filename_override = file.originalname);
 
 	try {
 		const result = await cloudinary.uploader.upload(dataURI, options);
