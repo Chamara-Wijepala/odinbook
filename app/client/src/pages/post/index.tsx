@@ -7,6 +7,7 @@ import Dialog from '../../components/dialog';
 import PostDialogItems from '../../components/post/post-dialog-items';
 import PostLikes from '../../components/post-likes';
 import BackButton from '../../components/back-button';
+import DefaultAvatar from '../../components/default-avatar';
 import CreateComment from '../../components/create-comment';
 import CommentSection from './comment-section';
 import SingleThread from './single-thread';
@@ -63,14 +64,14 @@ export default function PostPage() {
 								{/* profile */}
 								<div>
 									<Link to={`/users/${post.author.username}`}>
-										<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
+										<div className="rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
 											{post.author.avatar ? (
 												<img
 													src={post.author.avatar.url}
 													alt={post.author.username}
 												/>
 											) : (
-												<p>{post.author.firstName[0]}</p>
+												<DefaultAvatar />
 											)}
 										</div>
 									</Link>

@@ -12,6 +12,7 @@ import BackButton from '../../components/back-button';
 import Dialog from '../../components/dialog';
 import Modal from '../../components/modal';
 import ImageCropper from '../../components/image-cropper';
+import DefaultAvatar from '../../components/default-avatar';
 import api from '../../api';
 
 // The width of the profile picture must be equivalent to this in pixels. This
@@ -119,7 +120,7 @@ export default function Profile() {
 								{/* profile picture */}
 								<div className="relative flex items-center justify-center gap-2 w-[80px] sm:w-[120px] aspect-square">
 									{/* avatar */}
-									<div className="bg-sky-500 w-[80px] sm:w-[120px] aspect-square rounded-full overflow-hidden">
+									<div className="w-[80px] sm:w-[120px] aspect-square rounded-full overflow-hidden">
 										{user.avatar || currentUser?.avatar ? (
 											<img
 												// replace url from fetched user for the one in auth store to display the
@@ -132,7 +133,7 @@ export default function Profile() {
 												alt={user.username}
 											/>
 										) : (
-											<p>{user.firstName[0]}</p>
+											<DefaultAvatar />
 										)}
 									</div>
 

@@ -9,6 +9,7 @@ import useCommentsStore from '../../stores/comments';
 import coloredNotification from '../../services/notifications';
 import Dialog from '../dialog';
 import Modal from '../modal';
+import DefaultAvatar from '../default-avatar';
 import UpdateComment from './update-comment';
 import CommentLike from './like';
 import Reply from './reply';
@@ -67,11 +68,11 @@ export default function Comment({
 
 						{author && (
 							<Link to={`/users/${author.username}`}>
-								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[20px] sm:w-[25px] aspect-square overflow-hidden">
+								<div className="rounded-full flex items-center justify-center gap-2 w-[20px] sm:w-[25px] aspect-square overflow-hidden">
 									{author.avatar ? (
 										<img src={author.avatar.url} alt={author.username} />
 									) : (
-										<span className="text-xs">{author.firstName[0]}</span>
+										<DefaultAvatar />
 									)}
 								</div>
 							</Link>

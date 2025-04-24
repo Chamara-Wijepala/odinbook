@@ -6,6 +6,7 @@ import { FaRegComment } from 'react-icons/fa';
 import Dialog from '../dialog';
 import PostDialogItems from './post-dialog-items';
 import PostLikes from '../post-likes';
+import DefaultAvatar from '../default-avatar';
 
 type Props = {
 	postId: string;
@@ -51,11 +52,11 @@ export default function Post({
 						{/* profile */}
 						<Link to={`/users/${username}`}>
 							<div>
-								<div className="bg-sky-500 rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
+								<div className="rounded-full flex items-center justify-center gap-2 w-[40px] sm:w-[50px] aspect-square overflow-hidden">
 									{avatar ? (
 										<img src={avatar.url} alt={username} />
 									) : (
-										<p>{firstName[0]}</p>
+										<DefaultAvatar />
 									)}
 								</div>
 							</div>
