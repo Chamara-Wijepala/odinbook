@@ -38,7 +38,12 @@ export default function Avatar({
 		try {
 			setIsPending(true);
 			await api.delete(
-				`/users/${currentUser?.username}/avatar?avatarId=${avatarId}`
+				// Using the currentUser's avatar id when it's present fixes an error
+				// when deleting the avatar immediately after uploading it for the first
+				// time.
+				`/users/${currentUser?.username}/avatar?avatarId=${
+					currentUser?.avatar ? currentUser.avatar.id : avatarId
+				}`
 			);
 			navigate(0);
 		} catch (error) {
