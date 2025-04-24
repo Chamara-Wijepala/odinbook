@@ -134,8 +134,9 @@ export default function Avatar({
 												</h2>
 												<div className="flex gap-2 justify-end">
 													<button
+														disabled={isPending}
 														onClick={() => setIsModalOpen(false)}
-														className="bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-not-allowed py-2 px-4 rounded-full transition-colors"
+														className="bg-sky-400 hover:bg-sky-300 disabled:opacity-60 disabled:hover:bg-sky-400 disabled:cursor-wait py-2 px-4 rounded-full transition-colors"
 													>
 														Cancel
 													</button>
