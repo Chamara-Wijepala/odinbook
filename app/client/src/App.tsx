@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router';
+import { useEffect, useLayoutEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation, Outlet } from 'react-router';
 import { ToastContainer } from 'react-toastify';
 import Home from './pages/home';
 import Explore from './pages/explore';
@@ -27,9 +27,11 @@ function App() {
 
 				<Route element={<PageLoader />}>
 					<Route element={<NavigationLayout />}>
-						<Route index element={<Home />} />
-						<Route path="explore" element={<Explore />} />
-						<Route path="users/:username" element={<Profile />} />
+						<Route element={<ScrollToTop />}>
+							<Route index element={<Home />} />
+							<Route path="explore" element={<Explore />} />
+							<Route path="users/:username" element={<Profile />} />
+						</Route>
 
 						{/*
 						These pages will be rendered with the navigation layout but won't
@@ -48,6 +50,18 @@ function App() {
 			<ToastContainer />
 		</div>
 	);
+}
+
+// Switching pages while scrolled down keeps the scroll position, this causes
+// issues with loading posts.
+function ScrollToTop() {
+	const location = useLocation();
+
+	useLayoutEffect(() => {
+		document.documentElement.scrollTo(0, 0);
+	}, [location.pathname]);
+
+	return <Outlet />;
 }
 
 export default App;
