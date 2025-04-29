@@ -21,22 +21,10 @@ export default function Login() {
 	const navigate = useNavigate();
 	const { theme, toggleTheme } = useTheme();
 
-	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	}
-
-	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault();
-
-		setErrors({ username: '', password: '' });
-
+	async function login(data: { username: string; password: string }) {
 		try {
 			setIsPending(true);
-			const response = await api.post('/auth/login', formData, {
+			const response = await api.post('/auth/login', data, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
@@ -55,6 +43,22 @@ export default function Login() {
 		}
 	}
 
+	function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	}
+
+	async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+		e.preventDefault();
+
+		setErrors({ username: '', password: '' });
+
+		login(formData);
+	}
+
 	return (
 		<div className="min-h-[100svh] p-4 flex flex-col gap-4 justify-center items-center relative bg-gradient-to-br from-sky-400 to-pink-400 dark:from-sky-800 dark:to-pink-800">
 			<div className="bg-white dark:bg-slate-800 shadow-md rounded-lg max-w-md p-8 md:p-12 flex-grow-0">
@@ -63,7 +67,7 @@ export default function Login() {
 				</h2>
 				<form
 					onSubmit={handleSubmit}
-					className="flex flex-col gap-4 md:gap-6 my-4 md:my-6"
+					className="flex flex-col gap-4 md:gap-6 mt-4 md:mt-6"
 				>
 					<div className="flex flex-col">
 						<label
@@ -119,6 +123,24 @@ export default function Login() {
 						Log In
 					</button>
 				</form>
+
+				<div className="flex items-center my-4">
+					<div className="h-[1px] bg-slate-400 dark:bg-slate-600 w-full"></div>
+					<p className="px-4 text-slate-600 dark:text-slate-400">OR</p>
+					<div className="h-[1px] bg-slate-400 dark:bg-slate-600 w-full"></div>
+				</div>
+
+				<div className="mb-4 md:mb-6">
+					<button
+						disabled={isPending}
+						onClick={() => {
+							login({ username: 'JohnDoe1', password: 'helloworld' });
+						}}
+						className="bg-sky-400 hover:bg-sky-300 transition-colors duration-250 p-2 md:p-4 w-full rounded-lg disabled:opacity-50 disabled:hover:bg-sky-400 disabled:cursor-wait"
+					>
+						Log in as guest
+					</button>
+				</div>
 
 				<p className="text-center">
 					Don't have an account?{' '}
