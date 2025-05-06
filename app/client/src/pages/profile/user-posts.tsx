@@ -1,15 +1,18 @@
+import { useState } from 'react';
 import { useParams } from 'react-router';
 import CreatePost from '../../components/create-post';
 import Post, { PostSkeleton } from '../../components/post';
+import PostSorter from '../../components/post-sorter';
 import useAuthStore from '../../stores/auth';
 import usePosts from '../../hooks/usePosts';
 import useNewPosts from '../../hooks/useNewPosts';
 
 export default function UserPosts({ id }: { id: string }) {
+	const [sort, setSort] = useState('new');
 	const params = useParams();
 	const currentUser = useAuthStore((state) => state.user);
 	const { newPosts } = useNewPosts();
-	const { isLoading, posts, loaderRef } = usePosts(`/posts?userId=${id}`);
+	const { isLoading, posts, loaderRef } = usePosts(`/posts?userId=${id}`, sort);
 
 	return (
 		<div className="pb-4">
@@ -69,30 +72,34 @@ export default function UserPosts({ id }: { id: string }) {
 			</div>
 
 			{/* user's posts */}
-			<div className="pt-4 px-4 flex flex-col gap-4">
-				{posts?.map((post) => (
-					<Post
-						key={post.id}
-						postId={post.id}
-						authorId={post.author.id}
-						firstName={post.author.firstName}
-						lastName={post.author.lastName}
-						username={post.author.username}
-						// replace url from fetched user for the one in auth store to
-						// display the updated avatar without reloading
-						avatar={
-							currentUser?.avatar
-								? { url: currentUser.avatar.url }
-								: post.author.avatar
-						}
-						content={post.content}
-						createdAt={post.createdAt}
-						updatedAt={post.updatedAt}
-						likedBy={post.likedBy}
-						commentCount={post._count.comments}
-					/>
-				))}
-			</div>
+			{posts && posts.length > 0 && !isLoading && (
+				<div className="pt-4 px-4 flex flex-col gap-4">
+					<PostSorter sort={sort} setSort={setSort} />
+
+					{posts?.map((post) => (
+						<Post
+							key={post.id}
+							postId={post.id}
+							authorId={post.author.id}
+							firstName={post.author.firstName}
+							lastName={post.author.lastName}
+							username={post.author.username}
+							// replace url from fetched user for the one in auth store to
+							// display the updated avatar without reloading
+							avatar={
+								currentUser?.avatar
+									? { url: currentUser.avatar.url }
+									: post.author.avatar
+							}
+							content={post.content}
+							createdAt={post.createdAt}
+							updatedAt={post.updatedAt}
+							likedBy={post.likedBy}
+							commentCount={post._count.comments}
+						/>
+					))}
+				</div>
+			)}
 
 			{/* loads new posts */}
 			<div ref={loaderRef} className="p-4 flex flex-col gap-4">

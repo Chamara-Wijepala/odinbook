@@ -18,21 +18,22 @@ async function getPosts(
 	username: string,
 	userId: string | undefined,
 	page: string | undefined,
-	cursor: string
+	cursor: string,
+	sort: string
 ) {
 	let posts;
 
 	if (userId) {
-		posts = await postsRepository.getUserPosts(userId, cursor);
+		posts = await postsRepository.getUserPosts(userId, cursor, sort);
 	}
 
 	if (page) {
 		switch (page) {
 			case 'home':
-				posts = await postsRepository.getHomePage(username, cursor);
+				posts = await postsRepository.getHomePage(username, cursor, sort);
 				break;
 			case 'explore':
-				posts = await postsRepository.getExplorePage(cursor);
+				posts = await postsRepository.getExplorePage(cursor, sort);
 				break;
 			default:
 				break;

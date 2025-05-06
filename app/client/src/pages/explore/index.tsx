@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import useNewPostStore from '../../stores/new-post';
 import Post, { PostSkeleton } from '../../components/post';
+import PostSorter from '../../components/post-sorter';
 import usePosts from '../../hooks/usePosts';
 
 export default function Explore() {
-	const { isLoading, posts, loaderRef } = usePosts('/posts?page=explore');
+	const [sort, setSort] = useState('new');
+	const { isLoading, posts, loaderRef } = usePosts('/posts?page=explore', sort);
 	const newPost = useNewPostStore((s) => s.newPost);
 	const navigate = useNavigate();
 
@@ -42,6 +44,8 @@ export default function Explore() {
 			)}
 
 			<div className="flex flex-col gap-4">
+				<PostSorter sort={sort} setSort={setSort} />
+
 				{posts?.map((post) => (
 					<Post
 						key={post.id}

@@ -1,4 +1,5 @@
 import prisma from '../db/prisma';
+import getOrderBy from '../utils/getOrderBy';
 
 async function create(content: string, authorId: string) {
 	return await prisma.post.create({
@@ -43,7 +44,7 @@ async function findAuthorByPostId(id: string) {
 	});
 }
 
-async function getExplorePage(cursor: string) {
+async function getExplorePage(cursor: string, sort: string) {
 	return await prisma.post.findMany({
 		select: {
 			id: true,
@@ -66,18 +67,16 @@ async function getExplorePage(cursor: string) {
 					},
 				},
 			},
-			_count: { select: { comments: true } },
+			_count: { select: { comments: true, likedBy: true } },
 		},
-		orderBy: {
-			createdAt: 'desc',
-		},
+		orderBy: getOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },
 	});
 }
 
-async function getHomePage(username: string, cursor: string) {
+async function getHomePage(username: string, cursor: string, sort: string) {
 	return await prisma.post.findMany({
 		where: {
 			author: {
@@ -111,16 +110,14 @@ async function getHomePage(username: string, cursor: string) {
 			},
 			_count: { select: { comments: true } },
 		},
-		orderBy: {
-			createdAt: 'desc',
-		},
+		orderBy: getOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },
 	});
 }
 
-async function getUserPosts(authorId: string, cursor: string) {
+async function getUserPosts(authorId: string, cursor: string, sort: string) {
 	return await prisma.post.findMany({
 		where: {
 			authorId,
@@ -148,9 +145,7 @@ async function getUserPosts(authorId: string, cursor: string) {
 			},
 			_count: { select: { comments: true } },
 		},
-		orderBy: {
-			createdAt: 'desc',
-		},
+		orderBy: getOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },

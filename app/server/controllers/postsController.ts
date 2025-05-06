@@ -62,14 +62,15 @@ async function getPost(req: Request, res: Response, next: NextFunction) {
 }
 
 async function getPosts(req: Request, res: Response, next: NextFunction) {
-	const { page, userId, cursor } = req.query;
+	const { page, userId, cursor, sort } = req.query;
 
 	try {
 		const { status, data } = await postsService.getPosts(
 			req.user.username,
 			userId as string | undefined,
 			page as string | undefined,
-			cursor as string
+			cursor as string,
+			sort as string
 		);
 
 		if (!data) {

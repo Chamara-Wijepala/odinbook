@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import CreatePost from '../../components/create-post';
 import Post, { PostSkeleton } from '../../components/post';
+import PostSorter from '../../components/post-sorter';
 import usePosts from '../../hooks/usePosts';
 import useNewPosts from '../../hooks/useNewPosts';
 
 export default function Home() {
+	const [sort, setSort] = useState('new');
 	const { newPosts } = useNewPosts();
-	const { isLoading, posts, loaderRef } = usePosts('/posts?page=home');
+	const { isLoading, posts, loaderRef } = usePosts('/posts?page=home', sort);
 
 	return (
 		<div className="flex flex-col">
@@ -55,24 +58,28 @@ export default function Home() {
 						</div>
 					)}
 
-					<div className="flex flex-col gap-4">
-						{posts?.map((post) => (
-							<Post
-								key={post.id}
-								postId={post.id}
-								authorId={post.author.id}
-								firstName={post.author.firstName}
-								lastName={post.author.lastName}
-								username={post.author.username}
-								avatar={post.author.avatar}
-								content={post.content}
-								createdAt={post.createdAt}
-								updatedAt={post.updatedAt}
-								likedBy={post.likedBy}
-								commentCount={post._count.comments}
-							/>
-						))}
-					</div>
+					{posts && posts.length > 0 && !isLoading && (
+						<div className="flex flex-col gap-4">
+							<PostSorter sort={sort} setSort={setSort} />
+
+							{posts.map((post) => (
+								<Post
+									key={post.id}
+									postId={post.id}
+									authorId={post.author.id}
+									firstName={post.author.firstName}
+									lastName={post.author.lastName}
+									username={post.author.username}
+									avatar={post.author.avatar}
+									content={post.content}
+									createdAt={post.createdAt}
+									updatedAt={post.updatedAt}
+									likedBy={post.likedBy}
+									commentCount={post._count.comments}
+								/>
+							))}
+						</div>
+					)}
 
 					<div ref={loaderRef} className="pt-4 flex flex-col gap-4">
 						<PostSkeleton />
