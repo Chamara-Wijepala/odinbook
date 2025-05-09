@@ -1,8 +1,9 @@
-import { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import useCommentsStore from '../../stores/comments';
 import useComments from '../../hooks/useComments';
 import CommentSkeleton from '../../components/comment/comment-skeleton';
 import CommentThread from '../../components/comment-thread';
+import CommentSorter from '../../components/comment-sorter';
 
 export default function CommentSection({
 	postId,
@@ -11,6 +12,7 @@ export default function CommentSection({
 	postId: string;
 	postAuthor: string;
 }) {
+	const [sort, setSort] = useState('new');
 	const clearComments = useCommentsStore((s) => s.clearComments);
 	const comments = useCommentsStore((s) => s.comments);
 	const rootComments = useMemo(
@@ -18,7 +20,8 @@ export default function CommentSection({
 		[comments]
 	);
 	const { isLoading, loadMore, nextCursor } = useComments(
-		`/posts/${postId}/comments`
+		`/posts/${postId}/comments`,
+		sort
 	);
 
 	useEffect(() => {
@@ -49,7 +52,9 @@ export default function CommentSection({
 
 			{rootComments.length > 0 && (
 				<>
-					<div className="flex flex-col gap-2 mb-2">
+					<CommentSorter sort={sort} setSort={setSort} />
+
+					<div className="flex flex-col gap-2 my-2">
 						{rootComments.map((comment) => (
 							<div
 								key={comment.id}

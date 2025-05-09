@@ -1,4 +1,5 @@
 import prisma from '../db/prisma';
+import { getCommentOrderBy } from '../utils/getOrderBy';
 
 async function create(
 	content: string,
@@ -41,8 +42,9 @@ async function findAuthorByCommentId(commentId: number) {
 
 async function getComments(
 	postId: string,
+	replyToId: number | undefined,
 	cursor: number | undefined,
-	replyToId: number | undefined
+	sort: string
 ) {
 	return await prisma.comment.findMany({
 		where: { postId, replyToId },
@@ -67,6 +69,7 @@ async function getComments(
 				select: { userId: true },
 			},
 		},
+		orderBy: getCommentOrderBy(sort),
 		take: 5,
 		skip: cursor ? 1 : 0,
 		cursor: cursor ? { id: cursor } : undefined,

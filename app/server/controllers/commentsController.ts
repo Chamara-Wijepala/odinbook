@@ -29,8 +29,9 @@ async function getComments(req: Request, res: Response, next: NextFunction) {
 	try {
 		const result = await commentsService.getComments(
 			req.params.postId,
+			req.params.commentId as string,
 			req.query.cursor as string,
-			req.params.commentId as string
+			req.query.sort as string
 		);
 
 		res.status(200).json(result);

@@ -1,5 +1,5 @@
 import prisma from '../db/prisma';
-import getOrderBy from '../utils/getOrderBy';
+import { getPostOrderBy } from '../utils/getOrderBy';
 
 async function create(content: string, authorId: string) {
 	return await prisma.post.create({
@@ -69,7 +69,7 @@ async function getExplorePage(cursor: string, sort: string) {
 			},
 			_count: { select: { comments: true, likedBy: true } },
 		},
-		orderBy: getOrderBy(sort),
+		orderBy: getPostOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },
@@ -110,7 +110,7 @@ async function getHomePage(username: string, cursor: string, sort: string) {
 			},
 			_count: { select: { comments: true } },
 		},
-		orderBy: getOrderBy(sort),
+		orderBy: getPostOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },
@@ -145,7 +145,7 @@ async function getUserPosts(authorId: string, cursor: string, sort: string) {
 			},
 			_count: { select: { comments: true } },
 		},
-		orderBy: getOrderBy(sort),
+		orderBy: getPostOrderBy(sort),
 		take: 5,
 		skip: cursor === '' ? 0 : 1,
 		cursor: cursor === '' ? undefined : { createdAt: cursor },
