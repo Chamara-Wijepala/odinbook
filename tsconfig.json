@@ -15,7 +15,6 @@
 		"noImplicitAny": true
 	},
 	"references": [
-		{ "path": "./app/client/tsconfig.json" },
 		{ "path": "./app/server/tsconfig.json" },
 		{ "path": "./packages/types/tsconfig.json" },
 		{ "path": "./packages/zod/tsconfig.json" },

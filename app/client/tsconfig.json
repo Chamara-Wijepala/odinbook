@@ -4,7 +4,7 @@
 		"useDefineForClassFields": true,
 		"jsx": "react-jsx",
 		"composite": true,
-		"noEmit": false,
+		"noEmit": true,
 		"noUnusedParameters": true,
 		"lib": ["dom"]
 	},
