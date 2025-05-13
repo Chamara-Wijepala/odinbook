@@ -4,10 +4,12 @@
 	"description": "",
 	"main": "server.ts",
 	"scripts": {
+		"create-keys": "tsx ./utils/createKeyPair.ts",
 		"test": "NODE_ENV=test vitest",
 		"test:coverage": "NODE_ENV=test vitest --coverage",
 		"dev": "tsx watch ./server.ts",
-		"create-keys": "tsx ./utils/createKeyPair.ts"
+		"build": "tsc",
+		"start": "node dist/server.js"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
