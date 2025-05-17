@@ -10,6 +10,8 @@
 		"build:zod": "pnpm -F @odinbook/zod build",
 		"build:utils": "pnpm -F @odinbook/utils build",
 		"build:packages": "pnpm build:types && pnpm build:zod && pnpm build:utils",
+		"build:client": "pnpm build:packages && pnpm -F @odinbook/client build",
+		"build:server": "pnpm build:packages && pnpm -F @odinbook/server build",
 		"build": "pnpm build:packages && pnpm -F @odinbook/client build && pnpm -F @odinbook/server build",
 		"start": "pnpm build:packages && pnpm -r run dev"
 	},
