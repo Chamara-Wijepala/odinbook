@@ -1,20 +1,8 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
 import type { Request, Response, NextFunction } from 'express';
 import type { UserToken } from '../../types';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const PUB_KEY = {
-	key: fs.readFileSync(
-		path.join(__dirname, '..', '..', 'keys/id_rsa_pub.pem'),
-		'utf-8'
-	),
-	passphrase: process.env.KEY_PASSPHRASE,
-};
+const PUB_KEY = process.env.PUB_KEY as string;
 
 export default function verifyJWT(
 	req: Request,
