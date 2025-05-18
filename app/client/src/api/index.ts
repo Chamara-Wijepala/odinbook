@@ -5,7 +5,7 @@ import coloredNotification from '../services/notifications';
 
 const baseURL =
 	import.meta.env.MODE === 'production'
-		? import.meta.env.SERVER_BASEURL
+		? import.meta.env.VITE_SERVER_BASEURL
 		: 'http://localhost:3000';
 
 const api = axios.create({
