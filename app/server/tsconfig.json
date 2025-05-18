@@ -4,5 +4,9 @@
 		"composite": true,
 		"rootDir": "./",
 		"outDir": "dist"
+	},
+	"tsc-alias": {
+		"resolveFullPaths": true,
+		"verbose": false
 	}
 }
