@@ -103,15 +103,6 @@ importers:
 
   app/server:
     dependencies:
-      '@odinbook/types':
-        specifier: workspace:*
-        version: link:../../packages/types
-      '@odinbook/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@odinbook/zod':
-        specifier: workspace:*
-        version: link:../../packages/zod
       '@prisma/client':
         specifier: 6.2.1
         version: 6.2.1(prisma@6.2.1)
