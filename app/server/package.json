@@ -11,7 +11,7 @@
 		"dev": "tsx watch ./server.ts",
 		"build": "tsc && tsc-alias",
 		"start": "node dist/server.js",
-		"postinstall": "prisma generate"
+		"postinstall": "prisma generate && tsx prisma/seed.ts"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
