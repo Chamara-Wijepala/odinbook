@@ -1,5 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
-import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+
+const { TokenExpiredError, JsonWebTokenError } = jwt;
 
 function errorHandler(
 	err: unknown,

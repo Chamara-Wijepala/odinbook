@@ -3,10 +3,20 @@
 	"compilerOptions": {
 		"composite": true,
 		"rootDir": "./",
-		"outDir": "dist"
+		"outDir": "dist",
+		"paths": {
+			"@types/*": ["../../packages/types/*"],
+			"@utils/*": ["../../packages/utils/*"],
+			"@zod/*": ["../../packages/zod/*"]
+		}
 	},
 	"tsc-alias": {
 		"resolveFullPaths": true,
 		"verbose": false
-	}
+	},
+	"references": [
+		{ "path": "../../packages/types/tsconfig.json" },
+		{ "path": "../../packages/zod/tsconfig.json" },
+		{ "path": "../../packages/utils/tsconfig.json" }
+	]
 }

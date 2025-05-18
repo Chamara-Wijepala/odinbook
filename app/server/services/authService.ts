@@ -1,12 +1,18 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
-import jwt, { TokenExpiredError } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import usersRepository from '../repositories/usersRepository';
 import { issueAccessToken, issueRefreshToken } from '../utils/issueJWT';
 import type { CreateUser } from '@odinbook/zod';
 import type { CreateUserErrors } from '@odinbook/types';
 import type { UserToken } from '../types';
+
+const { TokenExpiredError } = jwt;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PUB_KEY = {
 	key: fs.readFileSync(

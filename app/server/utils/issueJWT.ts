@@ -1,6 +1,10 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import jwt, { SignOptions } from 'jsonwebtoken';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PRIV_KEY = {
 	key: fs.readFileSync(
