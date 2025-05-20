@@ -5,7 +5,7 @@
 	"type": "module",
 	"main": "server.ts",
 	"scripts": {
-		"create-keys": "tsx ./utils/createKeyPair.ts",
+		"create-keys": "mkdir -p keys && tsx ./utils/createKeyPair.ts",
 		"test": "NODE_ENV=test vitest",
 		"test:coverage": "NODE_ENV=test vitest --coverage",
 		"dev": "tsx watch ./server.ts",
