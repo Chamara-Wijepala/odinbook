@@ -1,3 +1,6 @@
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import usersRepository from '../repositories/usersRepository';
@@ -8,7 +11,15 @@ import type { UserToken } from '../types';
 
 const { TokenExpiredError } = jwt;
 
-const PUB_KEY = process.env.PUB_KEY as string;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const PUB_KEY = {
+	key: fs.readFileSync(
+		path.join(__dirname, '..', 'keys/id_rsa_pub.pem'),
+		'utf-8'
+	),
+};
 
 async function register({
 	firstName,
