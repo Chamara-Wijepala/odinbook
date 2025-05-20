@@ -10,7 +10,9 @@ const __dirname = path.dirname(__filename);
 
 const PUB_KEY = {
 	key: fs.readFileSync(
-		path.join(__dirname, '..', '..', 'keys/id_rsa_pub.pem'),
+		process.env.NODE_ENV === 'production'
+			? (process.env.PUBLIC_KEY_PATH as string)
+			: path.join(__dirname, '..', '..', 'keys/id_rsa_pub.pem'),
 		'utf-8'
 	),
 };

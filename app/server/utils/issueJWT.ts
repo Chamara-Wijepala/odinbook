@@ -8,7 +8,9 @@ const __dirname = path.dirname(__filename);
 
 const PRIV_KEY = {
 	key: fs.readFileSync(
-		path.join(__dirname, '..', 'keys/id_rsa_priv.pem'),
+		process.env.NODE_ENV === 'production'
+			? (process.env.PRIVATE_KEY_PATH as string)
+			: path.join(__dirname, '..', 'keys/id_rsa_priv.pem'),
 		'utf-8'
 	),
 	passphrase: process.env.KEY_PASSPHRASE,
