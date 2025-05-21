@@ -12,10 +12,7 @@ export default function Modal({
 
 	function toggleModal() {
 		if (!ref.current) return;
-
-		ref.current.hasAttribute('open')
-			? ref.current.close()
-			: ref.current.showModal();
+		isOpen ? ref.current.showModal() : ref.current.close();
 	}
 
 	useEffect(() => {
