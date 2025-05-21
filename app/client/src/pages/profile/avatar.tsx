@@ -169,7 +169,9 @@ export default function Avatar({
 				)}
 			</div>
 
-			<Modal isOpen={isModalOpen}>{modalContent}</Modal>
+			<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+				{modalContent}
+			</Modal>
 		</>
 	);
 }

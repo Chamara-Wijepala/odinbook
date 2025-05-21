@@ -171,7 +171,9 @@ export default function DialogItems({ authorId, postId, postContent }: Props) {
 				)}
 			</ul>
 
-			<Modal isOpen={isModalOpen}>{modalContent}</Modal>
+			<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
+				{modalContent}
+			</Modal>
 		</>
 	);
 }

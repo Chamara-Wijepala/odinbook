@@ -229,7 +229,7 @@ export default function Comment({
 				)}
 			</div>
 
-			<Modal isOpen={isModalOpen}>
+			<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
 				<div>
 					<h2 className="text-xl my-4">
 						Are you sure you want to delete this post?

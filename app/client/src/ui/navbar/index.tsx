@@ -156,7 +156,7 @@ export default function Navbar() {
 				</div>
 			</header>
 
-			<Modal isOpen={isModalOpen}>
+			<Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
 				<div className="w-[600px] max-w-full h-fit">
 					<CreatePost />
 				</div>
