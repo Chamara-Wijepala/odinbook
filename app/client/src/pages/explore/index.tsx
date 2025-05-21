@@ -44,7 +44,9 @@ export default function Explore() {
 			)}
 
 			<div className="flex flex-col gap-4">
-				<PostSorter sort={sort} setSort={setSort} />
+				{posts && posts.length > 0 && (
+					<PostSorter sort={sort} setSort={setSort} />
+				)}
 
 				{posts?.map((post) => (
 					<Post
