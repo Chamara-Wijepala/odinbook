@@ -63,7 +63,7 @@ export default function Login() {
 		<div className="min-h-[100svh] p-4 flex flex-col gap-4 justify-center items-center relative bg-gradient-to-br from-sky-400 to-pink-400 dark:from-sky-800 dark:to-pink-800">
 			<div className="flex gap-32">
 				<div className="hidden lg:block">
-					<img src="/public/images/logo.webp" alt="Odinbook logo" />
+					<img src="/images/logo.webp" alt="Odinbook logo" />
 
 					<h1 className="text-white text-3xl font-bold mt-12">
 						Welcome to Odinbook
