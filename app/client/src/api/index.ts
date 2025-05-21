@@ -42,10 +42,10 @@ api.interceptors.request.use(async (config) => {
 			config.headers['authorization'] = `Bearer ${newToken}`;
 			return config;
 		} catch (error) {
-			if (error instanceof AxiosError) {
-				const { toast } = error.response?.data;
-
-				coloredNotification(toast);
+			if (
+				error instanceof AxiosError &&
+				error.response?.data.expiredRefreshToken
+			) {
 				navigation.navigate && navigation.navigate('/login');
 				controller.abort();
 			}
@@ -86,8 +86,7 @@ api.interceptors.response.use(
 		const data = error.response?.data;
 		const originalRequest = error.config;
 
-		if (data.toast) {
-			coloredNotification(data.toast);
+		if (data.expiredRefreshToken) {
 			navigation.navigate && navigation.navigate('/login');
 			return;
 		}

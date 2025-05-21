@@ -38,10 +38,7 @@ function errorHandler(
 				})
 				.status(401)
 				.json({
-					toast: {
-						type: 'warn',
-						message: 'Your session has expired. Please log in again.',
-					},
+					expiredRefreshToken: true,
 				});
 			return;
 		}
