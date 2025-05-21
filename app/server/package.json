@@ -9,9 +9,8 @@
 		"test": "NODE_ENV=test vitest",
 		"test:coverage": "NODE_ENV=test vitest --coverage",
 		"dev": "tsx watch ./server.ts",
-		"build": "tsc && tsc-alias && mkdir -p keys",
-		"start": "node dist/server.js",
-		"postinstall": "prisma migrate deploy && prisma generate"
+		"build": "tsc && tsc-alias && mkdir -p keys && prisma migrate deploy && prisma generate",
+		"start": "node dist/server.js"
 	},
 	"prisma": {
 		"seed": "tsx prisma/seed.ts"
