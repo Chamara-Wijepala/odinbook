@@ -20,6 +20,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.get('/ping', (req, res) => {
+	res.status(200).send('Server is alive!');
+});
+
 app.use('/auth', routes.auth);
 
 app.use(verifyJWT);
