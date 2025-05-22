@@ -3,10 +3,7 @@ import useAuthStore from '../stores/auth';
 import navigation from '../services/navigation';
 import coloredNotification from '../services/notifications';
 
-const baseURL =
-	import.meta.env.MODE === 'production'
-		? import.meta.env.VITE_SERVER_BASEURL
-		: 'http://localhost:3000';
+const baseURL = import.meta.env.VITE_SERVER_BASEURL;
 
 const api = axios.create({
 	baseURL,
