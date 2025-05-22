@@ -8,6 +8,7 @@
 		"create-keys": "mkdir -p keys && tsx ./utils/createKeyPair.ts",
 		"test": "NODE_ENV=test vitest",
 		"test:coverage": "NODE_ENV=test vitest --coverage",
+		"setup": "pnpm create-keys && prisma migrate dev",
 		"dev": "tsx watch ./server.ts",
 		"build": "tsc && tsc-alias && mkdir -p keys && prisma migrate deploy && prisma generate",
 		"start": "node dist/server.js"

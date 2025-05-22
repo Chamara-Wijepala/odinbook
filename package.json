@@ -4,6 +4,9 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"test:server": "pnpm -F ./app/server run test",
+		"test:server:coverage": "pnpm -F ./app/server run test:coverage",
+		"setup:server": "pnpm -F ./app/server run setup",
 		"dev:client": "pnpm -F @odinbook/client dev",
 		"dev:server": "pnpm -F @odinbook/server dev",
 		"build:types": "pnpm -F @odinbook/types build",
