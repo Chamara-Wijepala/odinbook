@@ -57,7 +57,8 @@ export default function CreatePost() {
 					onChange={(e) => {
 						setContent(e.target.value);
 					}}
-					className="w-full max-h-[50svh] lg:max-h-full resize-none bg-transparent p-4 text-lg"
+					// min-h-[3.75rem] is required to stop the textarea from shrinking when inside the modal
+					className="w-full max-h-[50svh] lg:max-h-full min-h-[3.75rem] resize-none bg-transparent p-4 text-lg"
 				></textarea>
 
 				<div className="flex items-center justify-between">
