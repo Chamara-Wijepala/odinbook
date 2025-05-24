@@ -91,13 +91,13 @@ async function logoutFromAllDevices(
 	res: Response,
 	next: NextFunction
 ) {
-	if (!req.cookies.jwt) {
-		res.sendStatus(200);
-		return;
-	}
-
 	try {
 		await authService.updateTokenVersion(req.user.username);
+
+		if (!req.cookies.jwt) {
+			res.sendStatus(200);
+			return;
+		}
 
 		res
 			.clearCookie('jwt', {

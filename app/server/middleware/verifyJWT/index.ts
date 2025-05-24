@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import jwt from 'jsonwebtoken';
+import usersRepository from '../../repositories/usersRepository';
 import type { Request, Response, NextFunction } from 'express';
 import type { UserToken } from '../../types';
 
@@ -17,7 +18,7 @@ const PUB_KEY = {
 	),
 };
 
-export default function verifyJWT(
+export default async function verifyJWT(
 	req: Request,
 	res: Response,
 	next: NextFunction
@@ -30,6 +31,17 @@ export default function verifyJWT(
 
 	try {
 		const decoded = jwt.verify(bearerToken, PUB_KEY) as UserToken;
+
+		const user = await usersRepository.getTokenVersion(decoded.username);
+
+		// Type guard. User will always exist since there is no functionality to
+		// delete user profiles.
+		if (!user) throw new Error();
+
+		if (user.tokenVersion !== decoded.tokenVersion) {
+			throw new Error('RefreshTokenExpiredError');
+		}
+
 		req.user = decoded;
 		next();
 	} catch (error) {

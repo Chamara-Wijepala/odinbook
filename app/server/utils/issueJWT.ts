@@ -19,11 +19,13 @@ const PRIV_KEY = {
 export function issueAccessToken(
 	id: string,
 	username: string,
+	tokenVersion: number,
 	expiresIn: string | number
 ) {
 	const payload = {
 		id,
 		username,
+		tokenVersion,
 	};
 	const options: SignOptions = {
 		expiresIn,

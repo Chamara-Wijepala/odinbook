@@ -41,6 +41,13 @@ async function getLoginData(username: string) {
 	});
 }
 
+async function getTokenVersion(username: string) {
+	return await prisma.user.findUnique({
+		where: { username },
+		select: { tokenVersion: true },
+	});
+}
+
 async function getProfileData(username: string) {
 	return await prisma.user.findUnique({
 		where: {
@@ -136,6 +143,7 @@ export default {
 	findByUsername,
 	getLoginData,
 	getProfileData,
+	getTokenVersion,
 	updateTokenVersion,
 	followUser,
 	unfollowUser,
