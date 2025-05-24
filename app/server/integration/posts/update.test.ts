@@ -37,8 +37,12 @@ beforeAll(async () => {
 	const johnsId = await getUserId(userData.username);
 	const janesId = await getUserId(janeDoe.username);
 
-	johnsToken = getAccessToken(johnsId!, userData.username);
-	janesToken = getAccessToken(janesId!, janeDoe.username);
+	johnsToken = getAccessToken(
+		johnsId!,
+		userData.username,
+		userData.tokenVersion
+	);
+	janesToken = getAccessToken(janesId!, janeDoe.username, janeDoe.tokenVersion);
 	postId = await getFirstPostId();
 });
 

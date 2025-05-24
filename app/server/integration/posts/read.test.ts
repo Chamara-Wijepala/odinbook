@@ -54,8 +54,12 @@ beforeAll(async () => {
 	johnsId = (await getUserId(userData.username)) as string;
 	janesId = (await getUserId(janeDoe.username)) as string;
 
-	johnsToken = getAccessToken(johnsId!, userData.username);
-	janesToken = getAccessToken(janesId!, janeDoe.username);
+	johnsToken = getAccessToken(
+		johnsId!,
+		userData.username,
+		userData.tokenVersion
+	);
+	janesToken = getAccessToken(janesId!, janeDoe.username, janeDoe.tokenVersion);
 
 	// follow John Doe as Jane Doe
 	await request(app)

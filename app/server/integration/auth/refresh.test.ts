@@ -1,13 +1,34 @@
-import { describe, test, expect, expectTypeOf, beforeEach } from 'vitest';
+import {
+	describe,
+	test,
+	expect,
+	expectTypeOf,
+	beforeEach,
+	beforeAll,
+} from 'vitest';
 import request from 'supertest';
 import app from '../../app';
 import {
 	userData,
 	jwtRegex,
+	getUserId,
+	getAccessToken,
 	getCookieWithRefreshToken,
 	getCookieWithoutRefreshToken,
 } from '../common';
 import type { Response } from 'supertest';
+
+let accessToken: string;
+
+beforeAll(async () => {
+	const johnsId = await getUserId(userData.username);
+
+	accessToken = getAccessToken(
+		johnsId!,
+		userData.username,
+		userData.tokenVersion
+	);
+});
 
 describe('when passed an invalid cookie', () => {
 	const invalidTestCases = [
@@ -33,7 +54,8 @@ describe('when passed an invalid cookie', () => {
 		'should handle $name correctly',
 		async ({ cookie }) => {
 			const response = await request(app)
-				.post('/auth/refresh')
+				.get('/auth/refresh')
+				.set('authorization', `Bearer ${accessToken}`)
 				.set('Cookie', [cookie]);
 
 			expect(response.statusCode).toBe(401);

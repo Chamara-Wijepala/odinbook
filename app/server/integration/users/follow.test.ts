@@ -12,7 +12,11 @@ beforeAll(async () => {
 	johnsId = await getUserId(userData.username);
 	janesId = await getUserId(janeDoe.username);
 
-	accessToken = getAccessToken(johnsId!, userData.username);
+	accessToken = getAccessToken(
+		johnsId!,
+		userData.username,
+		userData.tokenVersion
+	);
 });
 
 describe('PATCH /:id/follow', () => {

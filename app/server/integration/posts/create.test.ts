@@ -10,7 +10,7 @@ let accessToken: string;
 
 beforeAll(async () => {
 	const id = await getUserId(userData.username);
-	accessToken = getAccessToken(id!, userData.username);
+	accessToken = getAccessToken(id!, userData.username, userData.tokenVersion);
 });
 
 afterAll(async () => {

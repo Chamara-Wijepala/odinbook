@@ -1,29 +1,32 @@
-import { vi, describe, expect, test } from 'vitest';
+import { vi, describe, expect, test, beforeAll } from 'vitest';
 import type { Request, Response } from 'express';
 import verifyJWT from '.';
 import { issueAccessToken } from '../../utils/issueJWT';
+import { userData, getUserId } from '../../integration/common';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 
 const mockNext = vi.fn();
 const mockRes = {} as Response;
 
+const userId = await getUserId(userData.username);
+
 describe('when passed no authorization header', () => {
 	const mockReq = { headers: {} };
 
-	test('should throw MissingHeaderError', () => {
-		expect(() => verifyJWT(mockReq as Request, mockRes, mockNext)).toThrow(
-			'MissingHeaderError'
-		);
+	test('should throw MissingHeaderError', async () => {
+		await expect(
+			verifyJWT(mockReq as Request, mockRes, mockNext)
+		).rejects.toThrow('MissingHeaderError');
 	});
 });
 
 describe('when passed a missing bearer token', () => {
 	const mockReq = { headers: { authorization: 'Bearer ' } };
 
-	test('should throw MissingBearerTokenError', () => {
-		expect(() => verifyJWT(mockReq as Request, mockRes, mockNext)).toThrow(
-			'MissingBearerTokenError'
-		);
+	test('should throw MissingBearerTokenError', async () => {
+		await expect(
+			verifyJWT(mockReq as Request, mockRes, mockNext)
+		).rejects.toThrow('MissingBearerTokenError');
 	});
 });
 
@@ -44,7 +47,7 @@ describe('when passed an invalid jwt as bearer', () => {
 describe('when passed a valid token', () => {
 	describe('if the token is expired', () => {
 		test('should call next function with "jwt expired" TokenExpiredError', () => {
-			const token = issueAccessToken('id', 'username', -10);
+			const token = issueAccessToken('id', 'username', 1, -10);
 			const mockReq = { headers: { authorization: `Bearer ${token}` } };
 
 			verifyJWT(mockReq as Request, mockRes, mockNext);
@@ -58,13 +61,24 @@ describe('when passed a valid token', () => {
 	});
 
 	describe('if the token is not expired', () => {
-		const token = issueAccessToken('id', 'username', 60);
+		const token = issueAccessToken(userId!, userData.username, 1, 60);
 		const mockReq = { headers: { authorization: `Bearer ${token}` } };
 
-		verifyJWT(mockReq as Request, mockRes, mockNext);
+		beforeAll(async () => {
+			await verifyJWT(mockReq as Request, mockRes, mockNext);
+		});
 
 		test('should add decoded payload to req.user', () => {
-			expect(mockReq).toMatchObject({ user: { username: 'username' } });
+			expect(mockReq).toMatchObject({
+				user: {
+					id: userId,
+					username: userData.username,
+					tokenVersion: 1,
+					iat: expect.any(Number),
+					exp: expect.any(Number),
+				},
+				headers: { authorization: `Bearer ${token}` },
+			});
 		});
 
 		test('should call next function', () => {

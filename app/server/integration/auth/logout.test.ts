@@ -3,6 +3,7 @@ import request from 'supertest';
 import app from '../../app';
 import prisma from '../../db/prisma';
 import { userData, getAccessToken, getCookieWithRefreshToken } from '../common';
+import type { Response } from 'supertest';
 
 const localUser = {
 	firstName: 'logout',
@@ -14,7 +15,7 @@ let accessToken: string;
 
 beforeAll(async () => {
 	const user = await prisma.user.create({ data: localUser });
-	accessToken = getAccessToken(user.id, user.username);
+	accessToken = getAccessToken(user.id, user.username, user.tokenVersion);
 });
 
 afterAll(async () => {
@@ -61,13 +62,15 @@ describe('POST /logout-all', () => {
 	});
 
 	describe('when a valid cookie is passed', () => {
-		// must be first because the other tests will update the token version
-		test('should update the token version', async () => {
-			await request(app)
+		let response: Response;
+		beforeAll(async () => {
+			response = await request(app)
 				.post('/auth/logout-all')
 				.set('Cookie', [getCookieWithRefreshToken(userData.username)])
 				.set('authorization', `Bearer ${accessToken}`);
+		});
 
+		test('should update the token version', async () => {
 			const user = await prisma.user.findUnique({
 				where: { username: localUser.username },
 				select: { tokenVersion: true },
@@ -77,21 +80,11 @@ describe('POST /logout-all', () => {
 			expect(user?.tokenVersion).toBe(2);
 		});
 
-		test('should return a 200 https status', async () => {
-			const response = await request(app)
-				.post('/auth/logout-all')
-				.set('Cookie', [getCookieWithRefreshToken(userData.username)])
-				.set('authorization', `Bearer ${accessToken}`);
-
+		test('should return a 200 https status', () => {
 			expect(response.statusCode).toBe(200);
 		});
 
-		test('should clear the cookie', async () => {
-			const response = await request(app)
-				.post('/auth/logout-all')
-				.set('Cookie', [getCookieWithRefreshToken(userData.username)])
-				.set('authorization', `Bearer ${accessToken}`);
-
+		test('should clear the cookie', () => {
 			expect(response.headers['set-cookie'][0]).toContain('jwt=;');
 		});
 	});

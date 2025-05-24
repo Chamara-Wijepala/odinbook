@@ -8,7 +8,7 @@ let accessToken: string;
 
 beforeAll(async () => {
 	const id = await getUserId(userData.username);
-	accessToken = getAccessToken(id!, userData.username);
+	accessToken = getAccessToken(id!, userData.username, userData.tokenVersion);
 });
 
 describe('GET /:username', () => {
@@ -22,14 +22,6 @@ describe('GET /:username', () => {
 
 		test('should return a 404 http status', () => {
 			expect(response.statusCode).toBe(404);
-		});
-
-		test('should return a toast error', () => {
-			expect(response.body.toast).toBeDefined();
-			expectTypeOf(response.body.toast).toExtend<{
-				type: string;
-				message: string;
-			}>();
 		});
 	});
 

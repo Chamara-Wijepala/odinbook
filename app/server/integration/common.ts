@@ -8,6 +8,7 @@ export const userData = {
 	lastName: 'Doe',
 	username: 'JohnDoe1990',
 	password: 'helloworld',
+	tokenVersion: 1,
 };
 
 export const hash = bcrypt.hashSync(userData.password, 10);
@@ -17,6 +18,7 @@ export const janeDoe = {
 	lastName: 'Doe',
 	username: 'JaneDoe2000',
 	password: 'helloworld',
+	tokenVersion: 1,
 };
 
 export const janesHash = bcrypt.hashSync(janeDoe.password, 10);
@@ -24,8 +26,12 @@ export const janesHash = bcrypt.hashSync(janeDoe.password, 10);
 export const jwtRegex =
 	/^([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_=]+)\.([a-zA-Z0-9_\-\+\/=]*)/;
 
-export function getAccessToken(id: string, username: string) {
-	return issueAccessToken(id, username, '5m');
+export function getAccessToken(
+	id: string,
+	username: string,
+	tokenVersion: number
+) {
+	return issueAccessToken(id, username, tokenVersion, '5m');
 }
 
 export function getCookieWithRefreshToken(
