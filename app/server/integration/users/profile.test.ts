@@ -1,4 +1,4 @@
-import { describe, test, expect, expectTypeOf, beforeAll } from 'vitest';
+import { describe, test, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import app from '../../app';
 import { userData, getUserId, getAccessToken } from '../common';
